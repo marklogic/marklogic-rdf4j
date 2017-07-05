@@ -1,0 +1,5 @@
+rootProject.name = 'marklogic-sesame-parent'
+include ':marklogic-sesame'
+include ':marklogic-sesame-functionaltests'
+include ':marklogic-sesame-examples'
+include ':marklogic-sesame-performance'

@@ -1,0 +1,751 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rss="http://purl.org/rss/1.0/"
+    xmlns:ntind="http://www.semanticbible.org/2005/09/NTN-individuals.owl#"
+    xmlns:ntnames="http://semanticbible.org/ns/2006/NTNames.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://semanticbible.org/ns/2006/NTNames#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xml:base="http://semanticbible.org/ns/2006/NTNames">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://www.semanticbible.org/2006/11/NTNames.owl"/>
+    <owl:versionInfo xml:lang="en">2006-09</owl:versionInfo>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >1.0</owl:versionInfo>
+    <rdfs:comment xml:lang="en">Changes in this version: - discontinued use of owl:sameAs fordifferent descriptions of the same person. These are now listed as a single instance, with multiple name_en values, and a single rdfs:label which is (sort of) canonical. -minor corrections</rdfs:comment>
+    <rdfs:comment xml:lang="en">Maintenance note: the underlying ontology (NTNames.owl) is still under development, so it's important the owl:imports statement stays up-to-date -- Sean 2005-02-13</rdfs:comment>
+    <rdfs:comment xml:lang="en">The names here are as
+transliterated in the English Standard Version (ESV), copyright ©
+2001 by Crossway Bibles, a division of Good News Publishers.
+
+Reuse note: where feasible, class names coincide with SUMO (Suggested
+Upper Merged Ontology), as developed within the IEEE Standard Upper
+Ontology Working Group, described at http://www.ontologyportal.org/,
+and available as OWL at http://reliant.teknowledge.com/DAML/SUMO.owl
+(But Not Without Some Problems). I've copied, rather than re-used, but
+this provides a future migration path toward coordinating the two
+ontologies.
+
+Location data taken from http://bbs.keyhole.com/ubb/showthreaded.php/Cat/0/Number/517264.
+
+</rdfs:comment>
+  </owl:Ontology>
+  <City rdf:ID="Salem">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Geodata assumes this is an earlier name for Jerusalem, though this is not certain. </rdfs:comment>
+    <rdfs:label xml:lang="en">Salem</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="SalemGeodata">
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >31.77451070780678</latitude>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <rdfs:label xml:lang="en">geodata for Salem</rdfs:label>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.22395850823153</longitude>
+      </GeographicLocation>
+    </location>
+  </City>
+  <GeographicLocation rdf:ID="BethanyBeyondtheJordanGeodata">
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >31.83673784971973</latitude>
+    <rdfs:label xml:lang="en">geodata for Bethany Beyond the Jordan</rdfs:label>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >35.55008611318313</longitude>
+  </GeographicLocation>
+  <GeographicLocation rdf:ID="BabylonGeodata">
+    <rdfs:label xml:lang="en">geodata for Babylon</rdfs:label>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >44.42007455918414</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >32.53660983263659</latitude>
+  </GeographicLocation>
+  <Man rdf:ID="Porcius">
+    <rdfs:label xml:lang="en">Porcius</rdfs:label>
+  </Man>
+  <Man rdf:ID="Timon">
+    <rdfs:label xml:lang="en">Timon</rdfs:label>
+  </Man>
+  <StateOrProvince rdf:ID="Cilicia">
+    <rdfs:label xml:lang="en">Cilicia</rdfs:label>
+  </StateOrProvince>
+  <ResidenceGroup rdf:ID="Gadarenes">
+    <rdfs:label xml:lang="en">Gadarenes</rdfs:label>
+  </ResidenceGroup>
+  <City rdf:ID="Attalia">
+    <location>
+      <GeographicLocation rdf:ID="AttaliaGeodata">
+        <rdfs:label xml:lang="en">geodata for Attalia</rdfs:label>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >36.91461876374842</latitude>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >30.7182409422051</longitude>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Attalia</rdfs:label>
+  </City>
+  <StateOrProvince rdf:ID="Pamphylia">
+    <rdfs:label xml:lang="en">Pamphylia</rdfs:label>
+  </StateOrProvince>
+  <EthnicityAttribute rdf:ID="Scythian">
+    <rdfs:comment xml:lang="en">Herodotus describes the Scythians as a savage race of nomads, living generally north of the Black and Caspain Seas. Paul's single use of the term seems largely synonymous with them as a type of barbarians. </rdfs:comment>
+    <rdfs:label xml:lang="en">Scythian</rdfs:label>
+  </EthnicityAttribute>
+  <Man rdf:ID="Sceva">
+    <rdfs:label xml:lang="en">Sceva</rdfs:label>
+  </Man>
+  <GeographicLocation rdf:ID="MiletusGeodata">
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >27.30704421298264</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >37.59280951286878</latitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <rdfs:label xml:lang="en">geodata for Miletus</rdfs:label>
+  </GeographicLocation>
+  <Tribe rdf:ID="TribeOfZebulun">
+    <rdfs:label xml:lang="en">Zebulun</rdfs:label>
+    <rdfs:label xml:lang="en">tribe of Zebulun</rdfs:label>
+  </Tribe>
+  <Man rdf:ID="Trachonitis">
+    <rdfs:label xml:lang="en">Trachonitis</rdfs:label>
+  </Man>
+  <Man rdf:ID="Augustus">
+    <rdfs:label xml:lang="en">Augustus</rdfs:label>
+    <occupation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >emperor</occupation>
+    <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Emperor of Rome at the time of Jesus' birth</description>
+  </Man>
+  <PoliticalOrganization rdf:ID="Herodians">
+    <rdfs:label xml:lang="en">Herodians</rdfs:label>
+  </PoliticalOrganization>
+  <GeographicLocation rdf:ID="CaesareaPhilippiGeodata">
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >33.25100774530771</latitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >35.69397573529149</longitude>
+    <rdfs:label xml:lang="en">geodata for Caesarea Philippi</rdfs:label>
+  </GeographicLocation>
+  <GroupOfPeople rdf:ID="Asiarchs">
+    <rdfs:label xml:lang="en">Asiarchs</rdfs:label>
+  </GroupOfPeople>
+  <ResidencyAttribute rdf:ID="Nazarene">
+    <rdfs:label xml:lang="en">Nazarene</rdfs:label>
+  </ResidencyAttribute>
+  <StateOrProvince rdf:ID="Lycaonia">
+    <rdfs:label xml:lang="en">Lycaonia</rdfs:label>
+  </StateOrProvince>
+  <PoliticalOrganization rdf:ID="Areopagus">
+    <rdfs:label xml:lang="en">Areopagus</rdfs:label>
+  </PoliticalOrganization>
+  <GeographicLocation rdf:ID="MountofOlivesGeodata">
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >31.77646075162188</latitude>
+    <rdfs:label xml:lang="en">geodata for Mount of Olives</rdfs:label>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >35.24256973151253</longitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+  </GeographicLocation>
+  <Man rdf:ID="Jude">
+    <rdfs:label xml:lang="en">Jude</rdfs:label>
+  </Man>
+  <GeographicLocation rdf:ID="SidonGeodata">
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <rdfs:label xml:lang="en">geodata for Sidon</rdfs:label>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >35.35565736166527</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >33.5571694642368</latitude>
+  </GeographicLocation>
+  <GeographicLocation rdf:ID="ColossaeGeodata">
+    <rdfs:label xml:lang="en">geodata for Colossae</rdfs:label>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >29.19879351988703</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >37.82980850278283</latitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+  </GeographicLocation>
+  <Man rdf:ID="Onesiphorus">
+    <rdfs:label xml:lang="en">Onesiphorus</rdfs:label>
+  </Man>
+  <Man rdf:ID="Pilate">
+    <rdfs:label xml:lang="en">Pilate</rdfs:label>
+  </Man>
+  <PoliticalOrganization rdf:ID="ItalianCohort">
+    <rdfs:label xml:lang="en">Italian Cohort</rdfs:label>
+    <rdfs:comment xml:lang="en">A Roman legion</rdfs:comment>
+  </PoliticalOrganization>
+  <City rdf:ID="Zarephath">
+    <rdfs:comment xml:lang="en">Jesus recounts the story of Elijah being sent to a widow of Zarephath as an example of God blessing those outside the nation of Israel.</rdfs:comment>
+    <rdfs:label xml:lang="en">Zarephath</rdfs:label>
+    <subregionOf>
+      <Region rdf:ID="Phoenicia">
+        <rdfs:label xml:lang="en">Phoenicia</rdfs:label>
+      </Region>
+    </subregionOf>
+  </City>
+  <Woman rdf:ID="Chloe">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >"Chloe's people" are mentioned in 1Cor.1.11: so while they were clearly Christians who knew the church in Corinth, nothing more specific is known about her. She may have resided in Ephesus instead of Corinth. </rdfs:comment>
+    <rdfs:label xml:lang="en">Chloe</rdfs:label>
+    <hasOnlyGenealogyMention rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >false</hasOnlyGenealogyMention>
+  </Woman>
+  <PoliticalAttribute rdf:ID="Areopagite">
+    <rdfs:label xml:lang="en">Areopagite</rdfs:label>
+  </PoliticalAttribute>
+  <City rdf:ID="Babylon">
+    <rdfs:label xml:lang="en">Babylon</rdfs:label>
+    <rdfs:comment xml:lang="en">Babylon also has a metaphorical usage as a symbol of the world system opposed to God</rdfs:comment>
+    <location rdf:resource="#BabylonGeodata"/>
+  </City>
+  <EthnicityAttribute rdf:ID="Syrophoenician">
+    <rdfs:comment xml:lang="en">Likely synonymous with Canaanite, and referring to those from the region of Syria and Phoenicia, and therefore a subgroup of Greek Gentiles.</rdfs:comment>
+    <rdfs:label xml:lang="en">Syrophoenician</rdfs:label>
+  </EthnicityAttribute>
+  <ReligiousOrganization rdf:ID="Levites">
+    <rdfs:label xml:lang="en">Levites</rdfs:label>
+    <rdfs:comment xml:lang="en">Distinguished from Jews not by different beliefs, but by special roles related to observation of temple worship.</rdfs:comment>
+  </ReligiousOrganization>
+  <City rdf:ID="Neapolis">
+    <rdfs:label xml:lang="en">Neapolis</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="NeapolisGeodata">
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >40.94505979070409</latitude>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >24.43247892824545</longitude>
+        <rdfs:label xml:lang="en">geodata for Neapolis</rdfs:label>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+      </GeographicLocation>
+    </location>
+  </City>
+  <City rdf:ID="Philadelphia">
+    <location>
+      <GeographicLocation rdf:ID="PhiladelphiaGeodata">
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >28.52643605613694</longitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >38.35785882454039</latitude>
+        <rdfs:label xml:lang="en">geodata for Philadelphia</rdfs:label>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Philadelphia</rdfs:label>
+  </City>
+  <LandArea rdf:ID="Spain">
+    <rdfs:label xml:lang="en">Spain</rdfs:label>
+  </LandArea>
+  <City rdf:ID="Sidon">
+    <rdfs:label xml:lang="en">Sidon</rdfs:label>
+    <subregionOf rdf:resource="#Phoenicia"/>
+    <location rdf:resource="#SidonGeodata"/>
+  </City>
+  <GeographicLocation rdf:ID="HaranGeodata">
+    <rdfs:label xml:lang="en">geodata for Haran</rdfs:label>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >39.04728757340273</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >36.92937229726265</latitude>
+  </GeographicLocation>
+  <GeographicLocation rdf:ID="RhodesGeodata">
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >28.22852638439881</longitude>
+    <rdfs:label xml:lang="en">geodata for Rhodes</rdfs:label>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >36.43927573777137</latitude>
+  </GeographicLocation>
+  <Man rdf:ID="Immanuel">
+    <rdfs:label xml:lang="en">Immanuel</rdfs:label>
+  </Man>
+  <ResidenceGroup rdf:ID="Galileans">
+    <rdfs:label xml:lang="en">Galileans</rdfs:label>
+  </ResidenceGroup>
+  <GroupOfPeople rdf:ID="Gentiles">
+    <rdfs:label xml:lang="en">Gentiles</rdfs:label>
+  </GroupOfPeople>
+  <NaturalLanguage rdf:ID="Aramaic">
+    <rdfs:label xml:lang="en">Aramaic</rdfs:label>
+  </NaturalLanguage>
+  <Man rdf:ID="Titus">
+    <rdfs:label xml:lang="en">Titus</rdfs:label>
+  </Man>
+  <BeliefGroup rdf:ID="Jews">
+    <rdfs:label xml:lang="en">Jews</rdfs:label>
+  </BeliefGroup>
+  <Man rdf:ID="Tyrannus">
+    <rdfs:label xml:lang="en">Tyrannus</rdfs:label>
+  </Man>
+  <StateOrProvince rdf:ID="Mysia">
+    <rdfs:label xml:lang="en">Mysia</rdfs:label>
+  </StateOrProvince>
+  <Man rdf:ID="Parmenas">
+    <rdfs:label xml:lang="en">Parmenas</rdfs:label>
+  </Man>
+  <Man rdf:ID="Luke">
+    <rdfs:label xml:lang="en">Luke</rdfs:label>
+  </Man>
+  <SaltWaterArea rdf:ID="Adriatic">
+    <rdfs:label xml:lang="en">Adriatic</rdfs:label>
+  </SaltWaterArea>
+  <StateOrProvince rdf:ID="Lycia">
+    <rdfs:label xml:lang="en">Lycia</rdfs:label>
+  </StateOrProvince>
+  <GeographicLocation rdf:ID="PaphosGeodata">
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >32.42822722601693</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >34.77011113075128</latitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <rdfs:label xml:lang="en">geodata for Paphos</rdfs:label>
+  </GeographicLocation>
+  <StateOrProvince rdf:ID="Bithynia">
+    <rdfs:label xml:lang="en">Bithynia</rdfs:label>
+  </StateOrProvince>
+  <ReligiousBelief rdf:ID="Epicurean">
+    <rdfs:label xml:lang="en">Epicurean</rdfs:label>
+  </ReligiousBelief>
+  <FreshWaterArea rdf:ID="Kidron">
+    <rdfs:comment xml:lang="en">The Kidron Brook/Valley is just outside the walls of Jerusalem</rdfs:comment>
+    <rdfs:label xml:lang="en">Kidron</rdfs:label>
+  </FreshWaterArea>
+  <City rdf:ID="Sodom">
+    <location>
+      <GeographicLocation rdf:ID="SodomGeodata">
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.37152949677915</longitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >31.42838121424862</latitude>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <rdfs:label xml:lang="en">geodata for Sodom</rdfs:label>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Sodom</rdfs:label>
+  </City>
+  <StateOrProvince rdf:ID="Pisidia">
+    <rdfs:label xml:lang="en">Pisidia</rdfs:label>
+  </StateOrProvince>
+  <City rdf:ID="Syracuse">
+    <rdfs:label xml:lang="en">Syracuse</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="SyracuseGeodata">
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >15.29666086592392</longitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >37.07082102418126</latitude>
+        <rdfs:label xml:lang="en">geodata for Syracuse</rdfs:label>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+      </GeographicLocation>
+    </location>
+  </City>
+  <City rdf:ID="Damascus">
+    <subregionOf>
+      <StateOrProvince rdf:ID="Abilene">
+        <subregion rdf:resource="#Damascus"/>
+        <rdfs:label xml:lang="en">Abilene</rdfs:label>
+      </StateOrProvince>
+    </subregionOf>
+    <rdfs:label xml:lang="en">Damascus</rdfs:label>
+  </City>
+  <City rdf:ID="Phoenix">
+    <rdfs:label xml:lang="en">Phoenix</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="PhoenixGeodata">
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <rdfs:label xml:lang="en">geodata for Phoenix</rdfs:label>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >24.01414490625663</longitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.26650579704394</latitude>
+      </GeographicLocation>
+    </location>
+  </City>
+  <GeographicLocation rdf:ID="SmyrnaGeodata">
+    <rdfs:label xml:lang="en">geodata for Smyrna</rdfs:label>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >27.25625458305646</longitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >38.32512200511864</latitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+  </GeographicLocation>
+  <PoliticalAttribute rdf:ID="Zealot">
+    <rdfs:label xml:lang="en">Zealot</rdfs:label>
+  </PoliticalAttribute>
+  <City rdf:ID="Smyrna">
+    <rdfs:label xml:lang="en">Smyrna</rdfs:label>
+    <location rdf:resource="#SmyrnaGeodata"/>
+  </City>
+  <Man rdf:ID="Jambres">
+    <rdfs:label xml:lang="en">Jambres</rdfs:label>
+  </Man>
+  <LandArea rdf:ID="Aenon">
+    <rdfs:label xml:lang="en">Aenon</rdfs:label>
+  </LandArea>
+  <Man rdf:ID="Barak">
+    <name_en rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Barak</name_en>
+    <occupation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >general</occupation>
+    <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >an Old Testament military leader from the book of Judges</description>
+    <rdfs:label xml:lang="en">Barak</rdfs:label>
+  </Man>
+  <Woman rdf:ID="Apphia">
+    <spouseOf>
+      <Man rdf:ID="Philemon">
+        <rdfs:comment xml:lang="en">His residence in Colossae is implied from his relationship to Archippus and Onesimus (Col.4.9; Col.4.17). He may have been been a native as well. 
+Paul describes him as "our beloved fellow worker".</rdfs:comment>
+        <rdfs:label xml:lang="en">Philemon</rdfs:label>
+        <spouseOf rdf:resource="#Apphia"/>
+        <collaboratesWith>
+          <Man rdf:ID="Archippus">
+            <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >a Christian in Colossae whom Paul describes as "our fellow soldier"</description>
+            <rdfs:comment xml:lang="en">Paul describes Archippus as "our fellow soldier" in Philemon 1:2, perhaps based on service together in Ephesus (RWP).</rdfs:comment>
+            <rdfs:label xml:lang="en">Archippus</rdfs:label>
+            <collaboratesWith rdf:resource="#Philemon"/>
+            <collaboratesWith rdf:resource="#Apphia"/>
+          </Man>
+        </collaboratesWith>
+      </Man>
+    </spouseOf>
+    <collaboratesWith rdf:resource="#Archippus"/>
+    <rdfs:comment xml:lang="en">Being the spouseOf Philemon is implied by their mention together in the salutation of the Letter to Philemon, though it is not definite. 
+Paul describes her as "our sister", presumably in Christ rather than literally. See Philemon about ResidentPlace.</rdfs:comment>
+    <hasOnlyGenealogyMention rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >false</hasOnlyGenealogyMention>
+    <rdfs:label xml:lang="en">Apphia</rdfs:label>
+    <religiousBelief rdf:resource="#Christianity"/>
+  </Woman>
+  <LandArea rdf:ID="Gethsemane">
+    <rdfs:label xml:lang="en">Gethsemane</rdfs:label>
+  </LandArea>
+  <SupernaturalBeing rdf:ID="Artemis">
+    <rdfs:label xml:lang="en">Artemis</rdfs:label>
+  </SupernaturalBeing>
+  <GroupOfPeople rdf:ID="Gog">
+    <hasOnlyGenealogyMention rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >false</hasOnlyGenealogyMention>
+    <rdfs:label xml:lang="en">Gog</rdfs:label>
+    <rdfs:comment xml:lang="en">The historic background of the reference to Gog is most likely the Lydian king in the 7th Century BC. Its usage in Revelation seems to describe a group of people,  but it is hard to be certain what is intended in this apocalyptic context.</rdfs:comment>
+    <description xml:lang="en">an apocalyptic opponent of God's people</description>
+  </GroupOfPeople>
+  <Island rdf:ID="Malta">
+    <location>
+      <GeographicLocation rdf:ID="MaltaGeodata">
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.85282675242785</latitude>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >14.53243601407711</longitude>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <rdfs:label xml:lang="en">geodata for Malta</rdfs:label>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Malta</rdfs:label>
+  </Island>
+  <City rdf:ID="Myra">
+    <rdfs:label xml:lang="en">Myra</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="MyraGeodata">
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >30.06643253716855</longitude>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >36.26320556210278</latitude>
+        <rdfs:label xml:lang="en">geodata for Myra</rdfs:label>
+      </GeographicLocation>
+    </location>
+  </City>
+  <Region rdf:ID="Mesopotamia">
+    <rdfs:label xml:lang="en">Mesopotamia</rdfs:label>
+  </Region>
+  <ReligiousBelief rdf:ID="Pharisee">
+    <rdfs:label xml:lang="en">Pharisee</rdfs:label>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Having a ReligiousBelief of Pharisee implies the belief of Jew as well. </rdfs:comment>
+  </ReligiousBelief>
+  <City rdf:ID="Salamis">
+    <rdfs:label xml:lang="en">Salamis</rdfs:label>
+    <location>
+      <GeographicLocation rdf:ID="SalamisGeodata">
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >33.85186619255565</longitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.14774697653193</latitude>
+        <rdfs:label xml:lang="en">geodata for Salamis</rdfs:label>
+      </GeographicLocation>
+    </location>
+  </City>
+  <LandArea rdf:ID="Salmone">
+    <location>
+      <GeographicLocation rdf:ID="SalmoneGeodata">
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >25.98384834966224</longitude>
+        <rdfs:label xml:lang="en">geodata for Salmone</rdfs:label>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >35.20497664329137</latitude>
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Salmone</rdfs:label>
+  </LandArea>
+  <Tribe rdf:ID="TribeOfJudah">
+    <rdfs:label xml:lang="en">tribe of Judah</rdfs:label>
+  </Tribe>
+  <ReligiousBelief rdf:ID="Christian">
+    <rdfs:label xml:lang="en">Christian</rdfs:label>
+  </ReligiousBelief>
+  <City rdf:ID="Patara">
+    <location>
+      <GeographicLocation rdf:ID="PataraGeodata">
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >36.27516973857826</latitude>
+        <rdfs:label xml:lang="en">geodata for Patara</rdfs:label>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >29.31849755912533</longitude>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Patara</rdfs:label>
+  </City>
+  <StateOrProvince rdf:ID="Greece">
+    <rdfs:label xml:lang="en">Greece</rdfs:label>
+  </StateOrProvince>
+  <City rdf:ID="Armageddon">
+    <rdfs:label xml:lang="en">Armageddon</rdfs:label>
+  </City>
+  <SaltWaterArea rdf:ID="Syrtis">
+    <rdfs:label xml:lang="en">Syrtis</rdfs:label>
+  </SaltWaterArea>
+  <Angel rdf:ID="Gabriel">
+    <rdfs:label xml:lang="en">Gabriel</rdfs:label>
+  </Angel>
+  <ResidenceGroup rdf:ID="Athenians">
+    <rdfs:label xml:lang="en">Athenians</rdfs:label>
+  </ResidenceGroup>
+  <City rdf:ID="Lasea">
+    <location>
+      <GeographicLocation rdf:ID="LaseaGeodata">
+        <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >0</altitude>
+        <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >34.93102546484152</latitude>
+        <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >24.8056554464516</longitude>
+        <rdfs:label xml:lang="en">geodata for Lasea</rdfs:label>
+      </GeographicLocation>
+    </location>
+    <rdfs:label xml:lang="en">Lasea</rdfs:label>
+  </City>
+  <GeographicLocation rdf:ID="FairHavensGeodata">
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >24.73534424651286</longitude>
+    <rdfs:label xml:lang="en">geodata for Fair Havens</rdfs:label>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >34.93065966009429</latitude>
+  </GeographicLocation>
+  <Man rdf:ID="Naaman">
+    <rdfs:label xml:lang="en">Naaman</rdfs:label>
+    <ethnicity>
+      <EthnicityAttribute rdf:ID="Syrian">
+        <rdfs:comment xml:lang="en">Of the country of Syria.</rdfs:comment>
+        <ethnicityOf rdf:resource="#Naaman"/>
+        <rdfs:label xml:lang="en">Syrian</rdfs:label>
+      </EthnicityAttribute>
+    </ethnicity>
+  </Man>
+  <City rdf:ID="Athens">
+    <residentPlaceOf>
+      <Woman rdf:ID="Damaris">
+        <residentPlace rdf:resource="#Athens"/>
+        <religiousBelief rdf:resource="#Christianity"/>
+        <rdfs:label xml:lang="en">Damaris</rdfs:label>
+        <hasOnlyGenealogyMention rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+        >false</hasOnlyGenealogyMention>
+        <rdfs:comment xml:lang="en">Damaris was converted through Paul's preaching in Athens.</rdfs:comment>
+        <knows rdf:resource="#Paul"/>
+        <description xml:lang="en">a convert from Paul's address to the Aeropagus</description>
+      </Woman>
+    </residentPlaceOf>
+    <rdfs:label xml:lang="en">Athens</rdfs:label>
+  </City>
+  <StateOrProvince rdf:ID="Dalmatia">
+    <rdfs:label xml:lang="en">Dalmatia</rdfs:label>
+  </StateOrProvince>
+  <Man rdf:ID="Jannes">
+    <rdfs:label xml:lang="en">Jannes</rdfs:label>
+  </Man>
+  <City rdf:ID="Cyrene">
+    <rdfs:label xml:lang="en">Cyrene</rdfs:label>
+  </City>
+  <Tribe rdf:ID="TribeOfReuben">
+    <rdfs:label xml:lang="en">tribe of Reuben</rdfs:label>
+  </Tribe>
+  <SupernaturalBeing rdf:ID="Zeus">
+    <rdfs:label xml:lang="en">Zeus</rdfs:label>
+  </SupernaturalBeing>
+  <Man rdf:ID="Isaiah">
+    <rdfs:label xml:lang="en">Isaiah</rdfs:label>
+  </Man>
+  <Man rdf:ID="Blastus">
+    <occupation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >chamberlain</occupation>
+    <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >the chamberlain of Herod Agrippa</description>
+    <knows rdf:resource="#HerodAgrippaI"/>
+    <rdfs:label xml:lang="en">Blastus</rdfs:label>
+  </Man>
+  <NaturalLanguage rdf:ID="GreekLanguage">
+    <rdfs:label xml:lang="en">Greek</rdfs:label>
+  </NaturalLanguage>
+  <Nation rdf:ID="Ethiopia">
+    <rdfs:comment xml:lang="en">Not named in the New Testament.</rdfs:comment>
+  </Nation>
+  <ResidenceGroup rdf:ID="Galatians">
+    <rdfs:label xml:lang="en">Galatians</rdfs:label>
+  </ResidenceGroup>
+  <City rdf:ID="Magadan">
+    <rdfs:label xml:lang="en">Magadan</rdfs:label>
+  </City>
+  <Man rdf:ID="Publius">
+    <rdfs:label xml:lang="en">Publius</rdfs:label>
+  </Man>
+  <Man rdf:ID="JonahTheProphet">
+    <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A prophet from the Old Testmanent</description>
+    <rdfs:label xml:lang="en">Jonah</rdfs:label>
+  </Man>
+  <EthnicGroup rdf:ID="Arabians">
+    <rdfs:label xml:lang="en">Arabians</rdfs:label>
+  </EthnicGroup>
+  <GeographicLocation rdf:ID="TyreGeodata">
+    <rdfs:label xml:lang="en">geodata for Tyre</rdfs:label>
+    <latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >33.2729182169202</latitude>
+    <longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >35.19877875091432</longitude>
+    <altitude rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >0</altitude>
+  </GeographicLocation>
+  <Man rdf:ID="Antipas">
+    <rdfs:label xml:lang="en">Antipas</rdfs:label>
+    <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >a martyr</description>
+  </Man>
+  <Island rdf:ID="Cyprus">
+    <rdfs:label xml:lang="en">Cyprus</rdfs:label>
+  </Island>
+  <LandArea rdf:ID="Taverns">
+    <rdfs:label xml:lang="en">Taverns</rdfs:label>
+  </LandArea>
+  <Man rdf:ID="Ptolemais">
+    <rdfs:label xml:lang="en">Ptolemais</rdfs:label>
+  </Man>
+  <Man rdf:ID="Jephthah">
+    <rdfs:label xml:lang="en">Jephthah</rdfs:label>
+  </Man>
+  <ResidenceGroup rdf:ID="Laodiceans">
+    <rdfs:label xml:lang="en">Laodiceans</rdfs:label>
+  </ResidenceGroup>
+  <City rdf:ID="Adramyttium">
+    <rdfs:label xml:lang="en">Adramyttium</rdfs:label>
+  </City>
+  <GeopoliticalArea rdf:ID="Italy">
+    <rdfs:label xml:lang="en">Italy</rdfs:label>
+  </GeopoliticalArea>
+  <Island rdf:ID="Chios">
+    <rdfs:label xml:lang="en">Chios</rdfs:label>
+  </Island>
+  <ReligiousBelief rdf:ID="Stoic">
+    <rdfs:label xml:lang="en">Stoic</rdfs:label>
+  </ReligiousBelief>
+  <Man rdf:ID="Jotham">
+    <description xml:lang="en">One of the ancestors of Jesus mentioned in Matthew's geneaology</description>
+    <rdfs:label xml:lang="en">Jotham</rdfs:label>
+    <ethnicity rdf:resource="#Jewish"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >His occupation as King comes from Old Testament sources, 2Chron.26-27. </rdfs:comment>
+    <parentOf rdf:resource="#Ahaz"/>
+  </Man>
+  <Man rdf:ID="Shelah">
+      <hasOnlyGenealogyMention rdf:datatype=
+          "http://www.w3.org/2001/XMLSchema#boolean"
+          >true</hasOnlyGenealogyMention>
+      <rdfs:label xml:lang="en">Shelah</rdfs:label>
+      <childOf>
+          <Man rdf:ID="CainanSonOfArphaxad">
+              <parentOf rdf:resource="#Shelah"/>
+              <description rdf:datatype=
+                  "http://www.w3.org/2001/XMLSchema#string"
+                  >One of the ancestors of Jesus mentioned in Luke's geneaology</description>
+          </Man>
+      </childOf>
+  </Man>
+  <Woman rdf:ID="Eve">
+      <rdfs:label xml:lang="en">Eve</rdfs:label>
+      <hasOnlyGenealogyMention rdf:datatype=
+          "http://www.w3.org/2001/XMLSchema#boolean"
+          >false</hasOnlyGenealogyMention>
+      <parentOf>
+          <Man rdf:ID="Abel">
+              <rdfs:label xml:lang="en">Abel</rdfs:label>
+              <childOf rdf:resource="#Adam"/>
+              <childOf rdf:resource="#Eve"/>
+              <siblingOf>
+                  <Man rdf:ID="Cain">
+                      <siblingOf rdf:resource="#Abel"/>
+                      <description rdf:datatype=
+                          "http://www.w3.org/2001/XMLSchema#string"
+                          >the first son of Adam and Eve, who killed his brother Abel</description>
+                      <rdfs:label xml:lang="en"
+                          >Cain</rdfs:label>
+                      <childOf rdf:resource="#Adam"/>
+                      <childOf rdf:resource="#Eve"/>
+                  </Man>
+              </siblingOf>
+          </Man>
+      </parentOf>
+      <parentOf rdf:resource="#Cain"/>
+      <spouseOf rdf:resource="#Adam"/>
+      <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+          >the first woman created by God</description>
+  </Woman>
+</rdf:RDF>
+
+
+<!-- Created with Protege (with OWL Plugin 3.2, Build 355)  http://protege.stanford.edu -->

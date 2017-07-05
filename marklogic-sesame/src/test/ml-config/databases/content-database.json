@@ -1,0 +1,6 @@
+{
+  "database-name": "%%DATABASE%%",
+  "maintain-last-modified": true,
+  "triple-index": true,
+  "collection-lexicon":true
+}

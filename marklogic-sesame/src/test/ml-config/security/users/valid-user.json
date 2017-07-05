@@ -1,0 +1,5 @@
+{
+  "user-name":"s-valid",
+  "password": "x",
+  "role":["rest-reader","rest-writer"]
+}

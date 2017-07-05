@@ -1,0 +1,150 @@
+<rdf:RDF xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:nodeID="rset">
+        <rdf:type rdf:resource="http://www.w3.org/2005/sparql-results#ResultSet" />
+        <res:resultVariable>c1</res:resultVariable>
+        <res:resultVariable>c2</res:resultVariable>
+        <res:resultVariable>sc</res:resultVariable>
+        <res:resultVariable>rank</res:resultVariable>
+        <res:resultVariable>g</res:resultVariable>
+        <res:solution rdf:nodeID="r0">
+            <res:binding rdf:nodeID="r0c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.0b26fx8"/></res:binding>
+            <res:binding rdf:nodeID="r0c1"><res:variable>c2</res:variable><res:value>Online &lt;b&gt;Databases&lt;/b&gt; Gale Directory of Online &lt;b&gt;Databases&lt;/b&gt; 96.</res:value></res:binding>
+            <res:binding rdf:nodeID="r0c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">6.3</res:value></res:binding>
+            <res:binding rdf:nodeID="r0c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#integer">0</res:value></res:binding>
+            <res:binding rdf:nodeID="r0c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r1">
+            <res:binding rdf:nodeID="r1c0"><res:variable>c1</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed/id/7938593"/></res:binding>
+            <res:binding rdf:nodeID="r1c1"><res:variable>c2</res:variable><res:value>Protein sequence &lt;b&gt;databases&lt;/b&gt; and the related &lt;b&gt;databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r1c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">6.3</res:value></res:binding>
+            <res:binding rdf:nodeID="r1c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#integer">0</res:value></res:binding>
+            <res:binding rdf:nodeID="r1c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r2">
+            <res:binding rdf:nodeID="r2c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.0b26fx8"/></res:binding>
+            <res:binding rdf:nodeID="r2c1"><res:variable>c2</res:variable><res:value>Online &lt;b&gt;Databases&lt;/b&gt; Gale Directory of Online &lt;b&gt;Databases&lt;/b&gt; 96.</res:value></res:binding>
+            <res:binding rdf:nodeID="r2c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">6.3</res:value></res:binding>
+            <res:binding rdf:nodeID="r2c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#integer">0</res:value></res:binding>
+            <res:binding rdf:nodeID="r2c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r3">
+            <res:binding rdf:nodeID="r3c0"><res:variable>c1</res:variable><res:value rdf:resource="http://chem2bio2rdf.org/medline/resource/medline/7938593"/></res:binding>
+            <res:binding rdf:nodeID="r3c1"><res:variable>c2</res:variable><res:value>Protein sequence &lt;b&gt;databases&lt;/b&gt; and the related &lt;b&gt;databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r3c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">6.3</res:value></res:binding>
+            <res:binding rdf:nodeID="r3c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#integer">0</res:value></res:binding>
+            <res:binding rdf:nodeID="r3c4"><res:variable>g</res:variable><res:value rdf:resource="http://cheminfov.informatics.indiana.edu/download/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r4">
+            <res:binding rdf:nodeID="r4c0"><res:variable>c1</res:variable><res:value rdf:resource="http://purl.org/commons/article/pmid/7938593"/></res:binding>
+            <res:binding rdf:nodeID="r4c1"><res:variable>c2</res:variable><res:value>Protein sequence &lt;b&gt;databases&lt;/b&gt; and the related &lt;b&gt;databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r4c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">6.3</res:value></res:binding>
+            <res:binding rdf:nodeID="r4c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#integer">0</res:value></res:binding>
+            <res:binding rdf:nodeID="r4c4"><res:variable>g</res:variable><res:value rdf:resource="http://purl.org/science/graph/medline/titles-years"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r5">
+            <res:binding rdf:nodeID="r5c0"><res:variable>c1</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed/id/16610138"/></res:binding>
+            <res:binding rdf:nodeID="r5c1"><res:variable>c2</res:variable><res:value>DoD: Database of &lt;b&gt;Databases&lt;/b&gt; updated molecular biology &lt;b&gt;databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r5c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r5c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12591e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r5c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r6">
+            <res:binding rdf:nodeID="r6c0"><res:variable>c1</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed/id/15488697"/></res:binding>
+            <res:binding rdf:nodeID="r6c1"><res:variable>c2</res:variable><res:value>National &lt;b&gt;databases&lt;/b&gt; and rheumatology research I: longitudinal &lt;b&gt;databases&lt;/b&gt; in Scandinavia.</res:value></res:binding>
+            <res:binding rdf:nodeID="r6c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r6c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.1259e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r6c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/pubmed"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r7">
+            <res:binding rdf:nodeID="r7c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f800000001258fb92"/></res:binding>
+            <res:binding rdf:nodeID="r7c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt;: Volume 1: Online &lt;b&gt;Databases&lt;/b&gt;, January 1995.</res:value></res:binding>
+            <res:binding rdf:nodeID="r7c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r7c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r7c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r8">
+            <res:binding rdf:nodeID="r8c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000013b4b023"/></res:binding>
+            <res:binding rdf:nodeID="r8c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 1996 Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 2v.</res:value></res:binding>
+            <res:binding rdf:nodeID="r8c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r8c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r8c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r9">
+            <res:binding rdf:nodeID="r9c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f800000001203463a"/></res:binding>
+            <res:binding rdf:nodeID="r9c1"><res:variable>c2</res:variable><res:value>Online &lt;b&gt;Databases&lt;/b&gt;: September 1999 Gale Directory of &lt;b&gt;Databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r9c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r9c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r9c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r10">
+            <res:binding rdf:nodeID="r10c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000013e151ea"/></res:binding>
+            <res:binding rdf:nodeID="r10c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; Gale Directory of &lt;b&gt;Databases&lt;/b&gt;, 2000.</res:value></res:binding>
+            <res:binding rdf:nodeID="r10c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r10c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r10c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r11">
+            <res:binding rdf:nodeID="r11c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000014341b0d"/></res:binding>
+            <res:binding rdf:nodeID="r11c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 2007 Gale Directory of &lt;b&gt;Databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r11c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r11c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r11c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r12">
+            <res:binding rdf:nodeID="r12c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.freebase.com/ns/guid.9202a8c04000641f80000000103f57d8"/></res:binding>
+            <res:binding rdf:nodeID="r12c1"><res:variable>c2</res:variable><res:value>Advances in &lt;b&gt;Databases&lt;/b&gt;: 18th British National Conference on &lt;b&gt;Databases&lt;/b&gt;, BNCOD 18 Chilton, UK, July 9 11,...</res:value></res:binding>
+            <res:binding rdf:nodeID="r12c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r12c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r12c4"><res:variable>g</res:variable><res:value rdf:resource="http://linkedlifedata.com/resource/freebase"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r13">
+            <res:binding rdf:nodeID="r13c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.0906kkv"/></res:binding>
+            <res:binding rdf:nodeID="r13c1"><res:variable>c2</res:variable><res:value>Online &lt;b&gt;Databases&lt;/b&gt;: September 1999 Gale Directory of &lt;b&gt;Databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r13c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r13c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r13c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r14">
+            <res:binding rdf:nodeID="r14c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.09z2nhb"/></res:binding>
+            <res:binding rdf:nodeID="r14c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; Gale Directory of &lt;b&gt;Databases&lt;/b&gt;, 2000.</res:value></res:binding>
+            <res:binding rdf:nodeID="r14c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r14c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r14c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r15">
+            <res:binding rdf:nodeID="r15c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.0906kkv"/></res:binding>
+            <res:binding rdf:nodeID="r15c1"><res:variable>c2</res:variable><res:value>Online &lt;b&gt;Databases&lt;/b&gt;: September 1999 Gale Directory of &lt;b&gt;Databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r15c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r15c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r15c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r16">
+            <res:binding rdf:nodeID="r16c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.09z2nhb"/></res:binding>
+            <res:binding rdf:nodeID="r16c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; Gale Directory of &lt;b&gt;Databases&lt;/b&gt;, 2000.</res:value></res:binding>
+            <res:binding rdf:nodeID="r16c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r16c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r16c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r17">
+            <res:binding rdf:nodeID="r17c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.09w9d13"/></res:binding>
+            <res:binding rdf:nodeID="r17c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 1996 Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 2v.</res:value></res:binding>
+            <res:binding rdf:nodeID="r17c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r17c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r17c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r18">
+            <res:binding rdf:nodeID="r18c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.09w9d13"/></res:binding>
+            <res:binding rdf:nodeID="r18c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 1996 Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 2v.</res:value></res:binding>
+            <res:binding rdf:nodeID="r18c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r18c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12589e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r18c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+        <res:solution rdf:nodeID="r19">
+            <res:binding rdf:nodeID="r19c0"><res:variable>c1</res:variable><res:value rdf:resource="http://rdf.basekb.com/ns/m.0b386sf"/></res:binding>
+            <res:binding rdf:nodeID="r19c1"><res:variable>c2</res:variable><res:value>Gale Directory of &lt;b&gt;Databases&lt;/b&gt; 2007 Gale Directory of &lt;b&gt;Databases&lt;/b&gt;.</res:value></res:binding>
+            <res:binding rdf:nodeID="r19c2"><res:variable>sc</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">NAN</res:value></res:binding>
+            <res:binding rdf:nodeID="r19c3"><res:variable>rank</res:variable><res:value datatype="http://www.w3.org/2001/XMLSchema#double">1.12588e-06</res:value></res:binding>
+            <res:binding rdf:nodeID="r19c4"><res:variable>g</res:variable><res:value rdf:resource="http://basekb.com/pro/"/></res:binding>
+        </res:solution>
+    </rdf:Description>
+</rdf:RDF>

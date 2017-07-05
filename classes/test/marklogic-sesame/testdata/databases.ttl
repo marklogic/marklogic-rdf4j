@@ -1,0 +1,127 @@
+@prefix res: <http://www.w3.org/2005/sparql-results#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+_:_ a res:ResultSet .
+_:_ res:resultVariable "c1" , "c2" , "sc" , "rank" , "g" .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.0b26fx8> ] ;
+      res:binding [ res:variable "c2" ; res:value "Online <b>Databases</b> Gale Directory of Online <b>Databases</b> 96." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.2999999999999998224 ] ;
+      res:binding [ res:variable "rank" ; res:value 0 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+@prefix ns1:	<http://linkedlifedata.com/resource/> .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://linkedlifedata.com/resource/pubmed/id/7938593> ] ;
+      res:binding [ res:variable "c2" ; res:value "Protein sequence <b>databases</b> and the related <b>databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.2999999999999998224 ] ;
+      res:binding [ res:variable "rank" ; res:value 0 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:pubmed ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.0b26fx8> ] ;
+      res:binding [ res:variable "c2" ; res:value "Online <b>Databases</b> Gale Directory of Online <b>Databases</b> 96." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.2999999999999998224 ] ;
+      res:binding [ res:variable "rank" ; res:value 0 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value "http://chem2bio2rdf.org/medline/resource/medline/7938593" ] ;
+      res:binding [ res:variable "c2" ; res:value "Protein sequence <b>databases</b> and the related <b>databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.2999999999999998224 ] ;
+      res:binding [ res:variable "rank" ; res:value 0 ] ;
+      res:binding [ res:variable "g" ; res:value <http://cheminfov.informatics.indiana.edu/download/> ] ] .
+@prefix ns2:	<http://purl.org/science/graph/medline/> .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://purl.org/commons/article/pmid/7938593> ] ;
+      res:binding [ res:variable "c2" ; res:value "Protein sequence <b>databases</b> and the related <b>databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.2999999999999998224 ] ;
+      res:binding [ res:variable "rank" ; res:value 0 ] ;
+      res:binding [ res:variable "g" ; res:value ns2:titles-years ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://linkedlifedata.com/resource/pubmed/id/16610138> ] ;
+      res:binding [ res:variable "c2" ; res:value "DoD: Database of <b>Databases</b> updated molecular biology <b>databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1259127277801419024e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:pubmed ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://linkedlifedata.com/resource/pubmed/id/15488697> ] ;
+      res:binding [ res:variable "c2" ; res:value "National <b>databases</b> and rheumatology research I: longitudinal <b>databases</b> in Scandinavia." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1259011010969159882e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:pubmed ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f800000001258fb92> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b>: Volume 1: Online <b>Databases</b>, January 1995." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864546668600198e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000013b4b023> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> 1996 Gale Directory of <b>Databases</b> 2v." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864546668600198e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f800000001203463a> ] ;
+      res:binding [ res:variable "c2" ; res:value "Online <b>Databases</b>: September 1999 Gale Directory of <b>Databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864546668600198e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000013e151ea> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> Gale Directory of <b>Databases</b>, 2000." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864378898446637e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000014341b0d> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> 2007 Gale Directory of <b>Databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864378898446637e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.freebase.com/ns/guid.9202a8c04000641f80000000103f57d8> ] ;
+      res:binding [ res:variable "c2" ; res:value "Advances in <b>Databases</b>: 18th British National Conference on <b>Databases</b>, BNCOD 18 Chilton, UK, July 9 11,..." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258864043358145869e-06 ] ;
+      res:binding [ res:variable "g" ; res:value ns1:freebase ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.0906kkv> ] ;
+      res:binding [ res:variable "c2" ; res:value "Online <b>Databases</b>: September 1999 Gale Directory of <b>Databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.09z2nhb> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> Gale Directory of <b>Databases</b>, 2000." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.0906kkv> ] ;
+      res:binding [ res:variable "c2" ; res:value "Online <b>Databases</b>: September 1999 Gale Directory of <b>Databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.09z2nhb> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> Gale Directory of <b>Databases</b>, 2000." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.09w9d13> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> 1996 Gale Directory of <b>Databases</b> 2v." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.09w9d13> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> 1996 Gale Directory of <b>Databases</b> 2v." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258854648233639768e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .
+_:_ res:solution [
+      res:binding [ res:variable "c1" ; res:value <http://rdf.basekb.com/ns/m.0b386sf> ] ;
+      res:binding [ res:variable "c2" ; res:value "Gale Directory of <b>Databases</b> 2007 Gale Directory of <b>Databases</b>." ] ;
+      res:binding [ res:variable "sc" ; res:value 6.0 ] ;
+      res:binding [ res:variable "rank" ; res:value 1.1258846763045904958e-06 ] ;
+      res:binding [ res:variable "g" ; res:value <http://basekb.com/pro/> ] ] .

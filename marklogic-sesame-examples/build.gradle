@@ -1,0 +1,74 @@
+// example marklogic-sesame project.  Uses your local maven repository
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {url "http://developer.marklogic.com/maven2/"}
+        flatDir {
+            dirs '/Users/asonvane/Documents/marklogic-rdf4j/classes/artifacts/marklogic_sesame_jar/marklogic-sesame.jar'
+        }
+    }
+}
+// this directive should be uncommented for development environments
+// otherwise the examples can run from centrally distributed marklogic-jena
+evaluationDependsOn(":marklogic-sesame")
+
+apply plugin: 'idea'
+apply plugin: 'java'
+
+configure(allprojects){
+    ext.slf4jVersion = '1.7.2'
+    ext.logbackVersion = '1.0.9'
+}
+
+dependencies {
+  compile('com.marklogic:marklogic-sesame:2.0.0'){
+      changing=true
+      exclude(group: 'org.slf4j')
+      exclude(group: 'log4j')
+      exclude(group: 'ch.qos.logback')
+  }
+    compile('org.slf4j:slf4j-api:1.7.10')
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
+    compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+
+}
+
+sourceSets {
+  src {
+    java {
+      srcDir 'src/main/java'
+    }
+  }
+}
+
+configurations {
+    compile {
+        description = 'compile classpath'
+        transitive = true
+    }
+    runtime {
+        extendsFrom compile
+    }
+}
+
+compileJava.dependsOn ":marklogic-sesame:install"
+
+task runExample1(type: JavaExec, dependsOn: 'classes') {
+    main = 'com.marklogic.semantics.sesame.examples.Example1_Simple'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runExample2(type: JavaExec, dependsOn: 'classes') {
+    main = 'com.marklogic.semantics.sesame.examples.Example2_Advanced'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runExample3(type: JavaExec, dependsOn: 'classes') {
+    main = 'com.marklogic.semantics.sesame.examples.Example3_Other'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runExample4(type: JavaExec, dependsOn: 'classes') {
+    main = 'com.marklogic.semantics.sesame.examples.Example4_Load_Triples'
+    classpath = sourceSets.main.runtimeClasspath
+}

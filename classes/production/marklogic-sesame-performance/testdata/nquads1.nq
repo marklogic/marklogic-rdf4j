@@ -1,0 +1,4 @@
+<http://example.org/kennedy/person1> <http://example.org/kennedy/alma-mater> <http://example.org/kennedy/Harvard> <http://example.org/graph1> .
+<http://example.org/kennedy/person1> <http://example.org/kennedy/birth-place> <http://example.org/kennedy/place5> <http://example.org/graph2> .
+<http://example.org/kennedy/person1> <http://example.org/kennedy/birth-year> "1888" <http://example.org/graph3> .
+<http://example.org/kennedy/person1> <http://example.org/kennedy/death-year> "1969" <http://example.org/graph4> .
