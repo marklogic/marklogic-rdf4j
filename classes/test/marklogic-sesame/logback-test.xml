@@ -13,7 +13,7 @@
         <appender-ref ref="BUFFER" />
     </logger>
 
-    <logger name="com.marklogic.semantics.sesame.client.*" level="DEBUG" additivity="false">
+    <logger name="com.marklogic.semantics.rdf4j.client.*" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
