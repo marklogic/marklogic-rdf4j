@@ -18,7 +18,7 @@ package com.marklogic.semantics.rdf4j.examples;
 import com.marklogic.semantics.sesame.MarkLogicRepository;
 import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
 import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -50,7 +50,7 @@ public class Example4_Load_Triples {
     }
 
     public void loadTriples() throws RepositoryException {
-        URI graph = new URIImpl("urn:test");
+        IRI graph = new URIImpl("urn:test");
         int docSize = 100000;
 
         conn.configureWriteCache(750,750,600); // customise write cache (initDelay interval, delayCache interval, cache size)

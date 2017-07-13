@@ -20,10 +20,7 @@
 package com.marklogic.semantics.rdf4j.client;
 
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.UpdateExecutionException;
@@ -176,7 +173,7 @@ public abstract class TripleCache extends TimerTask {
      * @param object
      * @param contexts
      */
-    public synchronized void add(Resource subject, URI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
+    public synchronized void add(Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
         cache.add(subject,predicate,object,contexts);
         if( cache.size() > cacheSize - 1){
             forceRun();

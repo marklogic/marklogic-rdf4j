@@ -20,10 +20,7 @@
 package com.marklogic.semantics.rdf4j;
 
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
@@ -86,12 +83,12 @@ public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {
 
         MarkLogicRepositoryConnection other= writerRep.getConnection();
 
-        Resource context5 = conn.getValueFactory().createURI("http://marklogic.com/test/context5");
+        Resource context5 = conn.getValueFactory().createIRI("http://marklogic.com/test/context5");
 
         ValueFactory vf= conn.getValueFactory();
-        URI fei = vf.createURI("http://marklogicsparql.com/id#3333");
-        URI lname = vf.createURI("http://marklogicsparql.com/addressbook#lastName");
-        URI age = vf.createURI("http://marklogicsparql.com/addressbook#age");
+        IRI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
         Literal feilname = vf.createLiteral("Ling", "nonexistentlangtag");
         Literal feiage = vf.createLiteral(25);
 
@@ -124,11 +121,11 @@ public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {
             throws Exception
     {
 
-        Resource context5 = conn.getValueFactory().createURI("http://marklogic.com/test/context5");
+        Resource context5 = conn.getValueFactory().createIRI("http://marklogic.com/test/context5");
 
         ValueFactory vf= conn.getValueFactory();
-        URI fei = vf.createURI("http://marklogicsparql.com/id#3333");
-        URI age = vf.createURI("http://marklogicsparql.com/addressbook#age");
+        IRI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
         Literal feiage = vf.createLiteral(25);
 
         conn.setIsolationLevel(IsolationLevels.SNAPSHOT);
@@ -145,13 +142,13 @@ public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {
             throws Exception
     {
 
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/test/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/test/context2");
 
         ValueFactory vf= conn.getValueFactory();
-        URI gary = vf.createURI("http://marklogicsparql.com/id#3333");
-        URI age = vf.createURI("http://marklogicsparql.com/addressbook#age");
-        URI gender = vf.createURI("http://marklogicsparql.com/addressbook#gender");
+        IRI gary = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
+        IRI gender = vf.createIRI("http://marklogicsparql.com/addressbook#gender");
 
         Literal garyage = vf.createLiteral(25);
         Literal garygender = vf.createLiteral("male");

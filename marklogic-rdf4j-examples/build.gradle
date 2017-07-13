@@ -1,4 +1,4 @@
-// example marklogic-sesame project.  Uses your local maven repository
+// example marklogic-rd4j project.  Uses your local maven repository
 buildscript {
     repositories {
         mavenCentral()

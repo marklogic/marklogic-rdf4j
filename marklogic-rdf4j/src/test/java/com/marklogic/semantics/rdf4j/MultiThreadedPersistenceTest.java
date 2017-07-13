@@ -16,7 +16,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -270,42 +270,42 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
     }
 
     private List<Entity> entitiesFor(String identifier) {
-        ValueFactoryImpl vf = ValueFactoryImpl.getInstance();
+        SimpleValueFactory vf = SimpleValueFactory.getInstance();
 
         Collection<Statement> statements = asList(
                 vf.createStatement(
-                        vf.createURI("http://" + identifier),
-                        vf.createURI("http://predicate/a"),
+                        vf.createIRI("http://" + identifier),
+                        vf.createIRI("http://predicate/a"),
                         vf.createLiteral("object value a")
                 ),
                 vf.createStatement(
-                        vf.createURI("http://" + identifier),
-                        vf.createURI("http://predicate/b"),
+                        vf.createIRI("http://" + identifier),
+                        vf.createIRI("http://predicate/b"),
                         vf.createLiteral("object value b")
                 ),
                 vf.createStatement(
-                        vf.createURI("http://" + identifier),
-                        vf.createURI("http://predicate/c"),
+                        vf.createIRI("http://" + identifier),
+                        vf.createIRI("http://predicate/c"),
                         vf.createLiteral("object value c")
                 )
         );
-        Resource[] graphs = new Resource[]{vf.createURI("http://foo/graph/" + identifier)};
+        Resource[] graphs = new Resource[]{vf.createIRI("http://foo/graph/" + identifier)};
         Entity entity = new Entity(statements, graphs);
 
 
         Collection<Statement> graphStatements = asList(
                 vf.createStatement(
-                        vf.createURI("http://foo/graph/" + identifier),
-                        vf.createURI("http://graph/timestamp"),
+                        vf.createIRI("http://foo/graph/" + identifier),
+                        vf.createIRI("http://graph/timestamp"),
                         vf.createLiteral(System.currentTimeMillis())
                 ),
                 vf.createStatement(
-                        vf.createURI("http://foo/graph/" + identifier),
-                        vf.createURI("http://graph/version"),
+                        vf.createIRI("http://foo/graph/" + identifier),
+                        vf.createIRI("http://graph/version"),
                         vf.createLiteral("the graph version")
                 )
         );
-        Resource[] graphContext = new Resource[]{vf.createURI("http://graph/meta")};
+        Resource[] graphContext = new Resource[]{vf.createIRI("http://graph/meta")};
         Entity entity1 = new Entity(graphStatements, graphContext);
 
         return asList(entity, entity1);

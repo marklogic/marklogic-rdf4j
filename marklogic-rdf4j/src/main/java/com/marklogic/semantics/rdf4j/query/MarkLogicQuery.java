@@ -26,7 +26,8 @@ import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClientDependent;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.Dataset;
 import org.eclipse.rdf4j.query.Query;
 import org.eclipse.rdf4j.query.impl.AbstractQuery;
@@ -138,7 +139,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
      * @param stringValue
      */
     public void setBinding(String name, String stringValue) {
-        bindingSet.addBinding(name, ValueFactoryImpl.getInstance().createURI(stringValue));
+        bindingSet.addBinding(name, SimpleValueFactory.getInstance().createIRI(stringValue));
     }
 
     /**

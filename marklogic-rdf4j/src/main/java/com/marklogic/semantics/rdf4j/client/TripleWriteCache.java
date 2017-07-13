@@ -87,10 +87,10 @@ public class TripleWriteCache extends TripleCache {
                         entireQuery.append("\"");
                         entireQuery.append(SPARQLUtil.encodeString(lit.getLabel()));
                         entireQuery.append("\"");
-                        if(null == lit.getLanguage()) {
+                        if(null == lit.getLanguage().orElse(null)) {
                             entireQuery.append("^^<" + lit.getDatatype().stringValue() + ">");
                         }else{
-                            entireQuery.append("@" + lit.getLanguage().toString());
+                            entireQuery.append("@" + lit.getLanguage().orElse(null));
                         }
                     } else {
                         if (stmt.getObject() instanceof org.eclipse.rdf4j.model.BNode) {

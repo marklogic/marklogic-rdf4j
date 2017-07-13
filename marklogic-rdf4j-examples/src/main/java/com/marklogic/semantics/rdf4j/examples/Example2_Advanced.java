@@ -30,7 +30,7 @@ import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.sesame.query.MarkLogicTupleQuery;
 import com.marklogic.semantics.sesame.query.MarkLogicUpdateQuery;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -76,11 +76,11 @@ public class Example2_Advanced {
         logger.info("1. number of triples: {}", conn.size());
 
         // add a few constructed triples
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/examples/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/examples/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
         ValueFactory f= conn.getValueFactory();
         String namespace = "http://example.org/";
-        URI john = f.createURI(namespace, "john");
+        IRI john = f.createIRI(namespace, "john");
 
         //use transactions to add triple statements
         conn.begin();

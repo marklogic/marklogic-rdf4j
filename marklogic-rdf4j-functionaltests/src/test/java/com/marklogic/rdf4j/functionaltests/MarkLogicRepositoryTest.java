@@ -1,19 +1,16 @@
-package com.marklogic.sesame.functionaltests;
+package com.marklogic.rdf4j.functionaltests;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -23,7 +20,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryConfig;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryFactory;
-import com.marklogic.sesame.functionaltests.util.ConnectedRESTQA;
+import com.marklogic.rdf4j.functionaltests.util.ConnectedRESTQA;
 
 /**
  * Integration test suite for implementations of Repository.
@@ -33,24 +30,38 @@ import com.marklogic.sesame.functionaltests.util.ConnectedRESTQA;
 public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
 	private static MarkLogicRepository testRepository;
 	private static ValueFactory vf ;
+	private static String[] hostNames;
 	private static MarkLogicRepositoryConnection testConn;
-	private static int restPort = 8024;
+	private static int restPort = 8000;
 	private static String host = "localhost";
 	private static String dbName = "MLSesameRep";
-	private static String [] fNames = {"MLSesameRep-1"};
-	private static String restServer = "REST-MLSesame-Rep-API-Server";
+	private static String restServer = "App-Services";
 	
 	@BeforeClass
-	public static void initialSetup() throws Exception {			
-		setupJavaRESTServer(dbName, fNames[0], restServer, restPort);
-		setupAppServicesConstraint(dbName);
+	public static void initialSetup() throws Exception {
+        hostNames = getHosts();
+        createDB(dbName);
+        Thread.currentThread().sleep(500L);
+        int count = 1;
+        for ( String forestHost : hostNames ) {
+            createForestonHost(dbName+"-"+count,dbName,forestHost);
+            count ++;
+            Thread.currentThread().sleep(500L);
+        }
+        associateRESTServerWithDB(restServer,dbName);
 		enableCollectionLexicon(dbName);
 		enableTripleIndex(dbName);		
 	}
 	
 	@AfterClass
 	public static void tearDownSetup() throws Exception  {
-		tearDownJavaRESTServer(dbName, fNames, restServer);
+        associateRESTServerWithDB(restServer,"Documents");
+        for (int i =0 ; i < hostNames.length; i++){
+            detachForest(dbName, dbName+"-"+(i+1));
+            deleteForest(dbName+"-"+(i+1));
+        }
+
+        deleteDB(dbName);
 		
 	}
 	
@@ -101,8 +112,8 @@ public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
 
 		testConn = testRepository.getConnection();
 		try {
-			Resource s = vf.createURI("http://a");
-			URI p = vf.createURI("http://b");
+			Resource s = vf.createIRI("http://a");
+			IRI p = vf.createIRI("http://b");
 			Value o =vf.createLiteral("c");
 			testConn.add(s,p,o);
 			assertTrue(testConn.hasStatement(s,p,o, true));
@@ -135,7 +146,7 @@ public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
     	testConn = testRepository.getConnection();
         Assert.assertTrue(testRepository.getDataDir() == null);
         Assert.assertTrue(testRepository.isWritable());
-        Assert.assertTrue(testRepository.getValueFactory() instanceof ValueFactoryImpl);
+        Assert.assertTrue(testRepository.getValueFactory() instanceof SimpleValueFactory);
     }
 	
 	

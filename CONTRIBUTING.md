@@ -1,6 +1,6 @@
-# Contributing to marklogic-sesame-repository
+# Contributing to marklogic-rdf4j
 
-The marklogic-sesame-repository welcomes new contributors. This document will guide you
+The marklogic-rdf4j welcomes new contributors. This document will guide you
 through the process.
 
  - [Question or Problem?](#question)
@@ -10,7 +10,7 @@ through the process.
 
 ## <a name="question"></a> Got a Question or Problem?
 
-If you have questions about how to use the marklogic-sesame-repository, you can ask on
+If you have questions about how to use the marklogic-rdf4j, you can ask on
 [StackOverflow](http://stackoverflow.com/tags/marklogic) or [MarkLogic mailing list](http://markmail.org/search/marklogic+list:com.marklogic.developer.general), tagging the
 question with MarkLogic.
 
@@ -49,14 +49,14 @@ to what might be causing the problem (line of code or commit)
 Before we can accept your pull request, we need you to sign the
 [Contributor License Agreement](http://developer.marklogic.com/products/cla).
 
-#### Forking marklogic-sesame-repository
+#### Forking marklogic-rdf4j
 
-Fork the project [on GitHub](https://github.com/marklogic/marklogic-sesame/fork)
+Fork the project [on GitHub](https://github.com/marklogic/marklogic-rdf4j/fork)
 and clone your copy.
 
-    $ git clone git@github.com:username/marklogic-sesame.git
-    $ cd marklogic-sesame
-    $ git remote add upstream git://github.com/marklogic/marklogic-sesame.git
+    $ git clone git@github.com:username/marklogic-rdf4j.git
+    $ cd marklogic-rdf4j
+    $ git remote add upstream git://github.com/marklogic/marklogic-rdf4j.git
 
 All bug fixes and new features go into the `develop` branch.
 
@@ -128,7 +128,7 @@ If you implement a new feature, please include unit tests for that feature.
 
 #### Submit the pull request
 
-Go to https://github.com/username/marklogic-sesame and select your feature
+Go to https://github.com/username/marklogic-rdf4j and select your feature
 branch. Click the 'Pull Request' button and fill out the form.
 
 Pull requests are usually reviewed within a few days. If you get comments that

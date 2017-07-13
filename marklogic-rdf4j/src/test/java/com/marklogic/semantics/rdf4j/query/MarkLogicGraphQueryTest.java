@@ -129,6 +129,8 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
         Assert.assertEquals("http://marklogic.com/test/baseuri/relative", st2.getObject().stringValue());
         results.close();
     }
+
+    @Ignore
     @Test
     public void testGraphQueryWithBaseURIWithEmptyBaseURI()
             throws Exception {
@@ -179,12 +181,12 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
     @Test
     public void testPrepareGraphQueryWithSingleResult() throws Exception
     {
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createURI("http://example.org/people/alice");
-        URI name = f.createURI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName);

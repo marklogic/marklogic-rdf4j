@@ -84,7 +84,7 @@ public class MarkLogicUpdateQueryTest extends Rdf4jTestBase {
         BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkQuery);
         boolean results = booleanQuery.evaluate();
         Assert.assertEquals(true, results);
-        conn.clear(conn.getValueFactory().createURI("http://marklogic.com/test/g27"));
+        conn.clear(conn.getValueFactory().createIRI("http://marklogic.com/test/g27"));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class MarkLogicUpdateQueryTest extends Rdf4jTestBase {
         BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkQuery,"http://marklogic.com/test/baseuri");
         boolean results = booleanQuery.evaluate();
         Assert.assertEquals(true, results);
-        conn.clear(conn.getValueFactory().createURI("http://marklogic.com/example/context1"));
+        conn.clear(conn.getValueFactory().createIRI("http://marklogic.com/example/context1"));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class MarkLogicUpdateQueryTest extends Rdf4jTestBase {
         BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkQuery);
         boolean results = booleanQuery.evaluate();
         Assert.assertEquals(true, results);
-        conn.clear(conn.getValueFactory().createURI("http://marklogic.com/test/context10"));
+        conn.clear(conn.getValueFactory().createIRI("http://marklogic.com/test/context10"));
     }
 
     @Test(expected=org.eclipse.rdf4j.query.UpdateExecutionException.class)

@@ -102,7 +102,7 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
     public void testAddMalformedTurtle() throws Exception {
         File inputFile = new File("src/test/resources/testdata/malformed-literals.ttl");
         String baseURI = "http://example.org/example1/";
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         exception.expect(RDFParseException.class);
         conn.add(inputFile, baseURI, RDFFormat.TURTLE, context1);
         conn.clear(context1);
@@ -113,7 +113,7 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
         FileInputStream is = new FileInputStream(inputFile);
         String baseURI = "http://example.org/example1/";
         exception.expect(RDFParseException.class);
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context3");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context3");
         conn.add(is, baseURI, RDFFormat.TURTLE, context1);
         conn.clear(context1);
     }
@@ -139,8 +139,8 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
         File inputFile = new File("src/test/resources/testdata/default-graph-1.ttl");
         FileInputStream is = new FileInputStream(inputFile);
         String baseURI = "http://example.org/example1/";
-        Resource context3 = conn.getValueFactory().createURI("http://marklogic.com/test/context3");
-        Resource context4 = conn.getValueFactory().createURI("http://marklogic.com/test/context4");
+        Resource context3 = conn.getValueFactory().createIRI("http://marklogic.com/test/context3");
+        Resource context4 = conn.getValueFactory().createIRI("http://marklogic.com/test/context4");
         conn.add(is, baseURI, RDFFormat.TURTLE, context3); // TBD - add multiple context
         conn.clear(context3, context4); // ensure we throw error as context not defined
     }
@@ -149,7 +149,7 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
     @Test
     public void testTransaction3() throws Exception {
         exception.expect(ResourceNotFoundException.class);
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/my-graph");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/my-graph");
         conn.begin();
         conn.clear(context1);
         conn.rollback();
@@ -176,7 +176,7 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
     public void testAddingIfClosed() throws Exception {
         File inputFile = new File("src/test/resources/testdata/default-graph-1.ttl");
         String baseURI = "http://example.org/example1/";
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         exception.expect(RepositoryException.class);
         conn.close();
         conn.add(inputFile, baseURI, RDFFormat.TURTLE, context1);

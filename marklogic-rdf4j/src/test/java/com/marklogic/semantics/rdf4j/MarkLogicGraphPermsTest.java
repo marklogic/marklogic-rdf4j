@@ -101,7 +101,7 @@ public class MarkLogicGraphPermsTest extends Rdf4jTestBase {
             throws Exception {
 
         GraphManager gmgr = adminClient.newGraphManager();
-        Resource context = conn.getValueFactory().createURI("http://marklogic.com/test/graph/permstest");
+        Resource context = conn.getValueFactory().createIRI("http://marklogic.com/test/graph/permstest");
 
         String defGraphQuery = "INSERT DATA { GRAPH <http://marklogic.com/test/graph/permstest> { <http://marklogic.com/test> <pp1> <oo1> } }";
         String checkQuery = "ASK WHERE {  GRAPH <http://marklogic.com/test/graph/permstest> {<http://marklogic.com/test> <pp1> <oo1> }}";
@@ -129,7 +129,7 @@ public class MarkLogicGraphPermsTest extends Rdf4jTestBase {
         conn.setDefaultGraphPerms(gmgr.permission("app-user", Capability.READ));
 
 
-        Resource context = conn.getValueFactory().createURI("http://marklogic.com/test/graph/permstest");
+        Resource context = conn.getValueFactory().createIRI("http://marklogic.com/test/graph/permstest");
 
         String defGraphQuery = "INSERT DATA { GRAPH <http://marklogic.com/test/graph/permstest> { <http://marklogic.com/test> <pp1> <oo1> } }";
         String checkQuery = "ASK WHERE {  GRAPH <http://marklogic.com/test/graph/permstest> {<http://marklogic.com/test> <pp1> <oo1> }}";
