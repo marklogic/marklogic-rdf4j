@@ -292,7 +292,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      * It is best practice to reuse a single connection to a
      * single MarkLogic database to take advantage of connection
      * pooling capabilities built into java api client (which is a
-     * dependency within marklogic-sesame).
+     * dependency within marklogic-rdf4j).
      *
      * @return MarkLogicRepositoryConnection
      * @throws RepositoryException
