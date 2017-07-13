@@ -21,15 +21,13 @@ package com.marklogic.semantics.rdf4j.config;
 
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.Rdf4jTestBase;
+import org.eclipse.rdf4j.model.*;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
@@ -50,12 +48,40 @@ import static com.marklogic.semantics.rdf4j.Rdf4jTestBase.*;
  *
  * @author James Fuller
  */
-public class MarkLogicRepositoryManagerTest {
+public class MarkLogicRepositoryManagerTest extends Rdf4jTestBase{
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
+    @Ignore
+    @Test
+    // requires a RDF4J server to be running eg. RemoteRepositoryManager uses HTTPRepository
+    public void testRemoteManager() throws Exception {
+        RepositoryManager manager;
+        manager = new RemoteRepositoryManager("http://localhost:8080/eclipse.rdf4j-sesame");
+        manager.initialize();
+        RepositoryConfig mlconf = new RepositoryConfig("remotetest",new MarkLogicRepositoryConfig("localhost", 8200, "admin", "admin", "DIGEST"));
+
+        manager.addRepositoryConfig((RepositoryConfig) mlconf);
+
+        Repository mlrepo = manager.getRepository("remotetest");
+
+        mlrepo.initialize();
+        RepositoryConnection mlconn = mlrepo.getConnection();
+
+        ValueFactory vf = mlconn.getValueFactory();
+        IRI tommy = vf.createIRI("http://marklogicsparql.com/id#4444");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
+        Literal tommylname = vf.createLiteral("Ramone");
+        Statement stmt = vf.createStatement(tommy, lname, tommylname);
+        mlconn.begin();
+        mlconn.add(stmt);
+        mlconn.commit();
+
+        mlconn.clear();
+    }
 
     @Test
     public void testLocalManager() throws Exception {
@@ -72,42 +98,14 @@ public class MarkLogicRepositoryManagerTest {
         mlrepo.initialize();
         MarkLogicRepositoryConnection mlconn = mlrepo.getConnection();
         ValueFactory vf = mlconn.getValueFactory();
-        URI tommy = vf.createURI("http://marklogicsparql.com/id#4444");
-        URI lname = vf.createURI("http://marklogicsparql.com/addressbook#lastName");
+        IRI tommy = vf.createIRI("http://marklogicsparql.com/id#4444");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
         Literal tommylname = vf.createLiteral("Ramone");
         Statement stmt = vf.createStatement(tommy, lname, tommylname);
         mlconn.begin();
         mlconn.add(stmt);
         mlconn.commit();
         Assert.assertEquals(1, mlconn.size());
-
-        mlconn.clear();
-    }
-
-    @Ignore
-    @Test
-    // requires a Sesame server to be running eg. RemoteRepositoryManager uses HTTPRepository
-    public void testRemoteManager() throws Exception {
-        RepositoryManager manager;
-        manager = new RemoteRepositoryManager("http://localhost:8080/eclipse.rdf4j-sesame");
-        manager.initialize();
-        RepositoryConfig mlconf = new RepositoryConfig("remotetest",new MarkLogicRepositoryConfig("localhost", 8200, "admin", "admin", "DIGEST"));
-
-        manager.addRepositoryConfig((RepositoryConfig) mlconf);
-
-        Repository mlrepo = manager.getRepository("remotetest");
-
-        mlrepo.initialize();
-        RepositoryConnection mlconn = mlrepo.getConnection();
-
-        ValueFactory vf = mlconn.getValueFactory();
-        URI tommy = vf.createURI("http://marklogicsparql.com/id#4444");
-        URI lname = vf.createURI("http://marklogicsparql.com/addressbook#lastName");
-        Literal tommylname = vf.createLiteral("Ramone");
-        Statement stmt = vf.createStatement(tommy, lname, tommylname);
-        mlconn.begin();
-        mlconn.add(stmt);
-        mlconn.commit();
 
         mlconn.clear();
     }

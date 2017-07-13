@@ -1142,9 +1142,9 @@ conn.sync();
             throws RDF4JException
     {
         ValueFactory vf= conn.getValueFactory();
-        URI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
-        URI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
-        URI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
+        IRI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
 
         Literal feilname = vf.createLiteral("Ling", "zh");
         //Literal shouldfail = vf.createLiteral(1, "zh");
@@ -1166,9 +1166,9 @@ conn.sync();
             throws RDF4JException
     {
         ValueFactory vf= conn.getValueFactory();
-        URI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
-        URI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
-        URI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
+        IRI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
         Literal feilname = vf.createLiteral("Ling", "nonexistentlangtag");
         conn.add(fei, lname, feilname);
     }

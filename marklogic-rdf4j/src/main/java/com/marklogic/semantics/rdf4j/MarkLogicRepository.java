@@ -26,7 +26,6 @@ import com.marklogic.semantics.rdf4j.client.MarkLogicClientDependent;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.query.algebra.Str;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.base.AbstractRepository;
@@ -357,11 +356,16 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      * @param auth
      * @return DatabaseClient
      */
-    private DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
+    private DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth, String... cert) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
         Authentication type;
+        String certFile;
+        String certPassword;
+
         if(auth != null)
         {
             type = Authentication.valueOfUncased(auth);
+            certFile = cert.length > 0 ? cert[0] : "";
+            certPassword = cert.length > 1 ? cert[1] : "";
 
             if(type == Authentication.BASIC)
             {
@@ -378,7 +382,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
             else if(type == Authentication.CERTIFICATE)
             {
                 //TODO: change parameters
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.CertificateAuthContext(user, password));
+                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.CertificateAuthContext(certFile, certPassword));
             }
         }
 

@@ -20,10 +20,12 @@
 package com.marklogic.semantics.rdf4j.config;
 
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
 import org.eclipse.rdf4j.model.util.GraphUtil;
 import org.eclipse.rdf4j.model.util.GraphUtilException;
+import org.eclipse.rdf4j.repository.config.AbstractRepositoryImplConfig;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
 import org.eclipse.rdf4j.repository.config.RepositoryImplConfigBase;
 import org.slf4j.Logger;
@@ -34,16 +36,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Fuller
  */
-public class MarkLogicRepositoryConfig extends RepositoryImplConfigBase {
+public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(MarkLogicRepositoryConfig.class);
 
-    public static final ValueFactory vf= new ValueFactoryImpl();
+    public static final ValueFactory vf= SimpleValueFactory.getInstance();
 
-    public static final IRI QUERY_ENDPOINT = new URIImpl(
+    public static final IRI QUERY_ENDPOINT = vf.createIRI(
             "http://www.marklogic.com/v1/graphs/sparql");
 
-    public static final IRI UPDATE_ENDPOINT = new URIImpl(
+    public static final IRI UPDATE_ENDPOINT = vf.createIRI(
             "http://www.marklogic.com/v1/graphs");
 
 	private String queryEndpointUrl;
@@ -204,10 +206,10 @@ public class MarkLogicRepositoryConfig extends RepositoryImplConfigBase {
 
 		ValueFactory vf = graph.getValueFactory();
 		if (getQueryEndpointUrl() != null) {
-			graph.add(implNode, QUERY_ENDPOINT, vf.createURI(getQueryEndpointUrl()));
+			graph.add(implNode, QUERY_ENDPOINT, vf.createIRI(getQueryEndpointUrl()));
 		}
 		if (getUpdateEndpointUrl() != null) {
-			graph.add(implNode, UPDATE_ENDPOINT, vf.createURI(getUpdateEndpointUrl()));
+			graph.add(implNode, UPDATE_ENDPOINT, vf.createIRI(getUpdateEndpointUrl()));
 		}
 
 		return implNode;

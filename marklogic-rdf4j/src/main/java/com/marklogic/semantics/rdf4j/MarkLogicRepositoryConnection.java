@@ -31,6 +31,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.impl.DatasetImpl;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.query.parser.sparql.SPARQLUtil;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -1415,15 +1416,15 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             query.setBinding("o", obj);
         }
         if (contexts != null && contexts.length > 0) {
-            DatasetImpl dataset = new DatasetImpl();
+            SimpleDataset dataset = new SimpleDataset();
             if(notNull(contexts)){
-            for (int i = 0; i < contexts.length; i++) {
-                if (notNull(contexts[i]) || contexts[i] instanceof URI) {
-                    dataset.addDefaultGraph((IRI) contexts[i]);
-                } else {
-                    dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
+                for (Resource context : contexts) {
+                    if (notNull(context) || context instanceof IRI) {
+                        dataset.addDefaultGraph((IRI) context);
+                    } else {
+                        dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
+                    }
                 }
-            }
             }else{
                 dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
             }

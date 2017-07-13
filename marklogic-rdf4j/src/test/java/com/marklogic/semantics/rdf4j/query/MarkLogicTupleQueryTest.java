@@ -23,6 +23,7 @@ import java.util.List;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import org.eclipse.rdf4j.common.iteration.ConvertingIteration;
 import org.eclipse.rdf4j.common.iteration.ExceptionConvertingIteration;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -451,6 +452,7 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         SPARQLResultsXMLWriter sparqlWriter = new SPARQLResultsXMLWriter(out);
+        sparqlWriter.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
 
         String expected = "<?xml version='1.0' encoding='UTF-8'?>\n" +
                 "<sparql xmlns='http://www.w3.org/2005/sparql-results#'>\n" +
@@ -478,7 +480,6 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
         tupleQuery.evaluate(sparqlWriter);
-
         Assert.assertEquals(expected, out.toString());
 
     }

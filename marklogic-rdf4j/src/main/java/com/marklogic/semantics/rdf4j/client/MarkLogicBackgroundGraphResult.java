@@ -15,10 +15,10 @@
  */
 package com.marklogic.semantics.rdf4j.client;
 
-import org.eclipse.rdf4j.http.client.BackgroundGraphResult;
-import org.eclipse.rdf4j.http.client.QueueCursor;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.impl.BackgroundGraphResult;
+import org.eclipse.rdf4j.query.impl.QueueCursor;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

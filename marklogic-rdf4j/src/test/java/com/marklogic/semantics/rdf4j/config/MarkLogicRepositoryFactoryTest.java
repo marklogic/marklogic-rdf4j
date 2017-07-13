@@ -20,6 +20,7 @@
 package com.marklogic.semantics.rdf4j.config;
 
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.Rdf4jTestBase;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import static com.marklogic.semantics.rdf4j.Rdf4jTestBase.*;
  *
  * @author James Fuller
  */
-public class MarkLogicRepositoryFactoryTest {
+public class MarkLogicRepositoryFactoryTest extends Rdf4jTestBase {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 

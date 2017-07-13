@@ -1,5 +1,5 @@
 {
-    "server-name": "sesame-test",
+    "server-name": "rdf4j-test",
     "group-name": "Default",
     "server-type": "http",
     "enabled": true,
@@ -61,7 +61,7 @@
     "ssl-hostname": "",
     "ssl-ciphers": "ALL:!LOW:@STRENGTH",
     "ssl-require-client-certificate": true,
-    "content-database": "marklogic-sesame-test-content",
+    "content-database": "marklogic-rdf4j-test-content",
     "modules-database": "Modules",
     "default-user": "nobody"
 }

@@ -33,24 +33,38 @@ import com.marklogic.sesame.functionaltests.util.ConnectedRESTQA;
 public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
 	private static MarkLogicRepository testRepository;
 	private static ValueFactory vf ;
+	private static String[] hostNames;
 	private static MarkLogicRepositoryConnection testConn;
-	private static int restPort = 8024;
+	private static int restPort = 8000;
 	private static String host = "localhost";
 	private static String dbName = "MLSesameRep";
-	private static String [] fNames = {"MLSesameRep-1"};
-	private static String restServer = "REST-MLSesame-Rep-API-Server";
+	private static String restServer = "App-Services";
 	
 	@BeforeClass
-	public static void initialSetup() throws Exception {			
-		setupJavaRESTServer(dbName, fNames[0], restServer, restPort);
-		setupAppServicesConstraint(dbName);
+	public static void initialSetup() throws Exception {
+        hostNames = getHosts();
+        createDB(dbName);
+        Thread.currentThread().sleep(500L);
+        int count = 1;
+        for ( String forestHost : hostNames ) {
+            createForestonHost(dbName+"-"+count,dbName,forestHost);
+            count ++;
+            Thread.currentThread().sleep(500L);
+        }
+        associateRESTServerWithDB(restServer,dbName);
 		enableCollectionLexicon(dbName);
 		enableTripleIndex(dbName);		
 	}
 	
 	@AfterClass
 	public static void tearDownSetup() throws Exception  {
-		tearDownJavaRESTServer(dbName, fNames, restServer);
+        associateRESTServerWithDB(restServer,"Documents");
+        for (int i =0 ; i < hostNames.length; i++){
+            detachForest(dbName, dbName+"-"+(i+1));
+            deleteForest(dbName+"-"+(i+1));
+        }
+
+        deleteDB(dbName);
 		
 	}
 	

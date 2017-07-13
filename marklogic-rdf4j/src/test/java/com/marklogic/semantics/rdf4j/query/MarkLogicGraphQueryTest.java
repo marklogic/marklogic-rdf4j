@@ -129,6 +129,8 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
         Assert.assertEquals("http://marklogic.com/test/baseuri/relative", st2.getObject().stringValue());
         results.close();
     }
+
+    @Ignore
     @Test
     public void testGraphQueryWithBaseURIWithEmptyBaseURI()
             throws Exception {
