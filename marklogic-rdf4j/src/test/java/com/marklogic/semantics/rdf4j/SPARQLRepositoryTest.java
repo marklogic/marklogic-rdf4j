@@ -70,7 +70,7 @@ public class SPARQLRepositoryTest extends Rdf4jTestBase {
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/237
-    // assert ML SPARQL endpoint can be used by sesame SPARQLRepository
+    // assert ML SPARQL endpoint can be used by rdf4j SPARQLRepository
     @Test
     public void testSPARQLRepositoryWithMarkLogic()
             throws Exception
