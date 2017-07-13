@@ -546,7 +546,7 @@ class MarkLogicClientImpl {
     private static SPARQLQueryDefinition bindObject(SPARQLQueryDefinition qdef, String variableName, Value object) throws MarkLogicRdf4jException {
         SPARQLBindings bindings = qdef.getBindings();
         if(object != null){
-            if (object instanceof URI) {
+            if (object instanceof IRI) {
                 bindings.bind(variableName, object.stringValue());
             } else if (object instanceof Literal) {
                 Literal lit = (Literal) object;

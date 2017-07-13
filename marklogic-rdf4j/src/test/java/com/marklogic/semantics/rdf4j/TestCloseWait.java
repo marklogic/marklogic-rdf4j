@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
@@ -21,7 +21,7 @@ public class TestCloseWait extends Rdf4jTestBase {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected ValueFactory vf;
 
-    protected URI dirgraph;
+    protected IRI dirgraph;
 
     private static final String ID = "id";
     private static final String ADDRESS = "addressbook";
@@ -71,8 +71,8 @@ public class TestCloseWait extends Rdf4jTestBase {
             public void run(){
                 try {
                     for (int j =0 ;j < 100; j++){
-                        URI subject = vf.createIRI(NS+ID+"/"+Thread.currentThread().getId()+"/"+j+"#1111");
-                        URI predicate = vf.createIRI(NS+ADDRESS+"/"+Thread.currentThread().getId()+"/"+"#firstName");
+                        IRI subject = vf.createIRI(NS+ID+"/"+Thread.currentThread().getId()+"/"+j+"#1111");
+                        IRI predicate = vf.createIRI(NS+ADDRESS+"/"+Thread.currentThread().getId()+"/"+"#firstName");
                         Literal object = vf.createLiteral(Thread.currentThread().getId()+ "-" + j +"-" +"John");
                         conn.add(subject, predicate,object, dirgraph);
                     }

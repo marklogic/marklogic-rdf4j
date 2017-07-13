@@ -452,29 +452,8 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         SPARQLResultsXMLWriter sparqlWriter = new SPARQLResultsXMLWriter(out);
-        sparqlWriter.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
 
-        String expected = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-                "<sparql xmlns='http://www.w3.org/2005/sparql-results#'>\n" +
-                "\t<head>\n" +
-                "\t\t<variable name='s'/>\n" +
-                "\t\t<variable name='p'/>\n" +
-                "\t\t<variable name='o'/>\n" +
-                "\t</head>\n" +
-                "\t<results>\n" +
-                "\t\t<result>\n" +
-                "\t\t\t<binding name='s'>\n" +
-                "\t\t\t\t<uri>http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata</uri>\n" +
-                "\t\t\t</binding>\n" +
-                "\t\t\t<binding name='p'>\n" +
-                "\t\t\t\t<uri>http://semanticbible.org/ns/2006/NTNames#altitude</uri>\n" +
-                "\t\t\t</binding>\n" +
-                "\t\t\t<binding name='o'>\n" +
-                "\t\t\t\t<literal datatype='http://www.w3.org/2001/XMLSchema#int'>0</literal>\n" +
-                "\t\t\t</binding>\n" +
-                "\t\t</result>\n" +
-                "\t</results>\n" +
-                "</sparql>\n";
+        String expected = "<?xml version='1.0' encoding='UTF-8'?><sparql xmlns='http://www.w3.org/2005/sparql-results#'><head><variable name='s'/><variable name='p'/><variable name='o'/></head><results><result><binding name='s'><uri>http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata</uri></binding><binding name='p'><uri>http://semanticbible.org/ns/2006/NTNames#altitude</uri></binding><binding name='o'><literal datatype='http://www.w3.org/2001/XMLSchema#int'>0</literal></binding></result></results></sparql>";
 
         String queryString = "select * { ?s ?p ?o . } limit 1";
         TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);

@@ -226,7 +226,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 		super.parse(graph, implNode);
 
 		try {
-			URI uri = GraphUtil.getOptionalObjectURI(graph, implNode, QUERY_ENDPOINT);
+			IRI uri = GraphUtil.getOptionalObjectURI(graph, implNode, QUERY_ENDPOINT);
 			if (uri != null) {
 				setQueryEndpointUrl(uri.stringValue());
 			}

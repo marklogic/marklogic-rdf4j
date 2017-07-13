@@ -330,10 +330,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Resource context6 = conn.getValueFactory().createIRI("http://marklogic.com/test/context8");
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -363,10 +363,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Resource context6 = conn.getValueFactory().createIRI("http://marklogic.com/test/context8");
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -447,9 +447,9 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
     public void testSizeWithSmallerGraph() throws Exception {
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         ValueFactory f= conn.getValueFactory();
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal alicesName = f.createLiteral("Alice");
         conn.add(alice, RDF.TYPE, person, context1);
         conn.add(alice, name, alicesName,context1);
@@ -464,10 +464,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -501,10 +501,10 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI age = f.createIRI("http://example.org/ontology/age");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI age = f.createIRI("http://example.org/ontology/age");
         Literal bobsAge = f.createLiteral(123123123123D);
         Literal alicesName = f.createLiteral("Alice");
 
@@ -529,9 +529,9 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal alicesName = f.createLiteral("Alice1");
 
         conn.add(alice, RDF.TYPE, person, context1);
@@ -559,8 +559,8 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName, context1);
@@ -583,8 +583,8 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName);
@@ -602,7 +602,7 @@ conn.sync();
         File inputFile = new File(TESTFILE_OWL);
         conn.add(inputFile,null,RDFFormat.RDFXML);
         ValueFactory f= conn.getValueFactory();
-        URI subj = f.createIRI("http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata");
+        IRI subj = f.createIRI("http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata");
         RepositoryResult<Statement> statements = conn.getStatements(subj, null, null, true);
         Assert.assertTrue(statements.hasNext());
         conn.clear(conn.getValueFactory().createIRI("http://marklogic.com/semantics#default-graph"));
@@ -616,7 +616,7 @@ conn.sync();
         conn.add(inputFile, null, RDFFormat.RDFXML, context1);
 
         ValueFactory f= conn.getValueFactory();
-        URI subj = f.createIRI("http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata1");
+        IRI subj = f.createIRI("http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata1");
         RepositoryResult<Statement> statements = conn.getStatements(subj, null, null, true, context1);
 
         Assert.assertFalse(statements.hasNext());
@@ -670,8 +670,8 @@ conn.sync();
             throws Exception {
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         ValueFactory f= conn.getValueFactory();
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
 
         Statement st1 = f.createStatement(alice, name, alicesName);
@@ -702,8 +702,8 @@ conn.sync();
             throws Exception {
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         ValueFactory f= conn.getValueFactory();
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
 
         Statement st1 = f.createStatement(alice, name, alicesName);
@@ -753,7 +753,7 @@ conn.sync();
                 @Override
                 public void handleSolution(BindingSet bindingSet) {
                     Resource subject = f.createIRI("http://www.w3.org/People/Berners-Lee/card#i");
-                    Statement st = conn.getValueFactory().createStatement(subject,(URI) bindingSet.getValue("p"), bindingSet.getValue("o"));
+                    Statement st = conn.getValueFactory().createStatement(subject,(IRI) bindingSet.getValue("p"), bindingSet.getValue("o"));
                     try {
                         conn.add(st, context1);
                     } catch (RepositoryException e) {
@@ -799,10 +799,10 @@ conn.sync();
         Resource context2 = f.createIRI("http://marklogic.com/test/context2");
         Resource context3 = f.createIRI("http://marklogic.com/test/context3");
         
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
-        URI age = f.createIRI("http://example.org/ontology/age");
+        IRI age = f.createIRI("http://example.org/ontology/age");
         Literal alicesAge = f.createLiteral(11);
 
         Statement st1 = f.createStatement(alice, name, alicesName);
@@ -835,8 +835,8 @@ conn.sync();
     {
         ValueFactory f= conn.getValueFactory();
         Resource context1 = f.createIRI("http://marklogic.com/test/context1");
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
 
         Statement st1 = f.createStatement(alice, name, alicesName);
@@ -880,9 +880,9 @@ conn.sync();
     {
         ValueFactory f= conn.getValueFactory();
         Resource context1 = f.createIRI("http://marklogic.com/test/context1");
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI age = f.createIRI("http://example.org/ontology/age");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI age = f.createIRI("http://example.org/ontology/age");
         Literal alicesName = f.createLiteral("Alice");
         Literal alicesAge = f.createLiteral(22);
 
@@ -907,9 +907,9 @@ conn.sync();
     {
         ValueFactory f= conn.getValueFactory();
         Resource context1 = f.createIRI("http://marklogic.com/test/context1");
-        final URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI age = f.createIRI("http://example.org/ontology/age");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI age = f.createIRI("http://example.org/ontology/age");
         Literal alicesName = f.createLiteral("Alice");
         Literal alicesAge = f.createLiteral(22);
 
@@ -929,9 +929,9 @@ conn.sync();
     @Test
     public void testAddWithNullContext() throws Exception {
         ValueFactory f= conn.getValueFactory();
-        final URI william = f.createIRI("http://example.org/people/william");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI age = f.createIRI("http://example.org/ontology/age");
+        final IRI william = f.createIRI("http://example.org/people/william");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI age = f.createIRI("http://example.org/ontology/age");
         Literal williamName = f.createLiteral("William");
         Literal williamAge = f.createLiteral(22);
 
@@ -981,10 +981,10 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -1015,10 +1015,10 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -1045,10 +1045,10 @@ conn.sync();
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI bob = f.createIRI("http://example.org/people/bob");
-        URI name = f.createIRI("http://example.org/ontology/name");
-        URI person = f.createIRI("http://example.org/ontology/Person");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI bob = f.createIRI("http://example.org/people/bob");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
         Literal bobsName = f.createLiteral("Bob");
         Literal alicesName = f.createLiteral("Alice");
 
@@ -1116,9 +1116,9 @@ conn.sync();
             throws RDF4JException
     {
         ValueFactory vf= conn.getValueFactory();
-        URI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
-        URI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
-        URI email = vf.createIRI("http://marklogicsparql.com/addressbook#email");
+        IRI fei = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI lname = vf.createIRI("http://marklogicsparql.com/addressbook#lastName");
+        IRI email = vf.createIRI("http://marklogicsparql.com/addressbook#email");
         Literal feilname = vf.createLiteral("Ling");
         Literal feiemail = vf.createLiteral("fei.ling@marklogic.com");
 
@@ -1200,7 +1200,7 @@ conn.sync();
     public final void exportEmptyStore()
             throws RDF4JException
     {
-        URI dirgraph = conn.getValueFactory().createIRI("http://marklogic.com/dirgraph");
+        IRI dirgraph = conn.getValueFactory().createIRI("http://marklogic.com/dirgraph");
 
         Assert.assertEquals(0L, conn.size());
         conn.exportStatements(null, null, null, false, new RDFHandlerBase() {
@@ -1260,8 +1260,8 @@ conn.sync();
     {
         Resource context5 = conn.getValueFactory().createIRI("http://marklogic.com/test/context5");
         ValueFactory f= conn.getValueFactory();
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
 
         Statement st = f.createStatement(alice, name, alicesName, context5);

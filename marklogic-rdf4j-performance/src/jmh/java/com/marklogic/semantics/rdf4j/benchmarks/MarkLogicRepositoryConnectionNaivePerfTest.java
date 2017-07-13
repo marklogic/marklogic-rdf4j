@@ -56,8 +56,8 @@ public class MarkLogicRepositoryConnectionNaivePerfTest {
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
 
         conn.begin();
         int count = 0;

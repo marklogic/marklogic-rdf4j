@@ -185,8 +185,8 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createIRI("http://example.org/people/alice");
-        URI name = f.createIRI("http://example.org/ontology/name");
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName);

@@ -984,7 +984,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     /**
      * add triples via File
      *
-     * will use file uri as base URI if none supplied
+     * will use file uri as base IRI if none supplied
      *
      * @param file
      * @param baseURI
@@ -1022,7 +1022,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     /**
      * add triples via URL
      *
-     * sets base URI to url if none is supplied
+     * sets base IRI to url if none is supplied
      *
      * @param url
      * @param baseURI
