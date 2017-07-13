@@ -71,8 +71,8 @@ public class TestCloseWait extends Rdf4jTestBase {
             public void run(){
                 try {
                     for (int j =0 ;j < 100; j++){
-                        URI subject = vf.createURI(NS+ID+"/"+Thread.currentThread().getId()+"/"+j+"#1111");
-                        URI predicate = vf.createURI(NS+ADDRESS+"/"+Thread.currentThread().getId()+"/"+"#firstName");
+                        URI subject = vf.createIRI(NS+ID+"/"+Thread.currentThread().getId()+"/"+j+"#1111");
+                        URI predicate = vf.createIRI(NS+ADDRESS+"/"+Thread.currentThread().getId()+"/"+"#firstName");
                         Literal object = vf.createLiteral(Thread.currentThread().getId()+ "-" + j +"-" +"John");
                         conn.add(subject, predicate,object, dirgraph);
                     }

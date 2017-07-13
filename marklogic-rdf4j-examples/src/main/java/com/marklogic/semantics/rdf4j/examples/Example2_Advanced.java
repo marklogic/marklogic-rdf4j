@@ -76,11 +76,11 @@ public class Example2_Advanced {
         logger.info("1. number of triples: {}", conn.size());
 
         // add a few constructed triples
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/examples/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/examples/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
         ValueFactory f= conn.getValueFactory();
         String namespace = "http://example.org/";
-        URI john = f.createURI(namespace, "john");
+        URI john = f.createIRI(namespace, "john");
 
         //use transactions to add triple statements
         conn.begin();

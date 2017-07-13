@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.Query;
@@ -407,8 +407,8 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         String queryString = "select ?s ?p ?o { ?s ?p ?o . filter (?s = ?b) filter (?p = ?c) }";
         TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-        tupleQuery.setBinding("b", ValueFactoryImpl.getInstance().createURI("http://semanticbible.org/ns/2006/NTNames#Jim"));
-        tupleQuery.setBinding("c", ValueFactoryImpl.getInstance().createURI("http://semanticbible.org/ns/2006/NTNames#parentOf"));
+        tupleQuery.setBinding("b", SimpleValueFactory.getInstance().createIRI("http://semanticbible.org/ns/2006/NTNames#Jim"));
+        tupleQuery.setBinding("c", SimpleValueFactory.getInstance().createIRI("http://semanticbible.org/ns/2006/NTNames#parentOf"));
 
         tupleQuery.removeBinding("c");
 
@@ -420,8 +420,8 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
 
         Assert.assertEquals(null, tupleQuery.getBindings().getBinding("b"));
 
-        tupleQuery.setBinding("b", ValueFactoryImpl.getInstance().createURI("http://semanticbible.org/ns/2006/NTNames#Jotham"));
-        tupleQuery.setBinding("c", ValueFactoryImpl.getInstance().createURI("http://semanticbible.org/ns/2006/NTNames#parentOf"));
+        tupleQuery.setBinding("b", SimpleValueFactory.getInstance().createIRI("http://semanticbible.org/ns/2006/NTNames#Jotham"));
+        tupleQuery.setBinding("c", SimpleValueFactory.getInstance().createIRI("http://semanticbible.org/ns/2006/NTNames#parentOf"));
 
         TupleQueryResult results = tupleQuery.evaluate();
 

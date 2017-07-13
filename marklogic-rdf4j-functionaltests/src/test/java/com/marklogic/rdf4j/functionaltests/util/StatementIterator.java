@@ -1,4 +1,4 @@
-package com.marklogic.sesame.functionaltests.util;
+package com.marklogic.rdf4j.functionaltests.util;
 
 import java.util.Iterator;
 

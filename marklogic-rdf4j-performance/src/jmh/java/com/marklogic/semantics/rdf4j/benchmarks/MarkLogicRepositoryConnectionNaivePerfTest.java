@@ -48,16 +48,16 @@ public class MarkLogicRepositoryConnectionNaivePerfTest {
         File inputFile = new File("src/jmh/resources/testdata/default-graph-1.ttl");
         FileInputStream is = new FileInputStream(inputFile);
         String baseURI = "http://example.org/example1/";
-        Resource context3 = conn.getValueFactory().createURI("http://marklogic.com/test/context3");
+        Resource context3 = conn.getValueFactory().createIRI("http://marklogic.com/test/context3");
         conn.add(is, baseURI, RDFFormat.TURTLE, context3);
 
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/test/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/test/context2");
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createURI("http://example.org/people/alice");
-        URI name = f.createURI("http://example.org/ontology/name");
+        URI alice = f.createIRI("http://example.org/people/alice");
+        URI name = f.createIRI("http://example.org/ontology/name");
 
         conn.begin();
         int count = 0;
@@ -87,7 +87,7 @@ public class MarkLogicRepositoryConnectionNaivePerfTest {
             @SuppressWarnings("unused")
             Value oV = bindingSet.getValue("o");
         }
-        Resource subject = conn.getValueFactory().createURI("urn:x-local:graph1");
+        Resource subject = conn.getValueFactory().createIRI("urn:x-local:graph1");
         RepositoryResult<Statement> statements = conn.getStatements(subject, null, null, true, context1);
 
         conn.clear(context1);

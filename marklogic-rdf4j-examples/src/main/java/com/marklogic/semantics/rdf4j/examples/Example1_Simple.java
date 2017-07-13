@@ -58,11 +58,11 @@ public class Example1_Simple {
         logger.info("number of triples: {}", conn.size());
 
         // add a few constructed triples
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/examples/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/examples/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
         ValueFactory f= conn.getValueFactory();
         String namespace = "http://example.org/";
-        URI john = f.createURI(namespace, "john");
+        URI john = f.createIRI(namespace, "john");
         conn.add(john, RDF.TYPE, FOAF.PERSON,context1);
         conn.add(john, RDFS.LABEL, f.createLiteral("John", XMLSchema.STRING),context2);
 

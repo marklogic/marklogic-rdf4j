@@ -1,4 +1,4 @@
-package com.marklogic.sesame.functionaltests;
+package com.marklogic.rdf4j.functionaltests;
 
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
@@ -29,7 +29,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.marklogic.rdf4j.functionaltests.util.ConnectedRESTQA;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
+import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.common.iteration.IteratorIteration;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.junit.After;
@@ -98,10 +101,9 @@ import com.marklogic.semantics.rdf4j.query.MarkLogicBooleanQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
-import com.marklogic.sesame.functionaltests.util.ConnectedRESTQA;
-import com.marklogic.sesame.functionaltests.util.StatementIterable;
-import com.marklogic.sesame.functionaltests.util.StatementIterator;
-import com.marklogic.sesame.functionaltests.util.StatementList;
+import com.marklogic.rdf4j.functionaltests.util.StatementIterable;
+import com.marklogic.rdf4j.functionaltests.util.StatementIterator;
+import com.marklogic.rdf4j.functionaltests.util.StatementList;
 
 
 public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
@@ -1855,7 +1857,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
     //ISSUE 108
 	@Test
 	public void testAddDelete()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		final Statement st1 = vf.createStatement(john, fname, johnfname);
 		try{
@@ -1886,7 +1888,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	//ISSUE 108, 250
 	@Test
 	public final void testInsertRemove()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		Statement st = null;
 		try{
@@ -1991,7 +1993,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 	@Test
 	public void testAddRemoveAdd()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		Assert.assertEquals(0L, testAdminCon.size());
 		Statement st = vf.createStatement(john, lname, johnlname, dirgraph);
@@ -2016,7 +2018,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 	@Test
 	public void testAddDeleteAdd()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		assertThat(testAdminCon.isOpen(), is(equalTo(true)));
 		Assert.assertEquals(0L, testAdminCon.size());
@@ -2045,7 +2047,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	// ISSUE 133
 	@Test
 	public void testAddRemoveInsert()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		Statement stmt = vf.createStatement(micah, homeTel, micahhomeTel);
 		testAdminCon.add(stmt);
@@ -2076,7 +2078,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	// ISSSUE 106, 133
 	@Test
 	public void testAddDeleteInsertWhere()
-		throws eclipse.rdf4jException
+		throws org.eclipse.rdf4j.RDF4JException
 	{
 		testAdminCon.add(fei,lname,feilname);
 		testAdminCon.add(fei, email, feiemail);

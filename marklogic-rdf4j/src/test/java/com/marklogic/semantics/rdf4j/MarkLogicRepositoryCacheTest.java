@@ -79,13 +79,13 @@ public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {
     // https://github.com/marklogic/marklogic-sesame/issues/183
     @Test
     public void testStatementWithWriteCache() throws Exception {
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
-        Resource context2 = conn.getValueFactory().createURI("http://marklogic.com/test/context2");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/test/context2");
 
         ValueFactory f= conn.getValueFactory();
 
-        URI alice = f.createURI("http://example.org/people/alice");
-        URI name = f.createURI("http://example.org/ontology/name");
+        URI alice = f.createIRI("http://example.org/people/alice");
+        URI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName, context1);
@@ -117,10 +117,10 @@ public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {
 
         assertEquals(conn.size(),0L);
 
-        Resource context1 = conn.getValueFactory().createURI("http://marklogic.com/test/context1");
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
         ValueFactory f= conn.getValueFactory();
-        URI alice = f.createURI("http://example.org/people/alice");
-        URI name = f.createURI("http://example.org/ontology/name");
+        URI alice = f.createIRI("http://example.org/people/alice");
+        URI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice1");
 
         Statement st1 = f.createStatement(alice, name, alicesName, context1);

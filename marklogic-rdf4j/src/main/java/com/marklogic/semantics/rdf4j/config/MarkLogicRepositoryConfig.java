@@ -22,7 +22,7 @@ package com.marklogic.semantics.rdf4j.config;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.URIImpl;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.GraphUtil;
 import org.eclipse.rdf4j.model.util.GraphUtilException;
 import org.eclipse.rdf4j.repository.config.AbstractRepositoryImplConfig;

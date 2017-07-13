@@ -1,19 +1,16 @@
-package com.marklogic.sesame.functionaltests;
+package com.marklogic.rdf4j.functionaltests;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -23,7 +20,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryConfig;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryFactory;
-import com.marklogic.sesame.functionaltests.util.ConnectedRESTQA;
+import com.marklogic.rdf4j.functionaltests.util.ConnectedRESTQA;
 
 /**
  * Integration test suite for implementations of Repository.
@@ -115,8 +112,8 @@ public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
 
 		testConn = testRepository.getConnection();
 		try {
-			Resource s = vf.createURI("http://a");
-			URI p = vf.createURI("http://b");
+			Resource s = vf.createIRI("http://a");
+			IRI p = vf.createIRI("http://b");
 			Value o =vf.createLiteral("c");
 			testConn.add(s,p,o);
 			assertTrue(testConn.hasStatement(s,p,o, true));
@@ -149,7 +146,7 @@ public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
     	testConn = testRepository.getConnection();
         Assert.assertTrue(testRepository.getDataDir() == null);
         Assert.assertTrue(testRepository.isWritable());
-        Assert.assertTrue(testRepository.getValueFactory() instanceof ValueFactoryImpl);
+        Assert.assertTrue(testRepository.getValueFactory() instanceof SimpleValueFactory);
     }
 	
 	
