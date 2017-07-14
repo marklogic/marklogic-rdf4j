@@ -1,1 +1,1 @@
-#marklogic-sesame-repository functional tests
+#marklogic-rdf4j-repository functional tests

@@ -19,6 +19,7 @@
  */
 package com.marklogic.semantics.rdf4j;
 
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -146,17 +147,17 @@ public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {
     @Test
     public void testLarge()
             throws Exception {
-
-        IRI graph = new URIImpl("urn:test");
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        IRI graph = vf.createIRI("urn:test");
         int docSize = 100000;
         conn.configureWriteCache(100,500,300);
         conn.begin();
         Set<Statement> bulkInsert = new HashSet();
         for (int term = 0; term < docSize; term++) {
-            bulkInsert.add(new StatementImpl
-                    (new URIImpl("urn:subject:" + term),
-                            new URIImpl("urn:predicate:" + term),
-                            new URIImpl("urn:object:" + term)));
+            bulkInsert.add(vf.createStatement
+                    (vf.createIRI("urn:subject:" + term),
+                            vf.createIRI("urn:predicate:" + term),
+                            vf.createIRI("urn:object:" + term)));
         }
         conn.add(bulkInsert, graph);
         conn.commit();

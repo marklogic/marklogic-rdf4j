@@ -3,7 +3,6 @@ buildscript {
         mavenCentral()
         jcenter()
         maven{ url "https://plugins.gradle.org/m2/"}
-        maven {url "http://developer.marklogic.com/maven2/"}
     }
     dependencies {
         classpath "gradle.plugin.com.marklogic:ml-gradle:2.4.0"
@@ -43,13 +42,6 @@ jacocoTestReport {
 dependencies {
     compile('org.eclipse.rdf4j:rdf4j-runtime:2.2.1')
 
-//    compile('com.marklogic:java-client-api:3.0-SNAPSHOT') {
-//        exclude(group: 'org.slf4j')
-//        exclude(group: 'ch.qos.logback')
-//    }
-
-    // for the bleeding edge switch to com.marklogic:java-client-api:4.0-SNAPSHOT
-
     compile('com.marklogic:java-client-api:4.0.1') {
         exclude(group: 'org.slf4j')
         exclude(group: 'ch.qos.logback')
@@ -86,7 +78,7 @@ task wrapper(type: Wrapper) {
 }
 
 javadoc {
-    options.overview = "src/main/java/com/marklogic/semantics/sesame/overview.html"
+    options.overview = "src/main/java/com/marklogic/semantics/rdf4j/overview.html"
 }
 
 Node pomCustomizations = new NodeBuilder(). project {
@@ -96,9 +88,9 @@ Node pomCustomizations = new NodeBuilder(). project {
         url 'https://github.com/marklogic/marklogic-rdf4j'
 
         scm {
-            url 'git@github.com:marklogic/marklogic-sesame.git'
-                connection 'scm:git@github.com:marklogic/marklogic-sesame.git'
-                developerConnection 'scm:git@github.com:marklogic/marklogic-sesame.git'
+            url 'git@github.com:marklogic/marklogic-rdf4j.git'
+                connection 'scm:git@github.com:marklogic/marklogic-rdf4j.git'
+                developerConnection 'scm:git@github.com:marklogic/marklogic-rdf4j.git'
         }
 
         licenses {
