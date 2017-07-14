@@ -15,10 +15,12 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
 import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -50,7 +52,8 @@ public class Example4_Load_Triples {
     }
 
     public void loadTriples() throws RepositoryException {
-        IRI graph = new URIImpl("urn:test");
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        IRI graph = vf.createIRI("urn:test");
         int docSize = 100000;
 
         conn.configureWriteCache(750,750,600); // customise write cache (initDelay interval, delayCache interval, cache size)
@@ -58,10 +61,10 @@ public class Example4_Load_Triples {
         conn.begin();
         Set<Statement> bulkInsert = new HashSet();
         for (int term = 0; term < docSize; term++) {
-            bulkInsert.add(new StatementImpl
-                    (new URIImpl("urn:subject:" + term),
-                            new URIImpl("urn:predicate:" + term),
-                            new URIImpl("urn:object:" + term)));
+            bulkInsert.add(vf.createStatement
+                    (vf.createIRI("urn:subject:" + term),
+                            vf.createIRI("urn:predicate:" + term),
+                            vf.createIRI("urn:object:" + term)));
         }
         conn.add(bulkInsert, graph);
         conn.commit();

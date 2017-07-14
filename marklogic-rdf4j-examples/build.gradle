@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
         maven {url "http://developer.marklogic.com/maven2/"}
         flatDir {
-            dirs '/Users/asonvane/Documents/marklogic-rdf4j/classes/artifacts/marklogic_sesame_jar/marklogic-sesame.jar'
+            dirs 'marklogic-rdf4j/build/libs/marklogic-rdf4j-2.0.0.jar'
         }
     }
 }

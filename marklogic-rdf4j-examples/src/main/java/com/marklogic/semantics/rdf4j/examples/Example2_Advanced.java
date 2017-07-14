@@ -25,10 +25,10 @@ import com.marklogic.client.query.StringQueryDefinition;
 import com.marklogic.client.semantics.Capability;
 import com.marklogic.client.semantics.GraphManager;
 import com.marklogic.client.semantics.SPARQLRuleset;
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
-import com.marklogic.semantics.sesame.query.MarkLogicTupleQuery;
-import com.marklogic.semantics.sesame.query.MarkLogicUpdateQuery;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -51,7 +51,7 @@ public class Example2_Advanced {
     public static void main(String... args) throws RepositoryException, IOException, RDFParseException, MalformedQueryException, QueryEvaluationException {
 
         // instantiate MarkLogicRepository with Java api client DatabaseClient
-        DatabaseClient adminClient = DatabaseClientFactory.newClient("localhost", 8200, "admin","admin", DatabaseClientFactory.Authentication.DIGEST);
+        DatabaseClient adminClient = DatabaseClientFactory.newClient("localhost", 8200, new DatabaseClientFactory.DigestAuthContext("admin", "admin"));
         GraphManager gmgr = adminClient.newGraphManager();
         QueryManager qmgr = adminClient.newQueryManager();
 
@@ -78,7 +78,7 @@ public class Example2_Advanced {
         // add a few constructed triples
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
         Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
-        ValueFactory f= conn.getValueFactory();
+        ValueFactory f = conn.getValueFactory();
         String namespace = "http://example.org/";
         IRI john = f.createIRI(namespace, "john");
 

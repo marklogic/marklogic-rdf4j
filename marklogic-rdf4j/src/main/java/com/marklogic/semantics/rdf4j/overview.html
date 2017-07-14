@@ -7,7 +7,7 @@
     marklogic-rdf4j enables applications based on Sesame 2.8.6 to use
     MarkLogic as a persistence layer for triples, and as a source to query with SPARQL.
     In addition to basic support for graph CRUD and SPARQL query and update,
-    marklogic-sesame also exposes the following MarkLogic capabilities to the Sesame
+    marklogic-rdf4j also exposes the following MarkLogic capabilities to the Sesame
     framework:
 <ul>
     <li>Transactions</li>
@@ -37,12 +37,12 @@ server for you.
 </p>
 <h2>The API</h2>
 <p>
-    Sesame uses a {@link org.eclipse.rdf4j.repository.Repository} to represent a quad store and {@link org.eclipse.rdf4j.repository.RepositoryConnection} to connect to a quad store.
+    RDF4J uses a {@link org.eclipse.rdf4j.repository.Repository} to represent a quad store and {@link org.eclipse.rdf4j.repository.RepositoryConnection} to connect to a quad store.
 
 <pre>
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
-import com.marklogic.semantics.sesame.query.MarkLogicTupleQuery;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -71,14 +71,13 @@ public class Example1_Simple {
         repo.initialize();
 
         // get repository connection
-        // note - It is best practice to open a single connection when accessing a single database
         MarkLogicRepositoryConnection conn = repo.getConnection();
 
         // return number of triples contained in repository
         logger.info("number of triples: {}", conn.size());
 
         // add triples from a file
-        File inputFile = new File("src/main/resources/testdata/test-small.owl");
+        File inputFile = new File("marklogic-rdf4j-examples/src/main/resources/testdata/test-small.owl");
         conn.add(inputFile, null, RDFFormat.RDFXML, (Resource) null);
 
         logger.info("number of triples: {}", conn.size());
@@ -103,16 +102,13 @@ public class Example1_Simple {
         tupleQuery.setIncludeInferred(true);
         TupleQueryResult results = tupleQuery.evaluate(1,10);
 
-        // iterate through query results
+        //iterate through query results
         while(results.hasNext()){
             BindingSet bindings = results.next();
             logger.info("subject:{}",bindings.getValue("s"));
             logger.info("predicate:{}", bindings.getValue("p"));
             logger.info("object:{}", bindings.getValue("o"));
         }
-
-        // must close TupleQueryResult
-        results.close()
 
         // clear all triples
         conn.clear();
@@ -127,97 +123,98 @@ public class Example1_Simple {
 
 </p>
 <h2>Add and Remove Triples Operation</h2>
-<p>Use Sesame's CRUD operations to store, retrieve, merge, or delete triples.
+<p>Use RDF4J's CRUD operations to store, retrieve, merge, or delete triples.
 <pre>
-Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
-Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
-ValueFactory f= conn.getValueFactory();
-String namespace = "http://example.org/";
-IRI john = f.createIRI(namespace, "john");
-conn.begin();
-conn.add(john, RDF.TYPE, FOAF.PERSON,context1);
-conn.add(john, RDFS.LABEL, f.createLiteral("John", XMLSchema.STRING),context2);
-logger.info("statement exist:{}",,conn.hasStatement(john,RDF.TYPE,null,context1));
-logger.info("total triples:{}",conn.size());
-conn.commit();
-conn.remove(john,RDF.TYPE,null,context1);
-conn.remove(john,null,null,context1);
-conn.clear();
-logger.info("total triples:{} should be zero",conn.size());
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context1");
+        Resource context2 = conn.getValueFactory().createIRI("http://marklogic.com/examples/context2");
+        ValueFactory f = conn.getValueFactory();
+        String namespace = "http://example.org/";
+        IRI john = f.createIRI(namespace, "john");
+        conn.begin();
+        conn.add(john, RDF.TYPE, FOAF.PERSON, context1);
+        conn.add(john, RDFS.LABEL, f.createLiteral("John", XMLSchema.STRING), context2);
+        logger.info("total triples:{}", conn.size());
+        conn.commit();
+        conn.remove(john,RDF.TYPE,null,context1);
+        conn.remove(john,null,null,context2);
+        logger.info("total triples:{} should be zero", conn.size());
 </pre>
 </p>
 <h2>Load 100k triples</h2>
 <p>
 <pre>
-IRI graph = new URIImpl("urn:test");
-int docSize = 100000;
-//conn.configureWriteCache(750,750,600); optionally customise write cache
-conn.begin();
-Set <Statement> bulkInsert = new HashSet();
-for (int term = 0; term < docSize; term++) {
-bulkInsert.add(new StatementImpl
-(new URIImpl("urn:subject:" + term),
-new URIImpl("urn:predicate:" + term),
-new URIImpl("urn:object:" + term)));
-}
-conn.add(bulkInsert, graph);
-conn.commit();
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        IRI graph = vf.createIRI("urn:test");
+        int docSize = 100000;
+
+        conn.configureWriteCache(750,750,600); // customise write cache (initDelay interval, delayCache interval, cache size)
+
+        conn.begin();
+        Set<Statement> bulkInsert = new HashSet();
+        for (int term = 0; term < docSize; term++) {
+            bulkInsert.add(vf.createStatement
+                    (vf.createIRI("urn:subject:" + term),
+                            vf.createIRI("urn:predicate:" + term),
+                            vf.createIRI("urn:object:" + term)));
+        }
+        conn.add(bulkInsert, graph);
+        conn.commit();
 </pre>
 </p>
 <h2>SPARQL Queries</h2>
 <p>Perform SPARQL query with pagination.</p>
 <p>
 <pre>
-// perform SPARQL query
-String queryString = "select * { ?s ?p ?o }";
-MarkLogicTupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+        // perform SPARQL query
+        String queryString = "select * { ?s ?p ?o }";
+        MarkLogicTupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-// enable rulesets set on MarkLogic database
-tupleQuery.setIncludeInferred(true);
+        // enable rulesets set on MarkLogic database
+        tupleQuery.setIncludeInferred(true);
 
-// set base uri for resolving relative uris
-tupleQuery.setBaseURI("http://www.example.org/base/");
+        // set base uri for resolving relative uris
+        tupleQuery.setBaseURI("http://www.example.org/base/");
 
-// set rulesets for infererencing
-tupleQuery.setRulesets(SPARQLRuleset.ALL_VALUES_FROM, SPARQLRuleset.HAS_VALUE);
+        // set rulesets for infererencing
+        tupleQuery.setRulesets(SPARQLRuleset.ALL_VALUES_FROM, SPARQLRuleset.HAS_VALUE);
 
-// set a combined query
-String combinedQuery =
-        "{\"search\":" +
-                "{\"qtext\":\"*\"}}";
-RawCombinedQueryDefinition rawCombined = qmgr.newRawCombinedQueryDefinition(new StringHandle().with(combinedQuery).withFormat(Format.JSON));
-tupleQuery.setConstrainingQueryDefinition(rawCombined);
+        // set a combined query
+        String combinedQuery =
+                "{\"search\":" +
+                        "{\"qtext\":\"*\"}}";
+        RawCombinedQueryDefinition rawCombined = qmgr.newRawCombinedQueryDefinition(new StringHandle().with(combinedQuery).withFormat(Format.JSON));
+        tupleQuery.setConstrainingQueryDefinition(rawCombined);
 
-// evaluate query with pagination
-TupleQueryResult results = tupleQuery.evaluate(1,10);
+        // evaluate query with pagination
+        TupleQueryResult results = tupleQuery.evaluate(1,10);
 
-// iterate through query results
-while(results.hasNext()){
-    BindingSet bindings = results.next();
-    logger.info("subject:{}",bindings.getValue("s"));
-    logger.info("predicate:{}", bindings.getValue("p"));
-    logger.info("object:{}", bindings.getValue("o"));
-}
+        //iterate through query results
+        while(results.hasNext()){
+            BindingSet bindings = results.next();
+            logger.info("subject:{}",bindings.getValue("s"));
+            logger.info("predicate:{}", bindings.getValue("p"));
+            logger.info("object:{}", bindings.getValue("o"));
+        }
 
-// must explicitly close QueryResult
-results.close();
+        // must explicitly close QueryResult
+        results.close();
 </pre>
 </p>
 <h2>SPARQL Update</h2>
 <p>
 <pre>
-// update query
-String updatequery = "INSERT DATA { GRAPH <http://marklogic.com/test/context10> {  <http://marklogic.com/test/subject> <pp1> <oo1> } }";
-MarkLogicUpdateQuery updateQuery = conn.prepareUpdate(QueryLanguage.SPARQL, updatequery,"http://marklogic.com/test/baseuri");
+        //update query
+        String updatequery = "INSERT DATA { GRAPH <http://marklogic.com/test/context10> {  <http://marklogic.com/test/subject> <pp1> <oo1> } }";
+        MarkLogicUpdateQuery updateQuery = conn.prepareUpdate(QueryLanguage.SPARQL, updatequery,"http://marklogic.com/test/baseuri");
 
-// set perms to be applied to data
-updateQuery.setGraphPerms(gmgr.permission("admin", Capability.READ).permission("admin", Capability.EXECUTE));
+        // set perms to be applied to data
+        updateQuery.setGraphPerms(gmgr.permission("admin", Capability.READ).permission("admin", Capability.EXECUTE));
 
-try {
-updateQuery.execute();
-} catch (UpdateExecutionException e) {
-e.printStackTrace();
-}
+        try {
+            updateQuery.execute();
+        } catch (UpdateExecutionException e) {
+            e.printStackTrace();
+        }
 </pre>
 </p>
 </body>

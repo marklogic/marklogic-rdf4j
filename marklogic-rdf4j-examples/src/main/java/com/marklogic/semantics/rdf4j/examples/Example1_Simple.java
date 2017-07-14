@@ -15,9 +15,9 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
-import com.marklogic.semantics.sesame.query.MarkLogicTupleQuery;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -52,7 +52,7 @@ public class Example1_Simple {
         logger.info("number of triples: {}", conn.size());
 
         // add triples from a file
-        File inputFile = new File("src/main/resources/testdata/test-small.owl");
+        File inputFile = new File("marklogic-rdf4j-examples/src/main/resources/testdata/test-small.owl");
         conn.add(inputFile, null, RDFFormat.RDFXML, (Resource) null);
 
         logger.info("number of triples: {}", conn.size());
