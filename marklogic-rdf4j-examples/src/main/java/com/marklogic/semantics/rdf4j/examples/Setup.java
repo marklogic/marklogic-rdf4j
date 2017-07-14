@@ -15,7 +15,7 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
-import com.marklogic.semantics.sesame.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class Setup {
     public static MarkLogicRepository loadPropsAndInit() {
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream("gradle.properties"));
+            props.load(new FileInputStream("marklogic-rdf4j-examples/gradle.properties"));
         } catch (IOException e) {
             System.err.println("problem loading properties file.");
             System.exit(1);

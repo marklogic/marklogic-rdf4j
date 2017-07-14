@@ -15,8 +15,8 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

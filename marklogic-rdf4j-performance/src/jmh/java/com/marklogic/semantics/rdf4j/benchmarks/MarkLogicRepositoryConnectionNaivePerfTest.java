@@ -1,7 +1,7 @@
 package com.marklogic.semantics.rdf4j.benchmarks;
 
-import com.marklogic.semantics.sesame.MarkLogicRepository;
-import com.marklogic.semantics.sesame.MarkLogicRepositoryConnection;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.BindingSet;
