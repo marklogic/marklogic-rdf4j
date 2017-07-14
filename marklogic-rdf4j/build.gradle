@@ -86,7 +86,7 @@ task wrapper(type: Wrapper) {
 }
 
 javadoc {
-    options.overview = "src/main/java/com/marklogic/semantics/sesame/overview.html"
+    options.overview = "src/main/java/com/marklogic/semantics/rdf4j/overview.html"
 }
 
 Node pomCustomizations = new NodeBuilder(). project {
@@ -96,9 +96,9 @@ Node pomCustomizations = new NodeBuilder(). project {
         url 'https://github.com/marklogic/marklogic-rdf4j'
 
         scm {
-            url 'git@github.com:marklogic/marklogic-sesame.git'
-                connection 'scm:git@github.com:marklogic/marklogic-sesame.git'
-                developerConnection 'scm:git@github.com:marklogic/marklogic-sesame.git'
+            url 'git@github.com:marklogic/marklogic-rdf4j.git'
+                connection 'scm:git@github.com:marklogic/marklogic-rdf4j.git'
+                developerConnection 'scm:git@github.com:marklogic/marklogic-rdf4j.git'
         }
 
         licenses {

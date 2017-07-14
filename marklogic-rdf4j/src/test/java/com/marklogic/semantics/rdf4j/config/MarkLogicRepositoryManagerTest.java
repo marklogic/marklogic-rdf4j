@@ -60,7 +60,7 @@ public class MarkLogicRepositoryManagerTest extends Rdf4jTestBase{
     // requires a RDF4J server to be running eg. RemoteRepositoryManager uses HTTPRepository
     public void testRemoteManager() throws Exception {
         RepositoryManager manager;
-        manager = new RemoteRepositoryManager("http://localhost:8080/eclipse.rdf4j-sesame");
+        manager = new RemoteRepositoryManager("http://localhost:8080/rdf4j-server");
         manager.initialize();
         RepositoryConfig mlconf = new RepositoryConfig("remotetest",new MarkLogicRepositoryConfig("localhost", 8200, "admin", "admin", "DIGEST"));
 

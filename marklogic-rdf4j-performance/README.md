@@ -1,10 +1,10 @@
-#marklogic-sesame-performance 
+#marklogic-rdf4j-performance 
 
-This directory contains [jmh](http://openjdk.java.net/projects/code-tools/jmh/) performance benchmark suite for marklogic-sesame.
+This directory contains [jmh](http://openjdk.java.net/projects/code-tools/jmh/) performance benchmark suite for marklogic-rdf4j.
 
 ##Setup and Running
 
-This perf suite utilises the same marklogic-sesame environment/marklogic setup (referenced in gradle.properties) and it will need to be operational to run these tests. 
+This perf suite utilises the same marklogic-rdf4j environment/marklogic setup (referenced in gradle.properties) and it will need to be operational to run these tests. 
   
 To run performance test 
 
@@ -25,7 +25,7 @@ human.txt
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
 # Benchmark mode: Throughput, ops/time
-# Benchmark: com.marklogic.semantics.sesame.benchmarks.MarkLogicRepositoryConnectionNaivePerfTest.perfNaiveQuery1
+# Benchmark: com.marklogic.semantics.rdf4j.benchmarks.MarkLogicRepositoryConnectionNaivePerfTest.perfNaiveQuery1
 
 # Run progress: 0.00% complete, ETA 00:01:00
 # Fork: 1 of 10
@@ -137,7 +137,7 @@ results.txt - json file
 ```
 [
     {
-        "benchmark" : "com.marklogic.semantics.sesame.benchmarks.MarkLogicRepositoryConnectionNaivePerfTest.perfNaiveQuery1",
+        "benchmark" : "com.marklogic.semantics.rdf4j.benchmarks.MarkLogicRepositoryConnectionNaivePerfTest.perfNaiveQuery1",
         "mode" : "thrpt",
         "threads" : 1,
         "forks" : 10,
