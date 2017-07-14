@@ -2,7 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven {url "http://developer.marklogic.com/maven2/"}
         flatDir {
             dirs 'marklogic-rdf4j/build/libs/marklogic-rdf4j-2.0.0.jar'
         }
@@ -32,8 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.marklogic:marklogic-rdf4j:2.0.0')
-
+    compile project (':marklogic-rdf4j')
     compile('org.slf4j:slf4j-api:1.7.10')
     compile "ch.qos.logback:logback-classic:$logbackVersion"
     compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
