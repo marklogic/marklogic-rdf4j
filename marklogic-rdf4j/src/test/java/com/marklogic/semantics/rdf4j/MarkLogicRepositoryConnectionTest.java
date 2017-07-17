@@ -269,10 +269,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.clear(context3);
     }
 
-    // this test requires access to https://raw.githubusercontent.com/marklogic/marklogic-sesame/develop/marklogic-sesame/src/test/resources/testdata/testData.trig
+    // this test requires access to https://raw.githubusercontent.com/marklogic/marklogic-rdf4j/develop/marklogic-rdf4j/src/test/resources/testdata/testData.trig
     @Test
     public void testAddTrigWithURL() throws Exception {
-        URL dataURL = new URL("https://raw.githubusercontent.com/marklogic/marklogic-sesame/develop/marklogic-sesame/src/test/resources/testdata/testData.trig?token=AApzyAXWDMZiXGGf9DFnhq534MpEP-tKks5VwxFswA%3D%3D");
+        URL dataURL = new URL("https://raw.githubusercontent.com/marklogic/marklogic-rdf4j/develop/marklogic-rdf4j/src/test/resources/testdata/testData.trig?token=AApzyAXWDMZiXGGf9DFnhq534MpEP-tKks5VwxFswA%3D%3D");
 
         Resource context1 = conn.getValueFactory().createIRI("http://example.org/g1");
         Resource context2 = conn.getValueFactory().createIRI("http://example.org/g2");
