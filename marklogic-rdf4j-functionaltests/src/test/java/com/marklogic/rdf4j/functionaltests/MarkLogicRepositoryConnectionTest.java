@@ -109,7 +109,7 @@ import com.marklogic.rdf4j.functionaltests.util.StatementList;
 public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 	private static final String TEST_DIR_PREFIX = "/testdata/";
-	private static String dbName = "MLSesame";
+	private static String dbName = "MLRDF4J";
 	private static String restServer = "App-Services";
 	private static int restPort = 8000;
 	private static String[] hostNames ;
@@ -295,7 +295,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	 */
 	protected void  createRepository() throws Exception {
 
-		//Creating MLSesame Connection object Using MarkLogicRepositoryConfig
+		//Creating MLRDF4J Connection object Using MarkLogicRepositoryConfig
 
 		MarkLogicRepositoryConfig adminconfig = new MarkLogicRepositoryConfig();
 		adminconfig.setHost(host);
@@ -351,7 +351,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
         dirgraph1 = testAdminCon.getValueFactory().createIRI("http://marklogic.com/dirgraph1");
 
 
-       //Creating MLSesame Connection object Using MarkLogicRepository overloaded constructor
+       //Creating MLRDF4J Connection object Using MarkLogicRepository overloaded constructor
         if(testReaderCon == null || testReaderRepository ==null){
         	testReaderRepository = new MarkLogicRepository(host, restPort, "reader", "reader", "DIGEST");
 	        try {
@@ -366,7 +366,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	   }
 
 
-        //Creating MLSesame Connection object Using MarkLogicRepository(databaseclient)  constructor
+        //Creating MLRDF4J Connection object Using MarkLogicRepository(databaseclient)  constructor
         if (databaseClient == null){
         	databaseClient = DatabaseClientFactory.newClient(host, restPort, new DatabaseClientFactory.DigestAuthContext("writer", "writer"));
         }

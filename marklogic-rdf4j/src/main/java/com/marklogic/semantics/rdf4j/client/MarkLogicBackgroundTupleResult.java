@@ -15,18 +15,18 @@
  */
 package com.marklogic.semantics.rdf4j.client;
 
-import org.eclipse.rdf4j.http.client.BackgroundTupleResult;
 import org.eclipse.rdf4j.http.client.QueueCursor;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultParser;
+import org.eclipse.rdf4j.query.resultio.helpers.BackgroundTupleResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
 /**
- * wrapper on Sesame BackgroundTupleResult
+ * wrapper on RDF4J BackgroundTupleResult
  *
  * @author James Fuller
  */

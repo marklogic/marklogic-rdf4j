@@ -15,16 +15,18 @@
  */
 /**
  * A library that enables access to a MarkLogic-backed triple-store via the
- * Sesame API.
+ * RDF4J API.
  */
 package com.marklogic.semantics.rdf4j.config;
 
+import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.GraphUtil;
 import org.eclipse.rdf4j.model.util.GraphUtilException;
+import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.repository.config.AbstractRepositoryImplConfig;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
 import org.eclipse.rdf4j.repository.config.RepositoryImplConfigBase;

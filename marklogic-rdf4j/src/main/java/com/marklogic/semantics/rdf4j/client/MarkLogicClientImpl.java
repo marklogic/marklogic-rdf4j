@@ -15,7 +15,7 @@
  */
 /**
  * A library that enables access to a MarkLogic-backed triple-store via the
- * Sesame API.
+ * RDF4J API.
  */
 package com.marklogic.semantics.rdf4j.client;
 
@@ -280,7 +280,7 @@ class MarkLogicClientImpl {
                         if(notNull(contexts[i])){
                             graphManager.mergeAs(contexts[i].toString(), new FileHandle(file), getGraphPerms(),tx);
                         }else{
-                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file),getGraphPerms(), tx);
+                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file), getGraphPerms(), tx);
                         }
                     }
                 } else {
@@ -519,7 +519,7 @@ class MarkLogicClientImpl {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * converts Sesame BindingSet to java api client SPARQLBindings
+     * converts RDF4J BindingSet to java api client SPARQLBindings
      *
      * @param bindings
      * @return
@@ -581,5 +581,4 @@ class MarkLogicClientImpl {
     private static Boolean notNull(Object item) {
         return item != null;
     }
-
 }

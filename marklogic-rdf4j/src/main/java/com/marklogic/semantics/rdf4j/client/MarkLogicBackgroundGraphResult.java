@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 /**
- * wrapper on Sesame BackgroundGraphResult
+ * wrapper on RDF4J BackgroundGraphResult
  *
  * @author James Fuller
  */

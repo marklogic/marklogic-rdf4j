@@ -34,7 +34,7 @@ public class MarkLogicRepositoryTest extends  ConnectedRESTQA{
 	private static MarkLogicRepositoryConnection testConn;
 	private static int restPort = 8000;
 	private static String host = "localhost";
-	private static String dbName = "MLSesameRep";
+	private static String dbName = "MLRdf4jRep";
 	private static String restServer = "App-Services";
 	
 	@BeforeClass
