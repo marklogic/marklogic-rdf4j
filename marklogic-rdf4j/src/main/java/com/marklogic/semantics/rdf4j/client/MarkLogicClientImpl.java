@@ -252,7 +252,13 @@ class MarkLogicClientImpl {
         if(notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         qdef.setIncludeDefaultRulesets(includeInferred);
         sparqlManager.clearPageLength();
-        sparqlManager.executeUpdate(qdef, tx);
+        try {
+            sparqlManager.executeUpdate(qdef, tx);
+        }
+        catch (ForbiddenUserException e)
+        {
+            throw new RepositoryException(e.getMessage());
+        }
     }
 
     /**
