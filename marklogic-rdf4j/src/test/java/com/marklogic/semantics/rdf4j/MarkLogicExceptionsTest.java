@@ -207,4 +207,54 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
         exception.expect(MarkLogicTransactionException.class);
         throw new MarkLogicTransactionException("testing exception",null);
     }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/319
+    @Test
+    public void testBeginTransactionForRestReader(){
+        readerRep.initialize();
+        MarkLogicRepositoryConnection con = readerRep.getConnection();
+        ValueFactory vf = con.getValueFactory();
+        IRI gary = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
+        IRI gender = vf.createIRI("http://marklogicsparql.com/addressbook#gender");
+        Statement st = vf.createStatement(gary, age, gender);
+
+        exception.expect(RepositoryException.class);
+        con.begin(); //causes exception
+        con.add(st, vf.createIRI("http://abc"));
+        con.commit();
+    }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/320
+    @Test
+    public void testCloseConnectionForRestReader(){
+        readerRep.initialize();
+
+        MarkLogicRepositoryConnection testReaderCon = readerRep.getConnection();
+        ValueFactory vf = testReaderCon.getValueFactory();
+        IRI gary = vf.createIRI("http://marklogicsparql.com/id#3333");
+        IRI age = vf.createIRI("http://marklogicsparql.com/addressbook#age");
+        IRI gender = vf.createIRI("http://marklogicsparql.com/addressbook#gender");
+
+        try{
+            testReaderCon.prepareUpdate("CREATE GRAPH <abc>").execute();
+            Assert.assertTrue(false);
+        }
+        catch(Exception e){
+            Assert.assertTrue(e instanceof UpdateExecutionException);
+        }
+
+
+        final Statement st1 = vf.createStatement(gary, age, gender);
+
+        try{
+            testReaderCon.add(st1, vf.createIRI("http://abc"));
+        }
+        catch(Exception e){
+            Assert.assertTrue(e instanceof UpdateExecutionException);
+        }
+
+        exception.expect(RepositoryException.class);
+        testReaderCon.close();
+    }
 }

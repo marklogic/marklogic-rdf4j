@@ -386,7 +386,13 @@ public class MarkLogicClient {
 	 */
 	public void openTransaction() throws MarkLogicTransactionException {
 		if (!isActiveTransaction()) {
-			this.tx = getClient().getDatabaseClient().openTransaction();
+			try {
+                this.tx = getClient().getDatabaseClient().openTransaction();
+            }
+            catch (ForbiddenUserException e)
+            {
+                throw new RepositoryException(e.getMessage());
+            }
 		}else{
 			throw new MarkLogicTransactionException("Only one active transaction allowed.");
 		}
