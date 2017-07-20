@@ -199,19 +199,17 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 	@Override
 	/**
-	 * export graph representation of config
-     *
-	 * @Note - Graph is deprecating soon (in Sesame) to be replaced by Model
+	 * export model representation of config
+	 *
 	 */
-	public Resource export(Model graph) {
-		Resource implNode = super.export(graph);
-
-		ValueFactory vf = graph.getValueFactory();
-		if (getQueryEndpointUrl() != null) {
-			graph.add(implNode, QUERY_ENDPOINT, vf.createIRI(getQueryEndpointUrl()));
+	public Resource export(Model model) {
+		Resource implNode = super.export(model);
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        if (getQueryEndpointUrl() != null) {
+			model.add(implNode, QUERY_ENDPOINT, vf.createIRI(getQueryEndpointUrl()));
 		}
 		if (getUpdateEndpointUrl() != null) {
-			graph.add(implNode, UPDATE_ENDPOINT, vf.createIRI(getUpdateEndpointUrl()));
+			model.add(implNode, UPDATE_ENDPOINT, vf.createIRI(getUpdateEndpointUrl()));
 		}
 
 		return implNode;
@@ -221,23 +219,23 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	/**
 	 * parse graph representation of config
 	 *
-     * @Note - Graph is deprecating soon (in Sesame) to be replaced by Model
+     *
 	 */
-	public void parse(Model graph, Resource implNode)
+	public void parse(Model model, Resource implNode)
 			throws RepositoryConfigException {
-		super.parse(graph, implNode);
+		super.parse(model, implNode);
 
 		try {
-			IRI uri = GraphUtil.getOptionalObjectURI(graph, implNode, QUERY_ENDPOINT);
-			if (uri != null) {
-				setQueryEndpointUrl(uri.stringValue());
+			IRI iri = Models.getPropertyIRI(model, implNode, QUERY_ENDPOINT).orElse(null);
+			System.out.println(iri);
+            if (iri != null) {
+				setQueryEndpointUrl(iri.stringValue());
 			}
-
-			uri = GraphUtil.getOptionalObjectURI(graph, implNode, UPDATE_ENDPOINT);
-			if (uri != null) {
-				setUpdateEndpointUrl(uri.stringValue());
+            iri = Models.getPropertyIRI(model, implNode, UPDATE_ENDPOINT).orElse(null);
+			if (iri != null) {
+				setUpdateEndpointUrl(iri.stringValue());
 			}
-		} catch (GraphUtilException e) {
+		} catch (RDF4JException e) {
 			throw new RepositoryConfigException(e.getMessage(), e);
 		}
 	}
