@@ -27,10 +27,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+import com.marklogic.client.*;
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.query.SPARQLQueryBindingSet;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
@@ -38,10 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.DatabaseClientFactory;
-import com.marklogic.client.FailedRequestException;
-import com.marklogic.client.Transaction;
 import com.marklogic.client.impl.SPARQLBindingsImpl;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.InputStreamHandle;
@@ -84,6 +81,7 @@ class MarkLogicClientImpl {
      * @param auth
      */
     public MarkLogicClientImpl(String host, int port, String user, String password, String auth) {
+        //TODO: Change auth based on parameter
         setDatabaseClient(DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password)));
     }
 
