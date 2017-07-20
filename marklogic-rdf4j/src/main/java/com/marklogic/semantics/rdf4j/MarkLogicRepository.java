@@ -16,7 +16,7 @@
 
 /**
  * A library that enables access to a MarkLogic-backed triple-store via the
- * Sesame API.
+ * RDF4J API.
  */
 package com.marklogic.semantics.rdf4j;
 
@@ -41,7 +41,7 @@ import java.security.cert.CertificateException;
 
 /**
  *
- * Sesame repository representing a MarkLogic triple store,
+ * RDF4J repository representing a MarkLogic triple store,
  * exposing MarkLogic-specific features; SPARQL and Graph queries
  * in all SPARQL forms, rulesets for inferencing, efficient
  * size queries, combination queries,  base uri, and permissions.

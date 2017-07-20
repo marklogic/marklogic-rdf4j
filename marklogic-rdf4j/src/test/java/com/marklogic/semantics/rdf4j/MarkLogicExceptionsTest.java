@@ -15,11 +15,13 @@
  */
 /**
  * A library that enables access to a MarkLogic-backed triple-store via the
- * Sesame API.
+ * RDF4J API.
  */
 package com.marklogic.semantics.rdf4j;
 
 import com.marklogic.client.ResourceNotFoundException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.IsolationLevels;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains core classes for instantiating a MarkLogic backed Sesame Repository ({@link com.marklogic.semantics.rdf4j.MarkLogicRepository})
+ * Contains core classes for instantiating a MarkLogic backed RDF4J Repository ({@link com.marklogic.semantics.rdf4j.MarkLogicRepository})
  * and connection ({@link com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection}), including exceptions.
  */
 package com.marklogic.semantics.rdf4j;

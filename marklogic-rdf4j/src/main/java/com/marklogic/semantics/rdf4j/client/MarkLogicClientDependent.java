@@ -15,7 +15,7 @@
  */
 /**
  * A library that enables access to a MarkLogic-backed triple-store via the
- * Sesame API.
+ * RDF4J API.
  */
 package com.marklogic.semantics.rdf4j.client;
 
