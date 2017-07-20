@@ -112,13 +112,13 @@ public class MarkLogicClient {
 	 */
 	public void initTimer(){
 		stopTimer();
-		if(this.WRITE_CACHE_ENABLED) {
+		if(WRITE_CACHE_ENABLED) {
 			logger.debug("configuring write cache with defaults");
 			timerWriteCache = new TripleWriteCache(this);
 			writeTimer = new Timer();
 			writeTimer.scheduleAtFixedRate(timerWriteCache, TripleWriteCache.DEFAULT_INITIAL_DELAY, TripleWriteCache.DEFAULT_CACHE_MILLIS);
 		}
-		if(this.DELETE_CACHE_ENABLED) {
+		if(DELETE_CACHE_ENABLED) {
 			logger.debug("configuring delete cache with defaults");
 			timerDeleteCache = new TripleDeleteCache(this);
 			deleteTimer = new Timer();
@@ -128,13 +128,13 @@ public class MarkLogicClient {
 
 	public void initTimer(long initDelay, long delayCache, long cacheSize ){
 		stopTimer();
-		if(this.WRITE_CACHE_ENABLED) {
+		if(WRITE_CACHE_ENABLED) {
 			logger.debug("configuring write cache");
 			timerWriteCache = new TripleWriteCache(this,cacheSize);
 			writeTimer = new Timer();
 			writeTimer.scheduleAtFixedRate(timerWriteCache, initDelay, delayCache);
 		}
-		if(this.DELETE_CACHE_ENABLED) {
+		if(DELETE_CACHE_ENABLED) {
 			logger.debug("configuring delete cache");
 			timerDeleteCache = new TripleDeleteCache(this);
 			deleteTimer = new Timer();
@@ -145,7 +145,7 @@ public class MarkLogicClient {
 	 * stop Timer task (write cache)
 	 */
 	public void stopTimer() {
-		if(this.WRITE_CACHE_ENABLED) {
+		if(WRITE_CACHE_ENABLED) {
 			if(timerWriteCache != null) {
 				timerWriteCache.cancel();
 			}
