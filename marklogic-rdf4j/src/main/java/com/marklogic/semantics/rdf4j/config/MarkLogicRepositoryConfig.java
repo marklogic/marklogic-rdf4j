@@ -22,14 +22,9 @@ package com.marklogic.semantics.rdf4j.config;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.impl.URIImpl;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.util.GraphUtil;
-import org.eclipse.rdf4j.model.util.GraphUtilException;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.repository.config.AbstractRepositoryImplConfig;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
-import org.eclipse.rdf4j.repository.config.RepositoryImplConfigBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +37,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(MarkLogicRepositoryConfig.class);
 
-    public static final ValueFactory vf= SimpleValueFactory.getInstance();
+	public static final ValueFactory vf= SimpleValueFactory.getInstance();
 
     public static final IRI QUERY_ENDPOINT = vf.createIRI(
             "http://www.marklogic.com/v1/graphs/sparql");
@@ -204,8 +199,8 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	 */
 	public Resource export(Model model) {
 		Resource implNode = super.export(model);
-        ValueFactory vf = SimpleValueFactory.getInstance();
-        if (getQueryEndpointUrl() != null) {
+		ValueFactory vf = SimpleValueFactory.getInstance();
+		if (getQueryEndpointUrl() != null) {
 			model.add(implNode, QUERY_ENDPOINT, vf.createIRI(getQueryEndpointUrl()));
 		}
 		if (getUpdateEndpointUrl() != null) {
@@ -219,7 +214,6 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	/**
 	 * parse graph representation of config
 	 *
-     *
 	 */
 	public void parse(Model model, Resource implNode)
 			throws RepositoryConfigException {
@@ -228,10 +222,10 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 		try {
 			IRI iri = Models.getPropertyIRI(model, implNode, QUERY_ENDPOINT).orElse(null);
 			System.out.println(iri);
-            if (iri != null) {
+			if (iri != null) {
 				setQueryEndpointUrl(iri.stringValue());
 			}
-            iri = Models.getPropertyIRI(model, implNode, UPDATE_ENDPOINT).orElse(null);
+			iri = Models.getPropertyIRI(model, implNode, UPDATE_ENDPOINT).orElse(null);
 			if (iri != null) {
 				setUpdateEndpointUrl(iri.stringValue());
 			}

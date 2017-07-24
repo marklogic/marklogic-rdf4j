@@ -30,7 +30,6 @@ import org.eclipse.rdf4j.common.iteration.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
 import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.query.impl.DatasetImpl;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.query.parser.sparql.SPARQLUtil;
