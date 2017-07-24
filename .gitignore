@@ -29,3 +29,6 @@ src/main/resources/test-server.ldif~
 creds
 
 .idea/
+
+marklogic-rdf4j-functionaltests/out/
+marklogic-rdf4j/out/
