@@ -2,9 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        flatDir {
-            dirs 'marklogic-rdf4j/build/libs/marklogic-rdf4j-2.0.0.jar'
-        }
     }
     dependencies {
         classpath "me.champeau.gradle:jmh-gradle-plugin:0.1.3"
