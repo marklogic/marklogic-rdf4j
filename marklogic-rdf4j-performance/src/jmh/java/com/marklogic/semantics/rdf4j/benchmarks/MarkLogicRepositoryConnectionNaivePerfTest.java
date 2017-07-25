@@ -42,8 +42,8 @@ public class MarkLogicRepositoryConnectionNaivePerfTest {
         rep.initialize();
 
         MarkLogicRepositoryConnection conn = rep.getConnection();
-        rep.shutDown();
-        rep.initialize();
+//        rep.shutDown();
+//        rep.initialize();
 
         File inputFile = new File("src/jmh/resources/testdata/default-graph-1.ttl");
         FileInputStream is = new FileInputStream(inputFile);
