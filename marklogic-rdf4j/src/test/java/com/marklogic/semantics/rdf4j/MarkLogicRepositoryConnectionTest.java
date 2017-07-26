@@ -1277,4 +1277,27 @@ conn.sync();
         conn.remove(st);
     }
 
+    //https://github.com/marklogic/marklogic-sesame/issues/362
+    @Test
+    public void testContextWhenSuppliedExplicitly()
+    {
+        Resource context6 = conn.getValueFactory().createIRI("http://marklogic.com/test/context6");
+        ValueFactory f = conn.getValueFactory();
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        Literal alicesName = f.createLiteral("Alice");
+
+        Statement st = f.createStatement(alice, name, alicesName, context6);
+
+        Resource context7 = conn.getValueFactory().createIRI("http://marklogic.com/test/context7");
+        conn.add(st, context7);
+
+        String queryString = "ASK {GRAPH <" + context7.stringValue() + "> {<" + alice.stringValue() + "> <" + name.stringValue() +"> \"" + alicesName.stringValue() + "\"^^<http://www.w3.org/2001/XMLSchema#string>}}";
+        BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        Assert.assertTrue(booleanQuery.evaluate());
+
+        queryString = "ASK {GRAPH <" + context6.stringValue() + "> {<" + alice.stringValue() + "> <" + name.stringValue() +"> \"" + alicesName.stringValue() + "\"^^<http://www.w3.org/2001/XMLSchema#string>}}";
+        booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        Assert.assertFalse(booleanQuery.evaluate());
+    }
 }

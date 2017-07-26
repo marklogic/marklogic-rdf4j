@@ -1448,13 +1448,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      * @return
      */
     private static Resource[] mergeResource(Resource o, Resource... arr) {
-        if(o != null) {
-            Resource[] newArray = new Resource[arr.length + 1];
-            newArray[0] = o;
-            System.arraycopy(arr, 0, newArray, 1, arr.length);
-            return newArray;
-        }else{
+        if(arr != null && arr.length > 0){
             return arr;
+        } else if(o == null) {
+            return null;
+        } else {
+            Resource[] newArray = new Resource[1];
+            newArray[0] = o;
+            return newArray;
         }
 
     }
