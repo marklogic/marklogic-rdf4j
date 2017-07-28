@@ -51,7 +51,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
@@ -734,27 +736,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 }
                 sb.append("CONSTRUCT {?s ?p "+ob.toString()+"} WHERE {");
                 if(notNull(contexts) && contexts.length>0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if(notNull(contexts[i])) {
-                            sb.append("GRAPH <" + contexts[i].stringValue() + "> {?s ?p " + ob.toString() + " .} ");
-                        }else{
-                            sb.append("GRAPH <"+DEFAULT_GRAPH_URI+"> {?s ?p "+ob.toString()+" .}");
-                        }
-                    }
-                    sb.append("}");
+                    sb.append(getContextsClause(object, contexts));
                 }else{
                     sb.append("?s ?p "+ob.toString()+" }");
                 }
             }else{
                 sb.append("CONSTRUCT {?s ?p ?o} WHERE {");
                 if(notNull(contexts) && contexts.length>0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if(contexts[i] != null) {
-                            sb.append("GRAPH <" + contexts[i].stringValue() + "> {?s ?p ?o .} ");
-                        }else{
-                            sb.append("GRAPH <"+DEFAULT_GRAPH_URI+"> {?s ?p ?o .}");
-                        }                    }
-                    sb.append("}");
+                    sb.append(getContextsClause(object, contexts));
                 }else{
                     sb.append("?s ?p ?o }");
                 }
@@ -771,6 +760,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             throw new RepositoryException(e);
         }
     }
+
+
 
     /**
      * returns number of triples in the entire triple store
@@ -1495,6 +1486,27 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     private static Boolean notNull(Object item) {
         return item!=null;
     }
+
+    private String getContextsClause(Value object, Resource... contexts){
+
+        String objectString = object != null ? object.toString() : "?o";
+
+        String unionGraphs = Arrays.stream(contexts)
+                .map(context -> {
+                    if(notNull(context)) {
+                        return context.stringValue();
+                    }else{
+                        return DEFAULT_GRAPH_URI;
+                    }
+                })
+                .map(stringContext -> "GRAPH <" + stringContext + "> {?s ?p " + objectString + " .} ")
+                .collect(Collectors.joining("} UNION {"));
+
+        unionGraphs = "{" + unionGraphs + "} }";
+
+        return unionGraphs;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 

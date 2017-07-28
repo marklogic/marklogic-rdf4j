@@ -26,6 +26,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.model.*;
@@ -50,6 +51,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -669,7 +672,7 @@ conn.sync();
     public void testExportStatements()
             throws Exception {
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
-        ValueFactory f= conn.getValueFactory();
+        ValueFactory f = conn.getValueFactory();
         final IRI alice = f.createIRI("http://example.org/people/alice");
         IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
@@ -726,6 +729,47 @@ conn.sync();
         conn.exportStatements(null, null, null, false, rdfWriter, context1);
         Assert.assertEquals(expected, out.toString());
         conn.clear(context1);
+    }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/360
+    @Test
+    public void testExportStatementsWithMultipleContexts() throws Exception
+    {
+        ValueFactory f = conn.getValueFactory();
+
+        Resource context9 = conn.getValueFactory().createIRI("http://marklogic.com/test/context9");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        Literal alicesName = f.createLiteral("Alice");
+
+        Statement st1 = f.createStatement(alice, name, alicesName);
+        conn.add(st1, context9);
+
+
+        Resource context10 = conn.getValueFactory().createIRI("http://marklogic.com/test/context10");
+        final IRI mark = f.createIRI("http://example.org/people/mark");
+        Literal marksName = f.createLiteral("Mark");
+
+        Statement st2 = f.createStatement(mark, name, marksName);
+        conn.add(st2, context10);
+
+        List<String> expected = new ArrayList<>(Arrays.asList(alice.stringValue(), name.stringValue(), alicesName.stringValue(), mark.stringValue(), name.stringValue(), marksName.stringValue()));
+
+        List<String> out = new ArrayList<>();
+        conn.exportStatements(null, null, null, true, new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st) throws RDFHandlerException {
+                out.add(st.getSubject().stringValue());
+                out.add(st.getPredicate().stringValue());
+                out.add(st.getObject().stringValue());
+            }
+        }, context9, context10);
+
+        expected.retainAll(out);
+
+        Assert.assertEquals(expected.size(), out.size());
+        conn.clear(context9);
+        conn.clear(context10);
     }
 
     @Ignore
