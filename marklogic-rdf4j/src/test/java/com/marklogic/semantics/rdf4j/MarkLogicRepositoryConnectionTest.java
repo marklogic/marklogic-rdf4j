@@ -480,10 +480,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.add(bob, name, bobsName, context5, context6);
 
         //TBD- need to be able to set baseURI
-       // RepositoryResult<Statement> statements = conn.getStatements(alice, null, null, true,context5);
+        // RepositoryResult<Statement> statements = conn.getStatements(alice, null, null, true,context5);
 
         //Model aboutAlice = Iterations.addAll(statements, new LinkedHashModel());
-conn.sync();
+        conn.sync();
         String checkAliceQuery = "ASK { GRAPH <http://marklogic.com/test/context5> {<http://example.org/people/alice> <http://example.org/ontology/name> 'Alice' .}}";
         BooleanQuery booleanAliceQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkAliceQuery);
         Assert.assertTrue(booleanAliceQuery.evaluate());
@@ -571,7 +571,7 @@ conn.sync();
         assertEquals("Statement must incrment size of database.", 1, conn.size());
         assertEquals("Statement must incrment size of database.", 1, conn.size(context1));
         assertEquals("Statement must not incrment size of default graph.", 0, conn.size((Resource) null));
-        
+
 
         String checkAliceQuery = "ASK { GRAPH <http://marklogic.com/test/context1> {<http://example.org/people/alice> <http://example.org/ontology/name> 'Alice1' .}}";
         BooleanQuery booleanAliceQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkAliceQuery);
@@ -732,6 +732,7 @@ conn.sync();
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/360
+    // https://github.com/marklogic/marklogic-sesame/issues/361
     @Test
     public void testExportStatementsWithMultipleContexts() throws Exception
     {
@@ -745,7 +746,6 @@ conn.sync();
         Statement st1 = f.createStatement(alice, name, alicesName);
         conn.add(st1, context9);
 
-
         Resource context10 = conn.getValueFactory().createIRI("http://marklogic.com/test/context10");
         final IRI mark = f.createIRI("http://example.org/people/mark");
         Literal marksName = f.createLiteral("Mark");
@@ -753,7 +753,8 @@ conn.sync();
         Statement st2 = f.createStatement(mark, name, marksName);
         conn.add(st2, context10);
 
-        List<String> expected = new ArrayList<>(Arrays.asList(alice.stringValue(), name.stringValue(), alicesName.stringValue(), mark.stringValue(), name.stringValue(), marksName.stringValue()));
+        List<String> expected = new ArrayList<>(Arrays.asList(alice.stringValue(), name.stringValue(), alicesName.stringValue(), context9.stringValue(),
+                mark.stringValue(), name.stringValue(), marksName.stringValue(), context10.stringValue()));
 
         List<String> out = new ArrayList<>();
         conn.exportStatements(null, null, null, true, new AbstractRDFHandler() {
@@ -762,10 +763,9 @@ conn.sync();
                 out.add(st.getSubject().stringValue());
                 out.add(st.getPredicate().stringValue());
                 out.add(st.getObject().stringValue());
+                out.add(st.getContext().stringValue());
             }
         }, context9, context10);
-
-        expected.retainAll(out);
 
         Assert.assertEquals(expected.size(), out.size());
         conn.clear(context9);
@@ -842,7 +842,7 @@ conn.sync();
         Resource context1 = f.createIRI("http://marklogic.com/test/context1");
         Resource context2 = f.createIRI("http://marklogic.com/test/context2");
         Resource context3 = f.createIRI("http://marklogic.com/test/context3");
-        
+
         final IRI alice = f.createIRI("http://example.org/people/alice");
         IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
@@ -862,11 +862,11 @@ conn.sync();
 
         Iteration<? extends Statement, RepositoryException> iter = conn.getStatements(null, null,
                 null, false);
-        
+
         conn.remove(iter, context1);
         Assert.assertEquals(0L, conn.size(context1));
         Assert.assertEquals(1L, conn.size(context1, context2));
-        
+
         iter = conn.getStatements(null, null, null, false);
         conn.remove(iter);
         Assert.assertEquals(0L, conn.size(context1, context2, context3));
@@ -900,14 +900,14 @@ conn.sync();
             System.out.println(s.getContext());
             assertTrue("All statements in context must be null or 'context1'", s.getContext() == null || s.getContext().equals(context1));
         }
-        
+
         iter = conn.getStatements(alice, name, null, false, context1);
         while (iter.hasNext()) {
             Statement s = iter.next();
             System.out.println(s.getContext());
             assertTrue("All statements in context must be context1'", s.getContext().equals(context1));
         }
-        
+
         iter = conn.getStatements(alice, name, null, false, (Resource) null);
         while (iter.hasNext()) {
             Statement s = iter.next();
@@ -1296,7 +1296,7 @@ conn.sync();
         conn.commit();
 
     }
-    
+
     // duplicated functional test
     @Test
     public void testAddDeleteAdd()
@@ -1345,3 +1345,4 @@ conn.sync();
         Assert.assertFalse(booleanQuery.evaluate());
     }
 }
+
