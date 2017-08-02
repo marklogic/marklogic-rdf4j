@@ -386,22 +386,20 @@ class MarkLogicClientImpl {
      */
     public void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
-        if(notNull(contexts) && contexts.length>0) {
+        String[] contextArgs = null;
+        if(notNull(contexts) && contexts.length>0)
+        {
             if (notNull(baseURI))sb.append("BASE <" + baseURI + ">\n");
-            sb.append("DELETE WHERE { ");
+            contextArgs = new String[contexts.length];
             for (int i = 0; i < contexts.length; i++) {
-                if (notNull(contexts[i])) {
-                    sb.append("GRAPH <" + contexts[i].stringValue() + "> { ?s ?p ?o .} ");
-                } else {
-                    sb.append("GRAPH <" + DEFAULT_GRAPH_URI + "> { ?s ?p ?o .} ");
+                if(notNull(contexts[i])){
+                    contextArgs[i] = contexts[i].stringValue();
                 }
             }
-            sb.append("}");
-        }else{
-            sb.append("DELETE WHERE { GRAPH ?ctx { ?s ?p ?o .}}");
         }
-
+        sb.append("DELETE WHERE { GRAPH ?ctx { ?s ?p ?o .}}");
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(sb.toString());
+        if(notNull(contextArgs)) qdef.setUsingNamedGraphUris(contextArgs);
         if(notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if(notNull(subject)) qdef.withBinding("s", subject.stringValue());
         if(notNull(predicate)) qdef.withBinding("p", predicate.stringValue());

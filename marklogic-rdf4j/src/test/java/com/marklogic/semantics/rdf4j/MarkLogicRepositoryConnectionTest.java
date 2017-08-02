@@ -648,6 +648,54 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.clear(context1);
     }
 
+    // TODO: Not implemented yet
+    // https://github.com/marklogic/marklogic-sesame/issues/363
+    @Test
+    @Ignore
+    public void testHasStatementBNode() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        BNode alicesName = vf.createBNode();
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context1);
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName, false));
+    }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/363
+    @Test
+    public void testMultiContextDelete()
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context3 = vf.createIRI("http://marklogic.com/test/context3");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context3);
+
+        Resource context4 = vf.createIRI("http://marklogic.com/test/context4");
+        conn.add(st1, context4);
+
+        Resource context5 = vf.createIRI("http://marklogic.com/test/context5");
+        //conn.add(st1, context5);
+
+        conn.remove(st1, context3, context4, context5);
+
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context3));
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context4));
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context5));
+
+        conn.add(st1, context3);
+        conn.remove(st1, context4, context5);
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName, false, context3));
+
+        conn.remove(st1);
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context3));
+    }
+
     // https://github.com/marklogic/marklogic-sesame/issues/153
     @Test
     public void testHasStatement2() throws Exception
