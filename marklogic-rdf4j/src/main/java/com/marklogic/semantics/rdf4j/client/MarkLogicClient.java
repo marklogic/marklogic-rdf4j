@@ -337,7 +337,7 @@ public class MarkLogicClient {
 	 */
 	public void sendAdd(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (WRITE_CACHE_ENABLED) {
-			timerWriteCache.add(subject, predicate, object, contexts);
+			timerWriteCache.add(subject, predicate, skolemize(object), contexts);
 		} else {
 			getClient().performAdd(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
 		}
