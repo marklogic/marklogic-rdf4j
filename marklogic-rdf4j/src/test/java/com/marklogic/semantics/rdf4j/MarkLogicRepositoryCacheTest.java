@@ -20,10 +20,8 @@
 package com.marklogic.semantics.rdf4j;
 
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
@@ -32,6 +30,9 @@ import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -166,4 +167,34 @@ public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {
 //        conn.remove(stmts);
 //        assertEquals(0L, conn.size());
     }
+
+    @Test
+    public void testLargeTrig() throws Exception
+    {
+        //File size ~ 277 MB
+        String fileName = "src/test/resources/testdata/bigTrig.trig";
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+
+        String alice = "http://example.org/people/alice";
+        String name = "http://example.org/ontology/name";
+        String aliceName = "Alice";
+        for (long i=0; i<3000000; i++)
+        {
+            bufferedWriter.write("<" + alice + i +"> <" + name + "> \"" + aliceName + i + "\" .\n");
+        }
+        bufferedWriter.close();
+
+        File file = new File(fileName);
+        conn.begin();
+        conn.add(file, null, RDFFormat.TRIG);
+        file.delete();
+        conn.commit();
+
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        Literal alicesName1 = vf.createLiteral("Alice1");
+        Literal alicesName2999999 = vf.createLiteral("Alice2999999");
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName1, false));
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName2999999, false));
+    }
+
 }
