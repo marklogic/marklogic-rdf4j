@@ -26,6 +26,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.model.*;
@@ -50,6 +51,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -477,10 +480,10 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.add(bob, name, bobsName, context5, context6);
 
         //TBD- need to be able to set baseURI
-       // RepositoryResult<Statement> statements = conn.getStatements(alice, null, null, true,context5);
+        // RepositoryResult<Statement> statements = conn.getStatements(alice, null, null, true,context5);
 
         //Model aboutAlice = Iterations.addAll(statements, new LinkedHashModel());
-conn.sync();
+        conn.sync();
         String checkAliceQuery = "ASK { GRAPH <http://marklogic.com/test/context5> {<http://example.org/people/alice> <http://example.org/ontology/name> 'Alice' .}}";
         BooleanQuery booleanAliceQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkAliceQuery);
         Assert.assertTrue(booleanAliceQuery.evaluate());
@@ -568,7 +571,7 @@ conn.sync();
         assertEquals("Statement must incrment size of database.", 1, conn.size());
         assertEquals("Statement must incrment size of database.", 1, conn.size(context1));
         assertEquals("Statement must not incrment size of default graph.", 0, conn.size((Resource) null));
-        
+
 
         String checkAliceQuery = "ASK { GRAPH <http://marklogic.com/test/context1> {<http://example.org/people/alice> <http://example.org/ontology/name> 'Alice1' .}}";
         BooleanQuery booleanAliceQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkAliceQuery);
@@ -645,6 +648,54 @@ conn.sync();
         conn.clear(context1);
     }
 
+    // TODO: Not implemented yet
+    // https://github.com/marklogic/marklogic-sesame/issues/363
+    @Test
+    @Ignore
+    public void testHasStatementBNode() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        BNode alicesName = vf.createBNode();
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context1);
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName, false));
+    }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/363
+    @Test
+    public void testMultiContextDelete()
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context3 = vf.createIRI("http://marklogic.com/test/context3");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context3);
+
+        Resource context4 = vf.createIRI("http://marklogic.com/test/context4");
+        conn.add(st1, context4);
+
+        Resource context5 = vf.createIRI("http://marklogic.com/test/context5");
+        //conn.add(st1, context5);
+
+        conn.remove(st1, context3, context4, context5);
+
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context3));
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context4));
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context5));
+
+        conn.add(st1, context3);
+        conn.remove(st1, context4, context5);
+        Assert.assertTrue(conn.hasStatement(null, null, alicesName, false, context3));
+
+        conn.remove(st1);
+        Assert.assertFalse(conn.hasStatement(null, null, alicesName, false, context3));
+    }
+
     // https://github.com/marklogic/marklogic-sesame/issues/153
     @Test
     public void testHasStatement2() throws Exception
@@ -669,7 +720,7 @@ conn.sync();
     public void testExportStatements()
             throws Exception {
         Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
-        ValueFactory f= conn.getValueFactory();
+        ValueFactory f = conn.getValueFactory();
         final IRI alice = f.createIRI("http://example.org/people/alice");
         IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
@@ -726,6 +777,47 @@ conn.sync();
         conn.exportStatements(null, null, null, false, rdfWriter, context1);
         Assert.assertEquals(expected, out.toString());
         conn.clear(context1);
+    }
+
+    // https://github.com/marklogic/marklogic-sesame/issues/360
+    // https://github.com/marklogic/marklogic-sesame/issues/361
+    @Test
+    public void testExportStatementsWithMultipleContexts() throws Exception
+    {
+        ValueFactory f = conn.getValueFactory();
+
+        Resource context9 = conn.getValueFactory().createIRI("http://marklogic.com/test/context9");
+        final IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        Literal alicesName = f.createLiteral("Alice");
+
+        Statement st1 = f.createStatement(alice, name, alicesName);
+        conn.add(st1, context9);
+
+        Resource context10 = conn.getValueFactory().createIRI("http://marklogic.com/test/context10");
+        final IRI mark = f.createIRI("http://example.org/people/mark");
+        Literal marksName = f.createLiteral("Mark");
+
+        Statement st2 = f.createStatement(mark, name, marksName);
+        conn.add(st2, context10);
+
+        List<String> expected = new ArrayList<>(Arrays.asList(alice.stringValue(), name.stringValue(), alicesName.stringValue(), context9.stringValue(),
+                mark.stringValue(), name.stringValue(), marksName.stringValue(), context10.stringValue()));
+
+        List<String> out = new ArrayList<>();
+        conn.exportStatements(null, null, null, true, new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st) throws RDFHandlerException {
+                out.add(st.getSubject().stringValue());
+                out.add(st.getPredicate().stringValue());
+                out.add(st.getObject().stringValue());
+                out.add(st.getContext().stringValue());
+            }
+        }, context9, context10);
+
+        Assert.assertEquals(expected.size(), out.size());
+        conn.clear(context9);
+        conn.clear(context10);
     }
 
     @Ignore
@@ -798,7 +890,7 @@ conn.sync();
         Resource context1 = f.createIRI("http://marklogic.com/test/context1");
         Resource context2 = f.createIRI("http://marklogic.com/test/context2");
         Resource context3 = f.createIRI("http://marklogic.com/test/context3");
-        
+
         final IRI alice = f.createIRI("http://example.org/people/alice");
         IRI name = f.createIRI("http://example.org/ontology/name");
         Literal alicesName = f.createLiteral("Alice");
@@ -818,11 +910,11 @@ conn.sync();
 
         Iteration<? extends Statement, RepositoryException> iter = conn.getStatements(null, null,
                 null, false);
-        
+
         conn.remove(iter, context1);
         Assert.assertEquals(0L, conn.size(context1));
         Assert.assertEquals(1L, conn.size(context1, context2));
-        
+
         iter = conn.getStatements(null, null, null, false);
         conn.remove(iter);
         Assert.assertEquals(0L, conn.size(context1, context2, context3));
@@ -856,14 +948,14 @@ conn.sync();
             System.out.println(s.getContext());
             assertTrue("All statements in context must be null or 'context1'", s.getContext() == null || s.getContext().equals(context1));
         }
-        
+
         iter = conn.getStatements(alice, name, null, false, context1);
         while (iter.hasNext()) {
             Statement s = iter.next();
             System.out.println(s.getContext());
             assertTrue("All statements in context must be context1'", s.getContext().equals(context1));
         }
-        
+
         iter = conn.getStatements(alice, name, null, false, (Resource) null);
         while (iter.hasNext()) {
             Statement s = iter.next();
@@ -1252,7 +1344,7 @@ conn.sync();
         conn.commit();
 
     }
-    
+
     // duplicated functional test
     @Test
     public void testAddDeleteAdd()
@@ -1277,4 +1369,28 @@ conn.sync();
         conn.remove(st);
     }
 
+    //https://github.com/marklogic/marklogic-sesame/issues/362
+    @Test
+    public void testContextWhenSuppliedExplicitly()
+    {
+        Resource context6 = conn.getValueFactory().createIRI("http://marklogic.com/test/context6");
+        ValueFactory f = conn.getValueFactory();
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        Literal alicesName = f.createLiteral("Alice");
+
+        Statement st = f.createStatement(alice, name, alicesName, context6);
+
+        Resource context7 = conn.getValueFactory().createIRI("http://marklogic.com/test/context7");
+        conn.add(st, context7);
+
+        String queryString = "ASK {GRAPH <" + context7.stringValue() + "> {<" + alice.stringValue() + "> <" + name.stringValue() +"> \"" + alicesName.stringValue() + "\"^^<http://www.w3.org/2001/XMLSchema#string>}}";
+        BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        Assert.assertTrue(booleanQuery.evaluate());
+
+        queryString = "ASK {GRAPH <" + context6.stringValue() + "> {<" + alice.stringValue() + "> <" + name.stringValue() +"> \"" + alicesName.stringValue() + "\"^^<http://www.w3.org/2001/XMLSchema#string>}}";
+        booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        Assert.assertFalse(booleanQuery.evaluate());
+    }
 }
+

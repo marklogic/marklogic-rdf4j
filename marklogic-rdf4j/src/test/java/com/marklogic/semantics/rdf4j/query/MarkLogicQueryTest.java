@@ -36,7 +36,7 @@ public class MarkLogicQueryTest  {
 
     @Before
     public void setUp() throws FileNotFoundException {
-        writerClient = DatabaseClientFactory.newClient(host, port, user, password, DatabaseClientFactory.Authentication.DIGEST);
+        writerClient = DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
     }
 
     @Test
