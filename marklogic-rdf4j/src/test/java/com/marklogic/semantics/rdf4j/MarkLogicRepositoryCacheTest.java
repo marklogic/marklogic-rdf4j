@@ -169,6 +169,8 @@ public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {
     }
 
     @Test
+    @Ignore
+    // This test is very long-running, ignore in general test runs.
     public void testLargeTrig() throws Exception
     {
         //File size ~ 277 MB
