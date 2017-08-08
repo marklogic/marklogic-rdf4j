@@ -29,24 +29,15 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.marklogic.rdf4j.functionaltests.util.ConnectedRESTQA;
+import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.common.iteration.IteratorIteration;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.eclipse.rdf4j.IsolationLevels;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
@@ -71,8 +62,16 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.RioSetting;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
 import org.eclipse.rdf4j.rio.helpers.RDFHandlerBase;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +91,10 @@ import com.marklogic.client.semantics.Capability;
 import com.marklogic.client.semantics.GraphManager;
 import com.marklogic.client.semantics.GraphPermissions;
 import com.marklogic.client.semantics.SPARQLRuleset;
+import com.marklogic.rdf4j.functionaltests.util.ConnectedRESTQA;
+import com.marklogic.rdf4j.functionaltests.util.StatementIterable;
+import com.marklogic.rdf4j.functionaltests.util.StatementIterator;
+import com.marklogic.rdf4j.functionaltests.util.StatementList;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.rdf4j.MarkLogicTransactionException;
@@ -101,9 +104,6 @@ import com.marklogic.semantics.rdf4j.query.MarkLogicBooleanQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
 import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
-import com.marklogic.rdf4j.functionaltests.util.StatementIterable;
-import com.marklogic.rdf4j.functionaltests.util.StatementIterator;
-import com.marklogic.rdf4j.functionaltests.util.StatementList;
 
 
 public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
@@ -1976,7 +1976,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			if(testAdminCon.isActive())
 				testAdminCon.rollback();
 		}
-		final Statement expSt = vf.createStatement(john, email, vf.createLiteral("jsnelson@marklogic.com"));
+		final Statement expSt = vf.createStatement(john, email, vf.createLiteral("jsnelson@marklogic.com"),dirgraph);
 		Assert.assertEquals("Dirgraph's size must be 3",3L, testAdminCon.size(dirgraph));
 		testAdminCon.exportStatements(null, email, null, false, new RDFHandlerBase() {
 

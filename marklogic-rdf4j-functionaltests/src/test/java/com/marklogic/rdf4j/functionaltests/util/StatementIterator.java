@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.eclipse.rdf4j.model.Statement;
 
-public class StatementIterator implements Iterator{
+public class StatementIterator implements Iterator<Statement>{
 	
 	private StatementList<Statement> sL;
 	private int index = 0;
