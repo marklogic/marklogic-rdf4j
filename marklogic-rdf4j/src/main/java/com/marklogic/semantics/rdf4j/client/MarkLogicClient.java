@@ -337,7 +337,7 @@ public class MarkLogicClient {
 	 */
 	public void sendAdd(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (WRITE_CACHE_ENABLED) {
-			timerWriteCache.add(subject, predicate, skolemize(object), contexts);
+			timerWriteCache.add((Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), contexts);
 		} else {
 			getClient().performAdd(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
 		}
@@ -354,7 +354,7 @@ public class MarkLogicClient {
 	 */
 	public void sendRemove(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (DELETE_CACHE_ENABLED) {
-			timerDeleteCache.add(subject, predicate, object, contexts);
+			timerDeleteCache.add((Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), contexts);
 		} else {
 			if (WRITE_CACHE_ENABLED)
 				sync();
