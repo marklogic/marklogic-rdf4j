@@ -358,9 +358,9 @@ public class MarkLogicClient {
 	 */
 	public void sendAdd(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (WRITE_CACHE_ENABLED) {
-			timerWriteCache.add((Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), contexts);
+			timerWriteCache.add((Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
 		} else {
-			getClient().performAdd(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
+			getClient().performAdd(baseURI, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), this.tx, contexts);
 		}
 	}
 
@@ -375,11 +375,11 @@ public class MarkLogicClient {
 	 */
 	public void sendRemove(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (DELETE_CACHE_ENABLED) {
-			timerDeleteCache.add((Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), contexts);
+			timerDeleteCache.add((Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
 		} else {
 			if (WRITE_CACHE_ENABLED)
 				sync();
-			getClient().performRemove(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
+			getClient().performRemove(baseURI, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), this.tx, contexts);
 		}
 	}
 
@@ -580,19 +580,6 @@ public class MarkLogicClient {
 	 */
 	private MarkLogicClientImpl getClient(){
 		return this._client;
-	}
-
-	/**
-	 *
-	 * @param s
-	 * @return
-	 */
-	private Value skolemize(Value s) {
-		if (s instanceof org.eclipse.rdf4j.model.BNode) {
-			return getValueFactory().createIRI("http://marklogic.com/semantics/blank/" + s.toString());
-		} else {
-			return s;
-		}
 	}
 
 	/**

@@ -24,6 +24,7 @@ import com.marklogic.client.semantics.GraphPermissions;
 import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.query.*;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.common.iteration.*;
@@ -83,6 +84,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     private GraphPermissions defaultGraphPerms;
     private SPARQLRuleset[] defaultRulesets;
     private QueryDefinition defaultQueryDef;
+
+    private Util util = Util.getInstance();
 
     /**
      * constructor
@@ -676,7 +679,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             logger.debug(queryString);
             MarkLogicBooleanQuery query = prepareBooleanQuery(queryString); // baseuri ?
 
-            setBindings(query, subject, predicate, object, contexts);
+            setBindings(query, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
             return query.evaluate();
         }
         catch (MalformedQueryException e) {

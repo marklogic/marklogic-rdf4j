@@ -648,10 +648,8 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.clear(context1);
     }
 
-    // TODO: Not implemented yet
-    // https://github.com/marklogic/marklogic-sesame/issues/363
+    // https://github.com/marklogic/marklogic-sesame/issues/364
     @Test
-    @Ignore
     public void testHasStatementBNode() throws Exception
     {
         ValueFactory vf = conn.getValueFactory();
@@ -662,6 +660,11 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Statement st1 = vf.createStatement(alice, name, alicesName);
         conn.add(st1, context1);
         Assert.assertTrue(conn.hasStatement(null, null, alicesName, false));
+
+        String alicesNamesId = alicesName.getID();
+        BNode copyOfAliceName = vf.createBNode(alicesNamesId);
+        System.out.println(alicesNamesId);
+        Assert.assertTrue(conn.hasStatement(null, null, copyOfAliceName, false));
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/363
