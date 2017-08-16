@@ -8,6 +8,10 @@ public class Util {
 
     }
 
+    /**
+     * Method to obtain instance of Util class.
+     * @return Util
+     */
     public static Util getInstance()
     {
         if(util == null){
@@ -17,7 +21,7 @@ public class Util {
     }
 
     /**
-     * public utility method that tests if an object is null
+     * Public utility method that tests if an object is null.
      * @param item the item to check for null.
      * @return boolean
      */
@@ -26,8 +30,8 @@ public class Util {
     }
 
     /**
-     * public utility method to check if the RDF format is supported by MarkLogic database.
-     * @param dataFormat the RDF format to check if supported by MarkLogic
+     * Public utility method to check if the RDF format is supported by MarkLogic database.
+     * @param dataFormat the RDF format to check if supported by MarkLogic.
      * @return Boolean
      */
     public Boolean isFormatSupported(RDFFormat dataFormat){

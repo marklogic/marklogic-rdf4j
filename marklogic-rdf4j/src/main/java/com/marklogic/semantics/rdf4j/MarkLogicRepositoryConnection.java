@@ -100,7 +100,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * gets the current value factory
+     * Gets the current value factory.
      *
      * @return ValueFactory
      */
@@ -110,20 +110,20 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * sets the current value factory
+     * Sets the current value factory.
      *
-     * @param f
+     * @param f the ValueFactory to be used.
      */
     public void setValueFactory(ValueFactory f) {
         client.setValueFactory(f);
     }
 
 
-    @Override
     /**
-     * Releases the connection to the database.  Ensures that open transactions
-     * are complete. Stops write cache Timer.
+     * Releases the connection to the database. Ensures that open transactions
+     * are complete. Stops write cache timer.
      */
+    @Override
     public void close()
             throws RepositoryException
     {
