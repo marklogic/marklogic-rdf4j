@@ -19,18 +19,44 @@
  */
 package com.marklogic.semantics.rdf4j;
 
-import com.marklogic.client.query.QueryDefinition;
-import com.marklogic.client.semantics.GraphPermissions;
-import com.marklogic.client.semantics.SPARQLRuleset;
-import com.marklogic.semantics.rdf4j.query.*;
-import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
-import org.eclipse.rdf4j.common.iteration.*;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.ConvertingIteration;
+import org.eclipse.rdf4j.common.iteration.EmptyIteration;
+import org.eclipse.rdf4j.common.iteration.ExceptionConvertingIteration;
+import org.eclipse.rdf4j.common.iteration.Iteration;
+import org.eclipse.rdf4j.common.iteration.SingletonIteration;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
-import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.Query;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.QueryResults;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.UnsupportedQueryLanguageException;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -46,15 +72,15 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-
-import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
+import com.marklogic.client.query.QueryDefinition;
+import com.marklogic.client.semantics.GraphPermissions;
+import com.marklogic.client.semantics.SPARQLRuleset;
+import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import com.marklogic.semantics.rdf4j.query.MarkLogicBooleanQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicGraphQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
 
 /**
  * RepositoryConnection to MarkLogic triplestore
