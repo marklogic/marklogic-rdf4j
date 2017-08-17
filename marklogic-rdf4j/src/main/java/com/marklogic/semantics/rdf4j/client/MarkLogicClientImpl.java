@@ -279,7 +279,7 @@ class MarkLogicClientImpl {
             if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
                 graphManager.mergeGraphs(new FileHandle(file),tx);
             } else {
-                if (notNull(contexts) && contexts.length>0) {
+                if (contexts.length>0) {
                     for (int i = 0; i < contexts.length; i++) {
                         if(notNull(contexts[i])){
                             graphManager.mergeAs(contexts[i].toString(), new FileHandle(file), getGraphPerms(),tx);
@@ -313,7 +313,7 @@ class MarkLogicClientImpl {
             if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
                 graphManager.mergeGraphs(new InputStreamHandle(in),tx);
             } else {
-                if (notNull(contexts) && contexts.length > 0) {
+                if (contexts.length > 0) {
                     for (int i = 0; i < contexts.length; i++) {
                         if (notNull(contexts[i])) {
                             graphManager.mergeAs(contexts[i].toString(), new InputStreamHandle(in), getGraphPerms(), tx);
@@ -348,7 +348,7 @@ class MarkLogicClientImpl {
      */
     public void performAdd(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
-        if(notNull(contexts) && contexts.length>0) {
+        if(contexts.length>0) {
             if (notNull(baseURI)) sb.append("BASE <" + baseURI + ">\n");
             sb.append("INSERT DATA { ");
             for (int i = 0; i < contexts.length; i++) {
@@ -361,7 +361,7 @@ class MarkLogicClientImpl {
             sb.append("}");
         } else {
             sb.append("INSERT DATA { GRAPH <" + DEFAULT_GRAPH_URI + "> {?s ?p ?o .}}");
-        }
+        }  
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(sb.toString());
         if (notNull(ruleset) ) {qdef.setRulesets(ruleset);}
         if(notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
@@ -387,7 +387,7 @@ class MarkLogicClientImpl {
     public void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
         String[] contextArgs = null;
-        if(notNull(contexts) && contexts.length>0)
+        if(contexts.length>0)
         {
             if (notNull(baseURI))sb.append("BASE <" + baseURI + ">\n");
             contextArgs = new String[contexts.length];
@@ -414,7 +414,7 @@ class MarkLogicClientImpl {
      * @param contexts
      */
     public void performClear(Transaction tx, Resource... contexts) {
-        if(notNull(contexts)) {
+        if(contexts.length>0) {
             for (int i = 0; i < contexts.length; i++) {
                 if (notNull(contexts[i])) {
                     graphManager.delete(contexts[i].stringValue(), tx);
