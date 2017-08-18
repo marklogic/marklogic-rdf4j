@@ -262,7 +262,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * MarkLogic, with the correct perms is always writable.
+     * MarkLogic, with the correct permissions is always writable.
      * Implemented to honor Repository interface.
      *
      * @return boolean
@@ -274,7 +274,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns a MarkLogicConnection object which is the entry point to
+     * Returns a MarkLogicConnection object which is the entry point to
      * performing all queries.
      *
      * It is best practice to reuse a single connection to a
@@ -295,7 +295,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns MarkLogicClient object which manages communication to ML server via Java api client
+     * Returns MarkLogicClient object which manages communication to ML server via Java api client
      *
      * @return MarkLogicClient
      */
@@ -320,7 +320,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns if repository is in quadmode or not.
+     * Returns if repository is in quadmode or not.
      *
      * @return boolean
      */
