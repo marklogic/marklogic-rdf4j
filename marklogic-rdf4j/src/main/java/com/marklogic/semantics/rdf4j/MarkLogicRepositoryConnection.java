@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
@@ -45,7 +46,6 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.impl.StatementImpl;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
@@ -57,6 +57,7 @@ import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.UnsupportedQueryLanguageException;
+
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -111,8 +112,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     private SPARQLRuleset[] defaultRulesets;
     private QueryDefinition defaultQueryDef;
 
+    private Util util = Util.getInstance();
+
     /**
-     * constructor
+     * Constructor instantiating MarkLogicRepositoryConnection
      *
      * @param repository
      * @param client
@@ -127,7 +130,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * gets the current value factory
+     * Gets the current value factory.
      *
      * @return ValueFactory
      */
@@ -137,20 +140,20 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * sets the current value factory
+     * Sets the current value factory.
      *
-     * @param f
+     * @param f the ValueFactory to be used.
      */
     public void setValueFactory(ValueFactory f) {
         client.setValueFactory(f);
     }
 
 
-    @Override
     /**
-     * Releases the connection to the database.  Ensures that open transactions
-     * are complete. Stops write cache Timer.
+     * Releases the connection to the database. Ensures that open transactions
+     * are complete. Stops write cache timer.
      */
+    @Override
     public void close()
             throws RepositoryException
     {
@@ -167,9 +170,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareQuery
+     * Overload for prepareQuery
      *
-     * @param queryString
+     * @param queryString Query string to be used.
      * @return MarkLogicQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -180,10 +183,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareQuery
+     * Overload for prepareQuery
      *
-     * @param queryString
-     * @param baseURI
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -194,10 +197,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareQuery
+     * Overload for prepareQuery
      *
-     * @param queryLanguage
-     * @param queryString
+     * @param queryLanguage  Query language to be used, for the query string.
+     * @param queryString Query string to be used
      * @return MarkLogicQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -208,13 +211,13 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * base method for prepareQuery
+     * Base method for prepareQuery
      *
-     * routes to all other query forms (prepareTupleQuery,prepareBooleanQuery,prepareGraphQuery)
+     * Routes to all other query forms (prepareTupleQuery,prepareBooleanQuery,prepareGraphQuery)
      *
-     * @param queryLanguage
-     * @param queryString
-     * @param baseURI
+     * @param queryLanguage  Query language to be used, for the query string.
+     * @param queryString  Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -240,9 +243,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareTupleQuery
+     * Overload for prepareTupleQuery
      *
-     * @param queryString
+     * @param queryString Query string to be used.
      * @return MarkLogicTupleQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -253,10 +256,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareTupleQuery
+     * Overload for prepareTupleQuery
      *
-     * @param queryString
-     * @param baseURI
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicTupleQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -267,10 +270,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareTupleQuery
+     * Overload for prepareTupleQuery
      *
-     * @param queryLanguage
-     * @param queryString
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
      * @return MarkLogicTupleQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -281,11 +284,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * base method for prepareTupleQuery
+     * Base method for prepareTupleQuery
      *
-     * @param queryLanguage
-     * @param queryString
-     * @param baseURI
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicTupleQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -299,9 +302,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareGraphQuery
+     * Overload for prepareGraphQuery
      *
-     * @param queryString
+     * @param queryString Query string to be used.
      * @return MarkLogicGraphQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -312,10 +315,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareGraphQuery
+     * Overload for prepareGraphQuery
      *
-     * @param queryString
-     * @param baseURI
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicGraphQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -326,10 +329,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareGraphQuery
+     * Overload for prepareGraphQuery
      *
-     * @param queryLanguage
-     * @param queryString
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
      * @return MarkLogicGraphQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -340,11 +343,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * base method for prepareGraphQuery
+     * Base method for prepareGraphQuery
      *
-     * @param queryLanguage
-     * @param queryString
-     * @param baseURI
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicGraphQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -360,9 +363,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareBooleanQuery
+     * Overload for prepareBooleanQuery
      *
-     * @param queryString
+     * @param queryString Query string to be used.
      * @return MarkLogicBooleanQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -373,10 +376,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareBooleanQuery
+     * Overload for prepareBooleanQuery
      *
-     * @param queryString
-     * @param baseURI
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicBooleanQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -387,10 +390,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareBooleanQuery
+     * Overload for prepareBooleanQuery
      *
-     * @param queryLanguage
-     * @param queryString
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
      * @return MarkLogicBooleanQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -401,11 +404,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * base method for prepareBooleanQuery
+     * Base method for prepareBooleanQuery
      *
-     * @param queryLanguage
-     * @param queryString
-     * @param baseURI
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicBooleanQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -419,9 +422,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareUpdate
+     * Overload for prepareUpdate
      *
-     * @param queryString
+     * @param queryString Query string to be used.
      * @return MarkLogicUpdateQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -432,10 +435,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareUpdate
+     * Overload for prepareUpdate
      *
-     * @param queryString
-     * @param baseURI
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicUpdateQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -446,10 +449,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * overload for prepareUpdate
+     * Overload for prepareUpdate
      *
-     * @param queryLanguage
-     * @param queryString
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
      * @return MarkLogicUpdateQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -460,11 +463,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * base method for prepareUpdate
+     * Base method for prepareUpdate
      *
-     * @param queryLanguage
-     * @param queryString
-     * @param baseURI
+     * @param queryLanguage Query language to be used, for the query string.
+     * @param queryString Query string to be used.
+     * @param baseURI Base URI to be used, with query string.
      * @return MarkLogicUpdateQuery
      * @throws RepositoryException
      * @throws MalformedQueryException
@@ -478,7 +481,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns list of graph names as Resource
+     * Returns list of graph names as Resource
      *
      * @throws RepositoryException
      */
@@ -505,20 +508,18 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                                 }
                             });
 
-        } catch (MalformedQueryException e) {
-            throw new RepositoryException(e);
-        } catch (QueryEvaluationException e) {
+        } catch (MalformedQueryException | QueryEvaluationException e) {
             throw new RepositoryException(e);
         }
     }
 
     /**
-     * returns all statements
+     * Returns all statements.
      *
-     * @param subj
-     * @param pred
-     * @param obj
-     * @param includeInferred
+     * @param subj Subject of the statement.
+     * @param pred Predicate of the statement.
+     * @param obj Object of the statement.
+     * @param includeInferred if false returns only explicit statements. If true returns both explicit and implicit statements.
      * @throws RepositoryException
      */
     public RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred) throws RepositoryException {
@@ -538,7 +539,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                         });
             } else if (subj != null && pred != null && obj != null) {
                 if (hasStatement(subj, pred, obj, includeInferred)) {
-                    Statement st = new StatementImpl(subj, pred, obj);
+                    ValueFactory vf = SimpleValueFactory.getInstance();
+                    Statement st = vf.createStatement(subj, pred, obj);
                     CloseableIteration<Statement, RepositoryException> cursor;
                     cursor = new SingletonIteration<Statement, RepositoryException>(st);
                     return new RepositoryResult<Statement>(cursor);
@@ -556,25 +558,24 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                             return new RepositoryException(e);
                         }
                     });
-        } catch (MalformedQueryException e) {
-            throw new RepositoryException(e);
-        } catch (QueryEvaluationException e) {
+        } catch (MalformedQueryException | QueryEvaluationException e) {
             throw new RepositoryException(e);
         }
     }
 
     /**
-     * returns statements from supplied context
+     * Returns statements from supplied context/s.
      *
-     * TBD - should share code path with above getStatements
      *
-     * @param subj
-     * @param pred
-     * @param obj
-     * @param includeInferred
-     * @param contexts
+     *
+     * @param subj Subject of the statement.
+     * @param pred Predicate of the statement.
+     * @param obj Object of the statement.
+     * @param includeInferred if false returns only explicit statements. If true returns both explicit and implicit statements.
+     * @param contexts Var-arg for specified contexts.
      * @throws RepositoryException
      */
+    // TBD - should share code path with above getStatements
     @Override
     public RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred, Resource... contexts) throws RepositoryException {
     	contexts = verifyContextNotNull(contexts);
@@ -585,13 +586,13 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 boolean first = true;
                 for (Resource context : contexts) {
                     if (first) {
-                        first = !first;
+                        first = false;
                     }
                     else {
                         sb.append(",");
                     }
                     if (notNull(context)) {
-                        sb.append("IRI(\"" + context.toString() + "\")");
+                        sb.append("IRI(\"").append(context.toString()).append("\")");
                     } else {
                         sb.append("IRI(\""+DEFAULT_GRAPH_URI+"\")");
                     }
@@ -632,9 +633,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                             }
                         });
             }
-        } catch (MalformedQueryException e) {
-            throw new RepositoryException(e);
-        } catch (QueryEvaluationException e) {
+        } catch (MalformedQueryException | QueryEvaluationException e) {
             throw new RepositoryException(e);
         }
     }
@@ -642,11 +641,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     // all statements
 
     /**
-     * returns true or false if a statement exists in repository / context
+     * Returns true or false if a statement exists in repository / context.
      *
-     * @param st
-     * @param includeInferred
-     * @param contexts
+     * @param st The statement to be checked.
+     * @param includeInferred if false returns only explicit statements. If true returns both explicit and implicit statements.
+     * @param contexts Var-arg for specified contexts.
      * @return boolean
      * @throws RepositoryException
      */
@@ -656,18 +655,19 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns true or false if a statement exists in repository / context
+     * Returns true or false if a statement exists in repository / context.
      *
-     * TBD- should refactor
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param includeInferred
-     * @param contexts
+     *
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param includeInferred if false returns only explicit statements. If true returns both explicit and implicit statements.
+     * @param contexts Var-arg for specified contexts.
      * @return boolean
      * @throws RepositoryException
      */
+    // TBD- should refactor
     @Override
     public boolean hasStatement(Resource subject, IRI predicate, Value object, boolean includeInferred, Resource... contexts) throws RepositoryException {
         if(!this.isOpen()){throw new RepositoryException("Connection is closed.");}
@@ -682,7 +682,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             boolean first = true;
             for (Resource context : contexts) {
                 if (first) {
-                    first = !first;
+                    first = false;
                 }
                 else {
                     sb.append(",");
@@ -690,7 +690,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 if (context == null) {
                     sb.append("IRI(\""+DEFAULT_GRAPH_URI+"\")");
                 } else {
-                    sb.append("IRI(\"" + context.toString() + "\")");
+                    sb.append("IRI(\"").append(context.toString()).append("\")");
                 }
             }
             sb.append(") ) }");
@@ -700,46 +700,45 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             logger.debug(queryString);
             MarkLogicBooleanQuery query = prepareBooleanQuery(queryString); // baseuri ?
 
-            setBindings(query, subject, predicate, object, contexts);
+            setBindings(query, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
             return query.evaluate();
         }
-        catch (MalformedQueryException e) {
-            throw new RepositoryException(e);
-        }
-        catch (QueryEvaluationException e) {
+        catch (MalformedQueryException | QueryEvaluationException e) {
             throw new RepositoryException(e);
         }
     }
 
     /**
-     * exports statements via RDFHandler
+     * Exports statements via RDFHandler.
      *
-     * TBD- should refactor
      *
-     * @param handler
-     * @param contexts
+     *
+     * @param handler RDFHAndler
+     * @param contexts Var-arg for specified contexts.
      * @throws RepositoryException
      * @throws RDFHandlerException
      */
+    // TBD- should refactor
     @Override
     public void export(RDFHandler handler, Resource... contexts) throws RepositoryException, RDFHandlerException {
         exportStatements(null, null, null, true, handler);
     }
 
     /**
-     * exports statements via RDFHandler
+     * Exports statements via RDFHandler.
      *
-     * TBD- should refactor
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param includeInferred
-     * @param handler
-     * @param contexts
+     *
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param includeInferred if false returns only explicit statements. If true returns both explicit and implicit statements.
+     * @param handler RDFHandler
+     * @param contexts Var-arg for specified contexts.
      * @throws RepositoryException
      * @throws RDFHandlerException
      */
+    // TBD- should refactor
     @Override
     public void exportStatements(Resource subject, IRI predicate, Value object, boolean includeInferred, RDFHandler handler, Resource... contexts) throws RepositoryException, RDFHandlerException {
         try {
@@ -748,10 +747,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             QueryResults.stream(st).forEach(handler::handleStatement);
             handler.endRDF();
         }
-        catch (MalformedQueryException e) {
-            throw new RepositoryException(e);
-        }
-        catch (QueryEvaluationException e) {
+        catch (MalformedQueryException | QueryEvaluationException e) {
             throw new RepositoryException(e);
         }
     }
@@ -759,7 +755,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
 
     /**
-     * returns number of triples in the entire triple store
+     * Returns number of triples in the entire triple store.
      *
      * @return long
      * @throws RepositoryException
@@ -782,9 +778,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns number of triples in supplied context
+     * Returns number of triples in supplied context.
      *
-     * @param contexts
+     * @param contexts Var-arg for specified contexts.
      * @return long
      * @throws RepositoryException
      */
@@ -800,7 +796,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 sb.append("filter (?g = (");
                 for (Resource context : contexts) {
                     if (first) {
-                        first = !first;
+                        first = false;
                     }
                     else {
                         sb.append(",");
@@ -808,7 +804,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                     if (context == null) {
                         sb.append("IRI(\""+DEFAULT_GRAPH_URI+"\")");
                     } else {
-                        sb.append("IRI(\"" + context.toString() + "\")");
+                        sb.append("IRI(\"").append(context.toString()).append("\")");
                     }
                 }
                 sb.append(") )");
@@ -833,7 +829,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * clears all triples from repository
+     * Clears all triples from repository.
      *
      * @throws RepositoryException
      */
@@ -843,7 +839,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * clears triples in supplied context
+     * Clears triples in supplied context.
      *
      * @param contexts
      * @throws RepositoryException
@@ -854,7 +850,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns true or false if the repository is empty or not
+     * Returns true or false if the repository is empty or not.
      *
      * @return boolean
      * @throws RepositoryException
@@ -870,7 +866,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns true if a transaction is active on connection
+     * Returns true if a transaction is active on connection.
      *
      * @return boolean
      * @throws UnknownTransactionStateException
@@ -882,7 +878,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * gets transaction isolationlevel (only IsolationLevels.SNAPSHOT supported)
+     * Gets the transaction isolation level. (only IsolationLevels.SNAPSHOT supported)
      *
      * @return level
      */
@@ -892,9 +888,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * sets transaction isolationlevel (only IsolationLevels.SNAPSHOT supported)
+     * Sets the transaction isolation level. (only IsolationLevels.SNAPSHOT supported)
      *
-     * @param level
+     * @param level Transaction isolation level.
      * @throws IllegalStateException
      */
     @Override
@@ -907,7 +903,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * opens a new transaction
+     * Opens a new transaction.
      *
      * @throws RepositoryException
      */
@@ -917,7 +913,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * opens a new transaction
+     * Opens a new transaction.
      *
      * @param level
      * @throws RepositoryException
@@ -929,7 +925,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * commits transaction
+     * Commits transaction.
      *
      * @throws RepositoryException
      */
@@ -939,7 +935,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * rollbacks open transaction
+     * Rollbacks open transaction.
      *
      * @throws RepositoryException
      */
@@ -949,12 +945,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add triples via inputstream
+     * Add triples via inputstream.
      *
-     * @param in
-     * @param baseURI
-     * @param dataFormat
-     * @param contexts
+     * @param in the input stream.
+     * @param baseURI the baseURI for the input stream.
+     * @param dataFormat the data format for the input stream.
+     * @param contexts Var-arg for specified context.
      * @throws IOException
      * @throws RDFParseException
      * @throws RepositoryException
@@ -966,14 +962,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add triples via File
+     * Add triples via File.
      *
-     * will use file uri as base IRI if none supplied
+     * It will use file uri as base IRI if none supplied.
      *
-     * @param file
-     * @param baseURI
-     * @param dataFormat
-     * @param contexts
+     * @param file the file for insertion.
+     * @param baseURI the baseURI for the content in the file.
+     * @param dataFormat the data format for the file.
+     * @param contexts Var-arg for specified context.
      * @throws IOException
      * @throws RDFParseException
      * @throws RepositoryException
@@ -989,12 +985,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add triples via Reader
+     * Add triples via Reader.
      *
-     * @param reader
-     * @param baseURI
-     * @param dataFormat
-     * @param contexts
+     * @param reader the reader as data source.
+     * @param baseURI the baseURI for the data source.
+     * @param dataFormat the data format for the data source.
+     * @param contexts Var-arg for specified context.
      * @throws IOException
      * @throws RDFParseException
      * @throws RepositoryException
@@ -1006,14 +1002,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add triples via URL
+     * Add triples via URL.
      *
-     * sets base IRI to url if none is supplied
+     * Sets base IRI to url if none is supplied.
      *
-     * @param url
-     * @param baseURI
-     * @param dataFormat
-     * @param contexts
+     * @param url the URL for the data.
+     * @param baseURI teh base URI for the supplied data.
+     * @param dataFormat the data format for the supplied data.
+     * @param contexts Var-arg for specified context.
      * @throws IOException
      * @throws RDFParseException
      * @throws RepositoryException
@@ -1029,12 +1025,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add single triple statement with supplied context
+     * Add single triple statement with supplied context.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param contexts
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1044,10 +1040,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add single triple statement with supplied context
+     * Add single triple statement with supplied context.
      *
-     * @param st
-     * @param contexts
+     * @param st Statement to be added.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1057,10 +1053,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * add triple statements
+     * Add triple statements.
      *
-     * @param statements
-     * @param contexts
+     * @param statements Statement to be added.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1074,11 +1070,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 	}
 
     /**
-     * add triple statements
+     * Add triple statements.
      *
-     * @param statements
-     * @param contexts
-     * @param <E>
+     * @param statements Statement to be added.
+     * @param contexts Var-arg for the specified contexts.
+     * @param <E> Iterator for statement.
      * @throws RepositoryException
      * @throws E
      */
@@ -1093,12 +1089,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
 
     /**
-     * remove triple statement
+     * Remove triple statement.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param contexts
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1108,10 +1104,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * remove triple statement
+     * Remove triple statement.
      *
-     * @param st
-     * @param contexts
+     * @param st the statement to be removed.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1121,9 +1117,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * remove triple statements
+     * Remove triple statements.
      *
-     * @param statements
+     * @param statements the statement to be removed.
      * @throws RepositoryException
      */
     @Override
@@ -1136,10 +1132,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * remove triple statements
+     * Remove triple statements.
      *
-     * @param statements
-     * @param contexts
+     * @param statements the statement to be removed.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1153,10 +1149,10 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 	}
 
     /**
-     * remove triple statements
+     * Remove triple statements.
      *
-     * @param statements
-     * @param <E>
+     * @param statements the statement to be removed.
+     * @param <E> iterator of statements to be removed.
      * @throws RepositoryException
      * @throws E
      */
@@ -1169,11 +1165,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * remove triple statements
+     * Remove triple statements.
      *
-     * @param statements
-     * @param contexts
-     * @param <E>
+     * @param statements the statement to be removed.
+     * @param contexts Var-arg for the specified contexts.
+     * @param <E> iterator of statements to be removed.
      * @throws RepositoryException
      * @throws E
      */
@@ -1187,14 +1183,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 	}
 
     /**
-     * add without commit
+     * Add without commit.
      *
-     * note- supplied to honor interface
+     * Supplied to honor interface.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param contexts
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1204,14 +1200,14 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * remove without commit
+     * Remove without commit.
      *
-     *  supplied to honor interface
+     * Supplied to honor interface.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param contexts
+     * @param subject Subject of the statement.
+     * @param predicate Predicate of the statement.
+     * @param object Object of the statement.
+     * @param contexts Var-arg for the specified contexts.
      * @throws RepositoryException
      */
     @Override
@@ -1226,7 +1222,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     /**
      *
-     * supplied to honor interface
+     * Supplied to honor interface.
      *
      * @return
      * @throws RepositoryException
@@ -1238,7 +1234,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     /**
      *
-     * supplied to honor interface
+     * Supplied to honor interface.
      *
      * @param prefix
      * @return
@@ -1251,7 +1247,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     /**
      *
-     * supplied to honor interface
+     * Supplied to honor interface.
      *
      * @param prefix
      * @param name
@@ -1263,7 +1259,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     /**
      *
-     * supplied to honor interface
+     * Supplied to honor interface.
      *
      * @param prefix
      * @throws RepositoryException
@@ -1274,7 +1270,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     /**
      *
-     * supplied to honor interface
+     * Supplied to honor interface.
      *
      * @throws RepositoryException
      */
@@ -1287,7 +1283,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     /**
      * sets default graph permissions to be used by all queries
      *
-     * @param graphPerms
+     * @param graphPerms the graph permissions to be set.
      */
     @Override
     public void setDefaultGraphPerms(GraphPermissions graphPerms) {
@@ -1299,7 +1295,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns default graph permissions to be used by all queries
+     * Returns default graph permissions to be used by all queries.
      *
      * @return GraphPermissions
      */
@@ -1310,9 +1306,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
 
     /**
-     * sets default QueryDefinition to be used by all queries
+     * Sets default QueryDefinition to be used by all queries.
      *
-     * @param queryDef
+     * @param queryDef the query definition to be used by default.
      */
     @Override
     public void setDefaultConstrainingQueryDefinition(QueryDefinition queryDef) {
@@ -1321,7 +1317,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns default QueryDefinition to be used by all queries
+     * Returns default QueryDefinition to be used by all queries.
      *
      * @return QueryDefinition
      */
@@ -1331,9 +1327,9 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * sets default rulesets to be used by all queries
+     * Sets default rulesets to be used by all queries.
      *
-     * @param ruleset
+     * @param ruleset Var-arg for the default ruleset.
      */
     @Override
     public void setDefaultRulesets(SPARQLRuleset ... ruleset ) {
@@ -1342,7 +1338,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * returns default rulesets to be used by all queries
+     * Returns default rulesets to be used by all queries.
      *
      * @return SPARQLRuleset[]
      */
@@ -1353,7 +1349,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
 
     /**
-     * forces write cache to sync
+     * Forces write cache to sync.
      *
      */
     @Override
@@ -1362,7 +1358,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
 
     /**
-     * customise write cache interval and cache size. 
+     * Customise write cache interval and cache size. 
      *
      * @param initDelay - initial interval before write cache is checked
      * @param delayCache - interval (ms) to check write cache
