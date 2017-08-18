@@ -34,18 +34,21 @@ import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.common.iteration.IteratorIteration;
+import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.Query;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -177,7 +180,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 	@BeforeClass
 	public static void initialSetup() throws Exception {
-
 		hostNames = getHosts();
 		createDB(dbName);
 		Thread.currentThread().sleep(500L);
@@ -196,7 +198,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 	@AfterClass
 	public static void tearDownSetup() throws Exception  {
-
 		associateRESTServerWithDB(restServer,"Documents");
 		for (int i =0 ; i < hostNames.length; i++){
 			detachForest(dbName, dbName+"-"+(i+1));
@@ -206,7 +207,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		deleteDB(dbName);
 		deleteRESTUser("reader");
 		deleteRESTUser("writer");
-
 	}
 
 	@Before
@@ -1163,7 +1163,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	@Test
 	public void testPrepareGraphQuery1() throws Exception
 	{
-
 		StringBuilder queryBuilder = new StringBuilder(128);
 		queryBuilder.append(" PREFIX ad: <http://marklogicsparql.com/addressbook#>");
 		queryBuilder.append(" CONSTRUCT{ ?person ?p ?o .} ");
@@ -1178,10 +1177,18 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 		GraphQuery emptyQuery = testAdminCon.prepareGraphQuery(QueryLanguage.SPARQL, queryBuilder.toString());
 		emptyQuery.setBinding("firstname", vf.createLiteral("Micah"));
-		GraphQueryResult emptyResult = emptyQuery.evaluate();
-		assertThat(emptyResult.hasNext(), is(equalTo(false)));
-
-
+		GraphQueryResult emptyResult = null;
+		try{
+			emptyResult = emptyQuery.evaluate();
+			assertFalse(emptyResult ==  null);
+			assertThat(emptyResult.hasNext(), is(equalTo(false)));
+		}
+		catch(QueryEvaluationException e){
+			e.printStackTrace();
+		}
+		finally{
+			emptyResult.close();
+		}
 		Statement st1 = vf.createStatement(john, fname, johnfname, dirgraph);
 		Statement st2 = vf.createStatement(john, lname, johnlname, dirgraph);
 		Statement st3 = vf.createStatement(john, homeTel, johnhomeTel, dirgraph);
@@ -1207,9 +1214,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		StatementIterator iter = new StatementIterator(sL);
 		testAdminCon.add(new StatementIterable(iter), dirgraph);
 		Assert.assertEquals(10, testAdminCon.size(dirgraph));
-
-
-
 		GraphQuery query = testAdminCon.prepareGraphQuery(QueryLanguage.SPARQL, queryBuilder.toString());
 		query.setBinding("firstname", vf.createLiteral("Micah"));
 
@@ -1220,7 +1224,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		int i = 0;
 
 		try {
-			assertThat(result, is(notNullValue()));
+		  	assertThat(result, is(notNullValue()));
 			assertThat(result.hasNext(), is(equalTo(true)));
 			while (result.hasNext()) {
 				Statement st = result.next();
@@ -1236,7 +1240,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		finally {
 			result.close();
 		}
-
 		StringBuilder qB = new StringBuilder(128);
 		qB.append(" PREFIX ad: <http://marklogicsparql.com/addressbook#>");
 		qB.append(" CONSTRUCT{ ?person ?p ?o .} ");
@@ -1250,9 +1253,15 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		qB.append(" order by $person ?p ?o ");
 
 		GraphQuery query1 = testAdminCon.prepareGraphQuery(QueryLanguage.SPARQL, qB.toString());
-		GraphQueryResult result1 = query1.evaluate();
-		assertThat(result1, is(notNullValue()));
-		Assert.assertFalse(result1.hasNext());
+		GraphQueryResult result1 = null;
+		try{
+			result1 = query1.evaluate();
+			assertThat(result1, is(notNullValue()));
+			Assert.assertFalse(result1.hasNext());
+		}
+		finally{
+			result1.close();
+		}
 	}
 
 	// ISSUE 45
@@ -1353,7 +1362,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 		Assert.assertTrue(testWriterCon.hasStatement(st1, false));
 		Assert.assertFalse(testWriterCon.hasStatement(st1, false, (Resource)null));
-		Assert.assertFalse(testWriterCon.hasStatement(st1, false, null));
+		Assert.assertFalse(testWriterCon.hasStatement(st1, false, new Resource [] {null}));
 		Assert.assertTrue(testWriterCon.hasStatement(st1, false, dirgraph));
 
 
@@ -1432,7 +1441,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	@Test
 	public void testPrepareQuery1() throws Exception {
 		testAdminCon.add(MarkLogicRepositoryConnectionTest.class.getResourceAsStream(TEST_DIR_PREFIX + "companies_100.ttl"), "",
-				RDFFormat.TURTLE, null);
+				RDFFormat.TURTLE,(Resource) null);
 		Assert.assertEquals(testAdminCon.size(), 1600L);
 
 		StringBuilder queryBuilder = new StringBuilder(128);
@@ -1477,7 +1486,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	public void testPrepareQuery2() throws Exception{
 
 		Reader ir = new BufferedReader(new InputStreamReader(MarkLogicRepositoryConnectionTest.class.getResourceAsStream(TEST_DIR_PREFIX + "property-paths.ttl")));
-		testAdminCon.add(ir, "", RDFFormat.TURTLE, null);
+		testAdminCon.add(ir, "", RDFFormat.TURTLE, (Resource)null);
 
 		StringBuilder queryBuilder = new StringBuilder(128);
 		queryBuilder.append(" prefix : <http://learningsparql.com/ns/papers#> ");
@@ -2139,7 +2148,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		Assert.assertFalse(testWriterCon.isEmpty());
 		Assert.assertTrue("The graph gr2 should not be empty", (testWriterCon.size(gr2) == 2));
 		Assert.assertTrue("The graph gr2 should not be empty", (testAdminCon.size(gr2) == 2));
-		Assert.assertTrue("The default graph should  be empty", (testAdminCon.size(null) == 0));
+		//Assert.assertTrue("The default graph should  be empty", (testAdminCon.size(null) == 0));
 
 		testWriterCon.prepareUpdate(
 				" DROP GRAPH <http://ml.com> ").execute();
@@ -2348,8 +2357,8 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		Statement st2 = vf.createStatement(john, lname, johnlname);
 		assertThat(testAdminCon.hasStatement(st2, false,  dirgraph), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(st2, true,  null, dirgraph), is(equalTo(true)));
-		assertThat(testAdminCon.hasStatement(st2, true,  null), is(equalTo(false)));
-		assertThat(testAdminCon.hasStatement(john, lname, johnlname, true,  null), is(equalTo(false)));
+		assertThat(testAdminCon.hasStatement(st2, true, (Resource) null), is(equalTo(false)));
+		assertThat(testAdminCon.hasStatement(john, lname, johnlname, true,  (Resource)null), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(john, lname, johnlname, true,  (Resource)null, dirgraph, dirgraph1), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(st2, true), is(equalTo(true)));
 		testAdminCon.remove(st2, dirgraph);
@@ -2360,7 +2369,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		testAdminCon.remove(john,email, null);
 		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false,  dirgraph), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false), is(equalTo(true)));
-		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false, null), is(equalTo(false)));
+		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false, (Resource)null), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false, null, dirgraph), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(john, lname, johnlname, false,  dirgraph), is(equalTo(false)));
 		testAdminCon.remove(john,null,null);
@@ -2369,9 +2378,9 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false,  dirgraph), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(john, fname, johnfname, false, null, dirgraph), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(john, lname, johnlname, false, (Resource)null, dirgraph), is(equalTo(false)));
-		assertThat(testAdminCon.hasStatement(micah, homeTel, johnhomeTel, false, null), is(equalTo(false)));
+		assertThat(testAdminCon.hasStatement(micah, homeTel, johnhomeTel, false, null, null), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(micah, homeTel, micahhomeTel, false, (Resource)null), is(equalTo(true)));
-		assertThat(testAdminCon.hasStatement(micah, homeTel, micahhomeTel, false, null), is(equalTo(true)));
+		assertThat(testAdminCon.hasStatement(micah, homeTel, micahhomeTel, false, null, (Resource)null), is(equalTo(true)));
 
 		testAdminCon.remove((Resource)null, homeTel,(Value) null);
 		testAdminCon.remove((Resource)null, homeTel, (Value)null);
@@ -2394,7 +2403,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		testAdminCon.remove(null, null, micahlname);
 		assertThat(testAdminCon.hasStatement(micah, fname, micahfname, false), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(micah, fname, micahfname, false, null, dirgraph), is(equalTo(true)));
-		assertThat(testAdminCon.hasStatement(null, null, null, false, null), is(equalTo(true)));
+		assertThat(testAdminCon.hasStatement(null, null, null, false, null, null), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(null, null, null, false), is(equalTo(true)));
 		assertThat(testAdminCon.hasStatement(null, null, null, false, dirgraph), is(equalTo(false)));
 		assertThat(testAdminCon.hasStatement(micah, fname, micahfname, false, dirgraph1, dirgraph), is(equalTo(false)));
@@ -2621,7 +2630,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			Assert.assertEquals("Size of repository must be 6",6, testAdminCon.size(dirgraph,dirgraph1));
 			Assert.assertEquals("Size of repository must be 3",3, testAdminCon.size(dirgraph,null));
 			Assert.assertEquals("Size of repository must be 3",3, testAdminCon.size(dirgraph1,null));
-			Assert.assertEquals("Size of default graph must be 0",0, testAdminCon.size(null));
+			Assert.assertEquals("Size of default graph must be 0",0, testAdminCon.size(null,null));
 
 
 			testAdminCon.add(dirgraph, vf.createIRI("http://TYPE"), vf.createLiteral("Directory Graph"));
@@ -2637,7 +2646,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 				testAdminCon.rollback();
 		}
 		Assert.assertEquals("Size of repository must be 4",4, testAdminCon.size(dirgraph1,null));
-		Assert.assertEquals(1, testAdminCon.size(null));
+		Assert.assertEquals(1, testAdminCon.size((Resource)null));
 		Assert.assertEquals(1, testAdminCon.size(null, null));
 		Assert.assertEquals(3, testAdminCon.size(dirgraph, dirgraph));
 
@@ -2677,7 +2686,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 
 		// Check handling of getStatements with null context
-		result = testAdminCon.getStatements(null, null, null, false, null);
+		result = testAdminCon.getStatements(null, null, null, false, null, null);
 		assertThat(result, is(notNullValue()));
 		try {
 			while (result.hasNext()) {
@@ -2704,7 +2713,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		assertNotNull("List should not be null", list);
 		assertFalse("List should not be empty", list.isEmpty());
 
-		List<Statement> list1 = Iterations.addAll(testAdminCon.getStatements(dirgraph, null, null, false, null),
+		List<Statement> list1 = Iterations.addAll(testAdminCon.getStatements(dirgraph, null, null, false, (Resource)null),
 				new ArrayList<Statement>());
 		assertNotNull("List should not be null", list1);
 		assertFalse("List should not be empty", list1.isEmpty());
@@ -2719,7 +2728,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		IRI ur = vf.createIRI("http://abcd");
 
 
-		CloseableIteration<? extends Statement, RepositoryException> iter1 = testAdminCon.getStatements(null, null, null, false, null);
+		CloseableIteration<? extends Statement, RepositoryException> iter1 = testAdminCon.getStatements(null, null, null, false, null, null);
 
 		try {
 			int count = 0;
@@ -3731,4 +3740,387 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		Assert.assertEquals("Size of dirgraph1",0, testAdminCon.size());
 
 	}
+   
+   @Ignore
+  	public void testHasStatement()
+  		throws Exception
+  	{
+  		try{
+  			BNode somenode = SimpleValueFactory.getInstance().createBNode();
+  			
+  			testAdminCon.add(john, fname, somenode, dirgraph);
+  			testAdminCon.add(john, fname, somenode, null);
+  			
+  			
+  			Assert.assertTrue(testAdminCon.hasStatement(john, fname, somenode, false, dirgraph));
+  			Assert.assertTrue(testAdminCon.hasStatement(john, fname, somenode, false, null));
+  			
+
+  		}
+  		catch(Exception e){
+  			e.printStackTrace();
+
+  		}
+  	}
+   
+   @Ignore
+	public void testExportStatements() throws Exception{
+
+		Statement st1 = vf.createStatement(john, fname, johnfname, dirgraph);
+		Statement st2 = vf.createStatement(john, homeTel, johnhomeTel, dirgraph1);
+
+		testAdminCon.add(st1);
+		testAdminCon.add(st2);
+		testAdminCon.add(micah, lname, micahlname, (Resource)null);
+		try{
+			Assert.assertEquals(3, testAdminCon.size());
+			
+			testWriterCon.exportStatements(null, null, null, false, new AbstractRDFHandler() {
+				@Override
+				public void handleStatement(Statement st)
+					throws RDFHandlerException
+				{
+					if(st.getContext() == null){
+						assertThat(st, is((equalTo(vf.createStatement(micah, lname, micahlname, null)))));
+					}
+					else {
+						if(st.getContext().equals(dirgraph)){
+							assertThat(st, is((equalTo(st1))));
+						}
+						else if(st.getContext().equals(dirgraph1)){
+							assertThat(st, is((equalTo(st2))));
+						}
+					
+						else{
+							fail("Statement not returned");
+						}
+					}
+				}
+			},dirgraph, dirgraph1, null);
+			
+			testWriterCon.exportStatements(null, null, null, false, new AbstractRDFHandler() {
+				@Override
+				public void handleStatement(Statement st)
+					throws RDFHandlerException
+				{
+					if(st.getContext() == null){
+						assertThat(st, is((equalTo(vf.createStatement(micah, lname, micahlname, null)))));
+					}
+					else {
+						if(st.getContext().equals(dirgraph)){
+							assertThat(st, is((equalTo(st1))));
+						}
+									
+						else{
+							fail("Statement not returned");
+						}
+					}
+				}
+			},dirgraph,  null);
+			testWriterCon.exportStatements(null, null, null, false, new AbstractRDFHandler() {
+				@Override
+				public void handleStatement(Statement st)
+					throws RDFHandlerException
+				{
+					if(st.getContext() == null){
+						assertThat(st, is((equalTo(vf.createStatement(micah, lname, micahlname, null)))));
+					}
+					else {
+						if(st.getContext().equals(dirgraph1)){
+							assertThat(st, is((equalTo(st2))));
+						}
+									
+						else{
+							fail("Statement not returned");
+						}
+					}
+				}
+			},dirgraph1,  null);
+		}
+		catch(Exception ex){
+			logger.error("Failed :", ex);
+		}
+   }
+   
+   @Test
+	public void testAddStatements() throws Exception{
+
+		Statement st1 = vf.createStatement(john, fname, johnfname, dirgraph);
+		Statement st2 = vf.createStatement(john, homeTel, johnhomeTel, dirgraph1);
+		Statement st3 = vf.createStatement(micah, lname, micahlname,dirgraph);
+				
+		testAdminCon.add(st1, dirgraph1);
+		testAdminCon.add(st2, dirgraph);
+		testAdminCon.add(st3,(Resource)null);
+		try{
+			Assert.assertEquals(3, testAdminCon.size());
+			testWriterCon.exportStatements(null, null, null, false, new AbstractRDFHandler() {
+				@Override
+				public void handleStatement(Statement st)
+					throws RDFHandlerException
+				{
+					if(st.getContext() == null){
+						assertThat(st, is((equalTo(vf.createStatement(micah, lname, micahlname, null)))));
+					}
+					else {
+						if(st.getContext().equals(dirgraph)){
+							// Issue rdf4j-25
+							assertThat(st, is(not(equalTo(vf.createStatement(john, homeTel, johnhomeTel, dirgraph)))));
+				
+						}
+						else if(st.getContext().equals(dirgraph1)){
+							assertThat(st, is((equalTo(vf.createStatement(john, fname, johnfname, dirgraph1)))));
+						}
+						else{
+							fail("Statement not returned");
+						}
+					}
+				}
+			},dirgraph, dirgraph1, null);
+		}
+		
+		catch(Exception ex){
+			logger.error("Failed :", ex);
+		}
+   	}
+   
+    @Test
+	public void testNullContexts() throws Exception{
+    	
+		Statement st = vf.createStatement(john, fname, johnfname, dirgraph);
+		try{
+			testAdminCon.add(st,null);
+			fail("null context shouldn't be allowed");
+		}
+		catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+		
+		testAdminCon.add(st,(Resource)null);
+		
+		try{
+			testAdminCon.getStatements(null, null, null, false, null);
+			fail("null context shouldn't be allowed");
+		}
+		catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+		
+		try{
+			testAdminCon.size(null);
+			fail("null context shouldn't be allowed");
+		}
+		catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+		
+		try{
+			testAdminCon.getStatements(null, null, null, true, null);
+			fail("null context shouldn't be allowed");
+		}
+		catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+		
+		try{
+			testAdminCon.exportStatements(null, null, null, false, new AbstractRDFHandler() {
+				@Override
+				public void handleStatement(Statement st)
+					throws RDFHandlerException
+				{
+					
+					
+				}
+			}, null);
+			fail("null context shouldn't be allowed");
+		}
+		catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+		
+				
+		Assert.assertEquals(1, testAdminCon.size(new Resource[]{}));
+		IRI temp = testAdminCon.getValueFactory().createIRI("http://marklogic.com/temp");
+		System.out.println(testAdminCon.size(temp));
+	}
+    
+    @Test
+	public void testRemove() throws Exception{
+    	
+    	Statement st = vf.createStatement(john, fname, johnfname);
+    	Statement st1 = vf.createStatement(john, lname, johnlname);
+    	testAdminCon.add(st, dirgraph);
+    	testAdminCon.add(st1, (Resource)null);
+    	
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==2);
+    	
+    	testAdminCon.remove(st, (Resource)null);
+    	
+    		
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==1);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==2);
+    	
+    	
+  
+		StatementList<Statement> sL1 = new StatementList<Statement>(st);
+		sL1.add(st1);
+		
+		StatementIterator iter1 = new StatementIterator(sL1);
+		Iterable<? extends Statement>  iterable1 = new StatementIterable(iter1);
+		Assert.assertTrue(iterable1.iterator().hasNext());
+
+	    testAdminCon.remove(iterable1);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+	    
+    	testAdminCon.add(st, dirgraph);
+    	testAdminCon.add(st1, (Resource)null);
+    	
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==2);
+    	
+    	iter1 = new StatementIterator(sL1);
+		iterable1 = new StatementIterable(iter1);
+		
+        testAdminCon.remove(iterable1, dirgraph);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==1);
+    	
+    	testAdminCon.add(st, dirgraph);
+    	testAdminCon.add(st1, (Resource)null);
+    	
+    	Collection<Statement> c = Iterations.addAll(testAdminCon.getStatements(null, null, null, false),
+				new ArrayList<Statement>());
+		testAdminCon.remove(c);
+		Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    	
+    	Statement st3 = vf.createStatement(micah, lname, micahlname,dirgraph1);
+    	testAdminCon.add(st3);
+    	
+    	sL1 = new StatementList<Statement>(st3);
+    	iter1 = new StatementIterator(sL1);
+		iterable1 = new StatementIterable(iter1);
+		testAdminCon.remove(iterable1);
+		
+		Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    	
+    	testAdminCon.add(john, fname, johnfname, dirgraph);
+    	testAdminCon.add(micah, lname, micahlname, dirgraph1);
+    	testAdminCon.add(st1, (Resource)null);
+    	
+    	sL1 = new StatementList<Statement>(st1);
+    	sL1.add(vf.createStatement(john, fname, johnfname, dirgraph));
+    	sL1.add(vf.createStatement(micah, lname, micahlname));
+    	
+    	iter1 = new StatementIterator(sL1);
+		iterable1 = new StatementIterable(iter1);
+		testAdminCon.remove(iterable1);
+		Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+		Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    	
+    	sL1 = new StatementList<Statement>(st);
+    	sL1.add(st1);
+
+    	iter1 = new StatementIterator(sL1);
+    	Iteration<Statement, Exception> it = new IteratorIteration<Statement, Exception> (iter1);
+    	Assert.assertTrue(it.hasNext());
+
+    	testAdminCon.remove(it);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+
+    	testAdminCon.add(st, dirgraph);
+    	testAdminCon.add(st1, (Resource)null);
+
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==2);
+
+    	iter1 = new StatementIterator(sL1);
+    	it = new IteratorIteration<Statement, Exception>(iter1);
+
+    	testAdminCon.remove(it, dirgraph);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==1);
+    	Assert.assertTrue(testAdminCon.size() ==1);
+
+    	testAdminCon.add(st, dirgraph);
+    	testAdminCon.add(st1, (Resource)null);
+
+    	c = Iterations.addAll(testAdminCon.getStatements(null, null, null, false),
+    			new ArrayList<Statement>());
+    	testAdminCon.remove(c);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+
+    	st3 = vf.createStatement(micah, lname, micahlname,dirgraph1);
+    	testAdminCon.add(st3);
+    	
+      	sL1 = new StatementList<Statement>(vf.createStatement(micah, lname, micahlname,dirgraph));
+    	iter1 = new StatementIterator(sL1);
+    	it = new IteratorIteration<Statement, Exception>(iter1);
+    	testAdminCon.remove(it);
+
+    	Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    	
+    	
+    	testAdminCon.add(st1);
+    	testAdminCon.add(st,dirgraph);
+      	sL1 = new StatementList<Statement>(vf.createStatement(micah, lname, micahlname,dirgraph));
+        sL1.add(st1);
+        sL1.add(st);
+    	iter1 = new StatementIterator(sL1);
+    	it = new IteratorIteration<Statement, Exception>(iter1);
+    	testAdminCon.remove(it, (Resource)null);
+
+    	Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==1);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==1);
+    	
+    	testAdminCon.remove(Iterations.addAll(testAdminCon.getStatements(null, null, null, false),
+    			new ArrayList<Statement>()));
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    	
+    	st3 = vf.createStatement(micah, lname, micahlname,dirgraph1);
+    	testAdminCon.add(st3);
+    	sL1 = new StatementList<Statement>(st3);
+    	iter1 = new StatementIterator(sL1);
+    	it = new IteratorIteration<Statement, Exception>(iter1);
+    	testAdminCon.remove(it);
+
+    	Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+
+    	testAdminCon.add(john, fname, johnfname, dirgraph);
+    	testAdminCon.add(micah, lname, micahlname, dirgraph1);
+    	testAdminCon.add(st1, (Resource)null);
+
+    	sL1 = new StatementList<Statement>(st1);
+    	sL1.add(vf.createStatement(john, fname, johnfname, dirgraph));
+    	sL1.add(vf.createStatement(micah, lname, micahlname));
+
+    	iter1 = new StatementIterator(sL1);
+    	it = new IteratorIteration<Statement, Exception>(iter1);
+    	testAdminCon.remove(it);
+    	Assert.assertTrue(testAdminCon.size(dirgraph) ==0);
+    	Assert.assertTrue(testAdminCon.size(dirgraph1) ==0);
+    	Assert.assertTrue(testAdminCon.size(null, null) ==0);
+    	Assert.assertTrue(testAdminCon.size() ==0);
+    }
 }

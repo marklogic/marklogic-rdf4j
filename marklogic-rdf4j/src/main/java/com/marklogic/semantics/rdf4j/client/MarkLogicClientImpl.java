@@ -27,9 +27,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import com.marklogic.client.*;
-import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
-import org.eclipse.rdf4j.model.*;
+
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.query.SPARQLQueryBindingSet;
@@ -39,6 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.DatabaseClientFactory;
+import com.marklogic.client.FailedRequestException;
+import com.marklogic.client.ForbiddenUserException;
+import com.marklogic.client.Transaction;
 import com.marklogic.client.impl.SPARQLBindingsImpl;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.InputStreamHandle;
@@ -50,6 +57,7 @@ import com.marklogic.client.semantics.SPARQLBindings;
 import com.marklogic.client.semantics.SPARQLQueryDefinition;
 import com.marklogic.client.semantics.SPARQLQueryManager;
 import com.marklogic.client.semantics.SPARQLRuleset;
+import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 
 /**
  * internal class for interacting with java api client
@@ -279,7 +287,7 @@ class MarkLogicClientImpl {
             if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
                 graphManager.mergeGraphs(new FileHandle(file),tx);
             } else {
-                if (notNull(contexts) && contexts.length>0) {
+                if (contexts.length>0) {
                     for (int i = 0; i < contexts.length; i++) {
                         if(notNull(contexts[i])){
                             graphManager.mergeAs(contexts[i].toString(), new FileHandle(file), getGraphPerms(),tx);
@@ -313,7 +321,7 @@ class MarkLogicClientImpl {
             if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
                 graphManager.mergeGraphs(new InputStreamHandle(in),tx);
             } else {
-                if (notNull(contexts) && contexts.length > 0) {
+                if (contexts.length > 0) {
                     for (int i = 0; i < contexts.length; i++) {
                         if (notNull(contexts[i])) {
                             graphManager.mergeAs(contexts[i].toString(), new InputStreamHandle(in), getGraphPerms(), tx);
@@ -348,7 +356,7 @@ class MarkLogicClientImpl {
      */
     public void performAdd(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
-        if(notNull(contexts) && contexts.length>0) {
+        if(contexts.length>0) {
             if (notNull(baseURI)) sb.append("BASE <" + baseURI + ">\n");
             sb.append("INSERT DATA { ");
             for (int i = 0; i < contexts.length; i++) {
@@ -361,7 +369,7 @@ class MarkLogicClientImpl {
             sb.append("}");
         } else {
             sb.append("INSERT DATA { GRAPH <" + DEFAULT_GRAPH_URI + "> {?s ?p ?o .}}");
-        }
+        }  
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(sb.toString());
         if (notNull(ruleset) ) {qdef.setRulesets(ruleset);}
         if(notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
@@ -387,13 +395,15 @@ class MarkLogicClientImpl {
     public void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
         String[] contextArgs = null;
-        if(notNull(contexts) && contexts.length>0)
-        {
-            if (notNull(baseURI))sb.append("BASE <" + baseURI + ">\n");
+        if(contexts.length>0)
+        {	if (notNull(baseURI))sb.append("BASE <" + baseURI + ">\n");
             contextArgs = new String[contexts.length];
             for (int i = 0; i < contexts.length; i++) {
                 if(notNull(contexts[i])){
                     contextArgs[i] = contexts[i].stringValue();
+                }
+                else{
+                	contextArgs[i] = DEFAULT_GRAPH_URI;
                 }
             }
         }
@@ -414,7 +424,7 @@ class MarkLogicClientImpl {
      * @param contexts
      */
     public void performClear(Transaction tx, Resource... contexts) {
-        if(notNull(contexts)) {
+        if(contexts.length>0) {
             for (int i = 0; i < contexts.length; i++) {
                 if (notNull(contexts[i])) {
                     graphManager.delete(contexts[i].stringValue(), tx);

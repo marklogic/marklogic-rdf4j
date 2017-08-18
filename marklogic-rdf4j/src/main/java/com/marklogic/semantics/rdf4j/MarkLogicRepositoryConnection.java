@@ -19,18 +19,44 @@
  */
 package com.marklogic.semantics.rdf4j;
 
-import com.marklogic.client.query.QueryDefinition;
-import com.marklogic.client.semantics.GraphPermissions;
-import com.marklogic.client.semantics.SPARQLRuleset;
-import com.marklogic.semantics.rdf4j.query.*;
-import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
-import org.eclipse.rdf4j.common.iteration.*;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.ConvertingIteration;
+import org.eclipse.rdf4j.common.iteration.EmptyIteration;
+import org.eclipse.rdf4j.common.iteration.ExceptionConvertingIteration;
+import org.eclipse.rdf4j.common.iteration.Iteration;
+import org.eclipse.rdf4j.common.iteration.SingletonIteration;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.StatementImpl;
-import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.Query;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.QueryResults;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.UnsupportedQueryLanguageException;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -46,14 +72,15 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URL;
-import java.util.Iterator;
-
-import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
+import com.marklogic.client.query.QueryDefinition;
+import com.marklogic.client.semantics.GraphPermissions;
+import com.marklogic.client.semantics.SPARQLRuleset;
+import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import com.marklogic.semantics.rdf4j.query.MarkLogicBooleanQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicGraphQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
+import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
 
 /**
  * RepositoryConnection to MarkLogic triplestore
@@ -550,10 +577,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred, Resource... contexts) throws RepositoryException {
-        if (contexts == null) {
-            contexts = new Resource[] { null };
-        }
-        try {
+    	contexts = verifyContextNotNull(contexts);
+    	try {
             if (isQuadMode()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("SELECT * WHERE { GRAPH ?ctx { ?s ?p ?o } filter (?ctx = (");
@@ -647,13 +672,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     public boolean hasStatement(Resource subject, IRI predicate, Value object, boolean includeInferred, Resource... contexts) throws RepositoryException {
         if(!this.isOpen()){throw new RepositoryException("Connection is closed.");}
         String queryString = null;
-        if(contexts == null) {
-            queryString="ASK { GRAPH ?ctx { ?s ?p ?o } filter (?ctx = (IRI(\""+DEFAULT_GRAPH_URI+"\")))}";
-        }else if (contexts.length == 0) {
+        contexts = verifyContextNotNull(contexts);
+    	if (contexts.length == 0) {
             queryString = SOMETHING;
         }
-        else {
-            StringBuilder sb= new StringBuilder();
+    	else{
+    		StringBuilder sb= new StringBuilder();
             sb.append("ASK { GRAPH ?ctx { ?s ?p ?o } filter (?ctx = (");
             boolean first = true;
             for (Resource context : contexts) {
@@ -766,9 +790,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public long size(Resource... contexts) throws RepositoryException {
-        if (contexts == null) {
-            contexts = new Resource[] { null };
-        }
+    	contexts = verifyContextNotNull(contexts);
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("SELECT (count(?s) as ?ct) where { GRAPH ?g { ?s ?p ?o }");
@@ -939,7 +961,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(InputStream in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-        getClient().sendAdd(in, baseURI, dataFormat, contexts);
+    	contexts = verifyContextNotNull(contexts);
+    	getClient().sendAdd(in, baseURI, dataFormat, contexts);
     }
 
     /**
@@ -957,7 +980,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(File file, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-        if(notNull(baseURI)) {
+        contexts = verifyContextNotNull(contexts);
+	 	if(notNull(baseURI)) {
             getClient().sendAdd(file, baseURI, dataFormat, contexts);
         }else{
             getClient().sendAdd(file, file.toURI().toString(), dataFormat, contexts);
@@ -977,7 +1001,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(Reader reader, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-        getClient().sendAdd(reader, baseURI, dataFormat, contexts);
+    	contexts = verifyContextNotNull(contexts);
+    	getClient().sendAdd(reader, baseURI, dataFormat, contexts);
     }
 
     /**
@@ -995,11 +1020,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(URL url, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-        if(notNull(baseURI)) {
+    	contexts = verifyContextNotNull(contexts);
+	  	if(notNull(baseURI)) {
             getClient().sendAdd(new URL(url.toString()).openStream(), baseURI, dataFormat, contexts);
         }else{
             getClient().sendAdd(new URL(url.toString()).openStream(), url.toString(), dataFormat, contexts);
-        }
+        }    
     }
 
     /**
@@ -1013,7 +1039,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(Resource subject, IRI predicate, Value object, Resource... contexts) throws RepositoryException {
-        getClient().sendAdd(null, subject, predicate, object, contexts);
+    	contexts = verifyContextNotNull(contexts);
+		getClient().sendAdd(null, subject, predicate, object, contexts);
     }
 
     /**
@@ -1025,7 +1052,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(Statement st, Resource... contexts) throws RepositoryException {
-        add(st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
+    	contexts = verifyContextNotNull(contexts);
+		add(st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
     }
 
     /**
@@ -1037,12 +1065,13 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void add(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
-        Iterator <? extends Statement> iter = statements.iterator();
-        while(iter.hasNext()){
-            Statement st = iter.next();
-            add(st, mergeResource(st.getContext(), contexts));
-        }
-    }
+    	contexts = verifyContextNotNull(contexts);
+    	Iterator <? extends Statement> iter = statements.iterator();
+	    while(iter.hasNext()){
+	    	Statement st = iter.next();
+	        add(st, mergeResource(st.getContext(), contexts));
+	    }
+	}
 
     /**
      * add triple statements
@@ -1055,11 +1084,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public <E extends Exception> void add(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
-        while(statements.hasNext()){
+    	contexts = verifyContextNotNull(contexts);
+		while(statements.hasNext()){
             Statement st = statements.next();
             add(st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
         }
-    }
+	}
 
 
     /**
@@ -1073,7 +1103,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void remove(Resource subject, IRI predicate, Value object, Resource... contexts) throws RepositoryException {
-        getClient().sendRemove(null, subject, predicate, object, contexts);
+    	contexts = verifyContextNotNull(contexts);
+    	getClient().sendRemove(null, subject, predicate, object, contexts);
     }
 
     /**
@@ -1085,7 +1116,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void remove(Statement st, Resource... contexts) throws RepositoryException {
-        getClient().sendRemove(null, st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
+    	contexts = verifyContextNotNull(contexts);
+    	getClient().sendRemove(null, st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
     }
 
     /**
@@ -1112,12 +1144,13 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void remove(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
-        Iterator <? extends Statement> iter = statements.iterator();
-        while(iter.hasNext()){
-            Statement st = iter.next();
-            getClient().sendRemove(null, st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
-        }
-    }
+    	contexts = verifyContextNotNull(contexts);
+	    Iterator <? extends Statement> iter = statements.iterator();
+	    while(iter.hasNext()){
+	    	Statement st = iter.next();
+	        getClient().sendRemove(null, st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
+	     }
+	}
 
     /**
      * remove triple statements
@@ -1146,11 +1179,12 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public <E extends Exception> void remove(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
-        while(statements.hasNext()){
+    	contexts = verifyContextNotNull(contexts);
+	 	while(statements.hasNext()){
             Statement st = statements.next();
             getClient().sendRemove(null, st.getSubject(), st.getPredicate(), st.getObject(), mergeResource(st.getContext(), contexts));
         }
-    }
+	}
 
     /**
      * add without commit
@@ -1165,7 +1199,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     protected void addWithoutCommit(Resource subject, IRI predicate, Value object, Resource... contexts) throws RepositoryException {
-        add(subject, predicate, object, contexts);
+    	contexts = verifyContextNotNull(contexts);
+    	add(subject, predicate, object, contexts); 
     }
 
     /**
@@ -1181,7 +1216,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     protected void removeWithoutCommit(Resource subject, IRI predicate, Value object, Resource... contexts) throws RepositoryException {
-        remove(subject, predicate, object, contexts);
+    	contexts = verifyContextNotNull(contexts);
+    	remove(subject, predicate, object, contexts);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1376,21 +1412,24 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
         if (obj != null) {
             query.setBinding("o", obj);
         }
-        if (contexts != null && contexts.length > 0) {
-            SimpleDataset dataset = new SimpleDataset();
-            if(notNull(contexts)){
-                for (Resource context : contexts) {
-                    if (notNull(context) || context instanceof IRI) {
+        contexts = verifyContextNotNull(contexts);
+        SimpleDataset dataset = new SimpleDataset();
+        if(contexts.length > 0){
+            for (Resource context : contexts) {
+            	if(notNull(context)){
+            		if (context instanceof IRI) {
                         dataset.addDefaultGraph((IRI) context);
-                    } else {
-                        dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
                     }
-                }
-            }else{
-                dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
+            	}
+            	else{
+            		 dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
+            	}
             }
-            query.setDataset(dataset);
         }
+        else {
+            dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
+        }
+        query.setDataset(dataset);
     }
 
     /**
@@ -1409,18 +1448,13 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      * @param arr
      * @return
      */
-    private static Resource[] mergeResource(Resource o, Resource... arr) {
-        if(arr != null && arr.length > 0){
-            return arr;
-        } else if(o == null) {
-            return null;
-        } else {
-            Resource[] newArray = new Resource[1];
-            newArray[0] = o;
-            return newArray;
-        }
-
-    }
+    private static Resource[] mergeResource(Resource o, Resource... arr) throws RepositoryException {
+    	arr = verifyContextNotNull(arr);
+    	if (arr.length == 0 && o != null) {
+			arr = new Resource[] { o };
+		}
+		return arr;          
+   }
 
     /**
      * convert bindings
@@ -1440,7 +1474,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 Value o = obj==null ? b.getValue("o") : obj;
                 IRI ctx = (IRI)b.getValue("ctx");
                 if (ctx.stringValue().equals(DEFAULT_GRAPH_URI)) {
-                    ctx = null;
+                    ctx = (IRI) null;
                 }
                 return getValueFactory().createStatement(s, p, o, ctx);
             }
@@ -1457,6 +1491,24 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     private static Boolean notNull(Object item) {
         return item!=null;
     }
+    
+	/**
+	 * private utility method that verifies that the supplied contexts parameter is not <tt>null</tt>, throwing an
+	 * {@link IllegalArgumentException} if it is.
+	 * 
+	 * @param contexts
+	 *        The parameter to check.
+	 * @return Resource[] 
+	 * @throws IllegalArgumentException
+	 *         If the supplied contexts parameter is <tt>null</tt>.
+	 */
+	private static Resource[] verifyContextNotNull(Resource... contexts) {
+		if (contexts == null) {
+			throw new IllegalArgumentException(
+					"Illegal value null array for contexts argument; either the value should be cast to Resource or an empty array should be supplied");
+		}
+		return Arrays.copyOf(contexts, contexts.length);
+	}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
