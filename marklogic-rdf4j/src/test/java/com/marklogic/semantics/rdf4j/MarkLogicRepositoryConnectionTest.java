@@ -1395,5 +1395,43 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
         Assert.assertFalse(booleanQuery.evaluate());
     }
+
+    @Test
+    public void testGetStatementContextBehaviorAsPerSpec()
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context8 = vf.createIRI("http://marklogic.com/test/context8");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        IRI creator = vf.createIRI("http://example.org/ontology/creator");
+        Literal alicesName = vf.createLiteral("Alice");
+
+        Resource context9 =  vf.createIRI("http://marklogic.com/test/context9");
+        IRI bob = vf.createIRI("http://example.org/people/bob");
+        Literal bobsName = vf.createLiteral("Bob");
+
+        conn.add(alice, name, alicesName, context8);
+        conn.add(bob, name, bobsName, context9);
+
+        conn.add(context8, creator, alicesName);
+        conn.add(context9, creator, bobsName);
+
+        RepositoryResult<Statement> result = conn.getStatements(null, null, null, context8, context9);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(2, model.size());
+
+        result = conn.getStatements(null, null, null, (Resource) null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(2, model.size());
+
+        result = conn.getStatements(null, null, null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(4, model.size());
+
+        exception.expect(IllegalArgumentException.class);
+        result = conn.getStatements(null, null, null, null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(0, model.size());
+    }
 }
 

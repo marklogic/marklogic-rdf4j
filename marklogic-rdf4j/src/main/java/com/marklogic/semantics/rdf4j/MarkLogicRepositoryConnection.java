@@ -578,26 +578,31 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     // TBD - should share code path with above getStatements
     @Override
     public RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred, Resource... contexts) throws RepositoryException {
-    	contexts = verifyContextNotNull(contexts);
-    	try {
+        contexts = verifyContextNotNull(contexts);
+        try {
             if (isQuadMode()) {
                 StringBuilder sb = new StringBuilder();
-                sb.append("SELECT * WHERE { GRAPH ?ctx { ?s ?p ?o } filter (?ctx = (");
-                boolean first = true;
-                for (Resource context : contexts) {
-                    if (first) {
-                        first = false;
-                    }
-                    else {
-                        sb.append(",");
-                    }
-                    if (notNull(context)) {
-                        sb.append("IRI(\"").append(context.toString()).append("\")");
-                    } else {
-                        sb.append("IRI(\""+DEFAULT_GRAPH_URI+"\")");
-                    }
+                if(contexts.length == 0)
+                {
+                    sb.append(GET_STATEMENTS);
                 }
-                sb.append(") ) }");
+                else {
+                    sb.append("SELECT * WHERE { GRAPH ?ctx { ?s ?p ?o } filter (?ctx = (");
+                    boolean first = true;
+                    for (Resource context : contexts) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            sb.append(",");
+                        }
+                        if (notNull(context)) {
+                            sb.append("IRI(\"").append(context.toString()).append("\")");
+                        } else {
+                            sb.append("IRI(\"" + DEFAULT_GRAPH_URI + "\")");
+                        }
+                    }
+                    sb.append(") ) }");
+                }
                 TupleQuery tupleQuery = prepareTupleQuery(sb.toString());
                 tupleQuery.setIncludeInferred(includeInferred);
                 setBindings(tupleQuery, subj, pred, obj, (Resource) null);
@@ -637,6 +642,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             throw new RepositoryException(e);
         }
     }
+
 
     // all statements
 
@@ -713,7 +719,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      *
      *
      *
-     * @param handler RDFHAndler
+     * @param handler RDFHandler
      * @param contexts Var-arg for specified contexts.
      * @throws RepositoryException
      * @throws RDFHandlerException
