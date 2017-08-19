@@ -37,8 +37,8 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
+import java.net.URL;
 
 import static junit.framework.TestCase.fail;
 
@@ -256,5 +256,31 @@ public class MarkLogicExceptionsTest extends Rdf4jTestBase {
 
         exception.expect(RepositoryException.class);
         testReaderCon.close();
+    }
+
+    @Test
+    public void testAddUnsupportedRDFFormatForFile() throws Exception {
+        File inputFile = new File("src/test/resources/testdata/malformed-literals.ttl");
+        String baseURI = "http://example.org/example1/";
+        Resource context1 = conn.getValueFactory().createIRI("http://marklogic.com/test/context1");
+        exception.expect(MarkLogicRdf4jException.class);
+        conn.add(inputFile, baseURI, RDFFormat.TRIX, context1);
+    }
+
+    @Test
+    public void testAddUnsupportedRDFFormatForInputStream() throws Exception {
+        File inputFile = new File("src/test/resources/testdata/malformed-literals.ttl");
+        InputStream in = new FileInputStream(inputFile);
+        Reader reader = new InputStreamReader(in);
+        exception.expect(MarkLogicRdf4jException.class);
+        conn.add(reader, "http://marklogic.com/baseball/", RDFFormat.BINARY);
+    }
+
+    @Test
+    public void testAddUnsupportedRDFFormatForURL() throws Exception {
+        File inputFile = new File("src/test/resources/testdata/malformed-literals.ttl");
+        URL url = inputFile.toURI().toURL();
+        exception.expect(MarkLogicRdf4jException.class);
+        conn.add(url, "",RDFFormat.JSONLD);
     }
 }

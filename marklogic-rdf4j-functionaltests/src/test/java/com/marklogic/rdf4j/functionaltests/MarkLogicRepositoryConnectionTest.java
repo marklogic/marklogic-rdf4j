@@ -1224,7 +1224,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		int i = 0;
 
 		try {
-		  	assertThat(result, is(notNullValue()));
+			assertThat(result, is(notNullValue()));
 			assertThat(result.hasNext(), is(equalTo(true)));
 			while (result.hasNext()) {
 				Statement st = result.next();

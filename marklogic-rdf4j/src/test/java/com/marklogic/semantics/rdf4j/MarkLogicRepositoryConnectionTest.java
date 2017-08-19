@@ -641,17 +641,15 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
 
         Assert.assertTrue(conn.hasStatement(st1, false, context1));
         Assert.assertTrue(conn.hasStatement(st1, false, context1, null));
-        Assert.assertFalse(conn.hasStatement(st1, false, null));
+        Assert.assertFalse(conn.hasStatement(st1, false, (Resource) null));
         Assert.assertFalse(conn.hasStatement(st1, false, (Resource) null));
         Assert.assertTrue(conn.hasStatement(st1, false));
         Assert.assertTrue(conn.hasStatement(null, null, null, false));
         conn.clear(context1);
     }
 
-    // TODO: Not implemented yet
-    // https://github.com/marklogic/marklogic-sesame/issues/363
+    // https://github.com/marklogic/marklogic-sesame/issues/364
     @Test
-    @Ignore
     public void testHasStatementBNode() throws Exception
     {
         ValueFactory vf = conn.getValueFactory();
@@ -662,6 +660,11 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Statement st1 = vf.createStatement(alice, name, alicesName);
         conn.add(st1, context1);
         Assert.assertTrue(conn.hasStatement(null, null, alicesName, false));
+
+        String alicesNamesId = alicesName.getID();
+        BNode copyOfAliceName = vf.createBNode(alicesNamesId);
+        System.out.println(alicesNamesId);
+        Assert.assertTrue(conn.hasStatement(null, null, copyOfAliceName, false));
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/363
@@ -711,7 +714,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
 
         Assert.assertTrue(conn.hasStatement(st1, false));
         Assert.assertFalse(conn.hasStatement(st1, false, (Resource) null));
-        Assert.assertFalse(conn.hasStatement(st1, false, null));
+        Assert.assertFalse(conn.hasStatement(st1, false, (Resource) null));
 
         conn.clear(context1);
     }
@@ -1061,7 +1064,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
     public void testSizeWithUncastedNull() throws Exception {
         File inputFile = new File(TESTFILE_OWL);
         conn.add(inputFile,null,RDFFormat.RDFXML);
-        Assert.assertEquals(449, conn.size(null));
+        Assert.assertEquals(449, conn.size((Resource) null));
         conn.clear(conn.getValueFactory().createIRI("http://marklogic.com/semantics#default-graph"));
     }
 
@@ -1192,7 +1195,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         File inputFile2 = new File("src/test/resources/testdata/default-graph-2.ttl");
         conn.add(inputFile2, "http://example.org/example1/", RDFFormat.TURTLE, context5);
 
-        Assert.assertEquals(4, conn.size(null));
+        Assert.assertEquals(4, conn.size((Resource) null));
         Assert.assertEquals(8, conn.size());
         Assert.assertEquals(4, conn.size(context5));
         Assert.assertEquals(4, conn.size((Resource) null));
@@ -1391,6 +1394,44 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         queryString = "ASK {GRAPH <" + context6.stringValue() + "> {<" + alice.stringValue() + "> <" + name.stringValue() +"> \"" + alicesName.stringValue() + "\"^^<http://www.w3.org/2001/XMLSchema#string>}}";
         booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
         Assert.assertFalse(booleanQuery.evaluate());
+    }
+
+    @Test
+    public void testGetStatementContextBehaviorAsPerSpec()
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context8 = vf.createIRI("http://marklogic.com/test/context8");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        IRI creator = vf.createIRI("http://example.org/ontology/creator");
+        Literal alicesName = vf.createLiteral("Alice");
+
+        Resource context9 =  vf.createIRI("http://marklogic.com/test/context9");
+        IRI bob = vf.createIRI("http://example.org/people/bob");
+        Literal bobsName = vf.createLiteral("Bob");
+
+        conn.add(alice, name, alicesName, context8);
+        conn.add(bob, name, bobsName, context9);
+
+        conn.add(context8, creator, alicesName);
+        conn.add(context9, creator, bobsName);
+
+        RepositoryResult<Statement> result = conn.getStatements(null, null, null, context8, context9);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(2, model.size());
+
+        result = conn.getStatements(null, null, null, (Resource) null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(2, model.size());
+
+        result = conn.getStatements(null, null, null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(4, model.size());
+
+        exception.expect(IllegalArgumentException.class);
+        result = conn.getStatements(null, null, null, null);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(0, model.size());
     }
 }
 

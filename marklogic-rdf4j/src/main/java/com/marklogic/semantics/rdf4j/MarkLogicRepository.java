@@ -122,11 +122,11 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      *
      * constructor inited with connection vars to MarkLogic server
      *
-     * @param host
-     * @param port
-     * @param user
-     * @param password
-     * @param auth
+     * @param host the host with the REST server
+     * @param port the port for the REST server
+     * @param user the user with read, write, or administrative privileges
+     * @param password the password for the user
+     * @param auth the type of authentication applied to the request
      */
     public MarkLogicRepository(String host, int port, String user, String password, String auth) {
         super();
@@ -139,13 +139,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.auth = auth;
         try {
             this.databaseClient = getClientBasedOnAuth(host, port, user, password, auth);
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
             e.printStackTrace();
         }
         this.client = new MarkLogicClient(databaseClient);
@@ -154,7 +148,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * constructor inited with java api client DatabaseClient
      *
-     * @param databaseClient
+     * @param databaseClient the java api client to be used
      */
     public MarkLogicRepository(DatabaseClient databaseClient) {
         super();
@@ -209,7 +203,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * sets the ValueFactory used for creating URIs, blank nodes, literals and statements
      *
-     * @param f
+     * @param f the ValueFactory to be set.
      */
     public void setValueFactory(ValueFactory f) {
         this.f=f;
@@ -227,13 +221,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     {
         try {
             this.databaseClient = getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.auth);
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
             e.printStackTrace();
         }
         this.client = new MarkLogicClient(databaseClient);
@@ -241,7 +229,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
 
     /**
      * @deprecated
-     * implemented to honor Repository interface
+     * Implemented to honor Repository interface.
      *
      * @throws RepositoryException
      */
@@ -263,8 +251,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * MarkLogic has no concept of data directory, so this does nothing
-     * implemented to honor Repository interface
+     * MarkLogic has no concept of data directory, so this does nothing.
+     * Implemented to honor Repository interface.
      *
      * @param dataDir
      */
@@ -274,8 +262,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * MarkLogic, with the correct perms is always writeable
-     * implemented to honor Repository interface
+     * MarkLogic, with the correct permissions is always writable.
+     * Implemented to honor Repository interface.
      *
      * @return boolean
      * @throws RepositoryException
@@ -286,7 +274,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns a MarkLogicConnection object which is the entry point to
+     * Returns a MarkLogicConnection object which is the entry point to
      * performing all queries.
      *
      * It is best practice to reuse a single connection to a
@@ -307,7 +295,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns MarkLogicClient object which manages communication to ML server via Java api client
+     * Returns MarkLogicClient object which manages communication to ML server via Java api client
      *
      * @return MarkLogicClient
      */
@@ -322,9 +310,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * sets MarkLogicClient used by this repository
+     * Sets MarkLogicClient used by this repository.
      *
-     * @param client
+     * @param client the MarkLogicClient to be used
      */
     @Override
     public synchronized void setMarkLogicClient(MarkLogicClient client) {
@@ -332,7 +320,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * returns if repository is in quadmode or not
+     * Returns if repository is in quadmode or not.
      *
      * @return boolean
      */
@@ -341,9 +329,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * sets quadmode for this repository
+     * Sets quadmode for this repository.
      *
-     * @param quadMode
+     * @param quadMode the quadMode to be used.
      */
     public void setQuadMode(boolean quadMode) {
         this.quadMode = quadMode;
@@ -352,9 +340,6 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
 
     /**
      * returns client based on auth
-     *
-     * @param auth
-     * @return DatabaseClient
      */
     private DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth, String... cert) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
         Authentication type;

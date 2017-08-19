@@ -28,6 +28,7 @@ import com.marklogic.client.semantics.GraphPermissions;
 import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 import com.marklogic.semantics.rdf4j.MarkLogicTransactionException;
+import com.marklogic.semantics.rdf4j.utils.Util;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.eclipse.rdf4j.http.protocol.UnauthorizedException;
 import org.eclipse.rdf4j.model.*;
@@ -82,6 +83,8 @@ public class MarkLogicClient {
 
 	private static boolean WRITE_CACHE_ENABLED = true;
 	private static boolean DELETE_CACHE_ENABLED = false;
+
+	private Util util = Util.getInstance();
 
 	/**
 	 * constructor init with connection params
@@ -298,7 +301,13 @@ public class MarkLogicClient {
 	 * @throws RDFParseException
 	 */
 	public void sendAdd(File file, String baseURI, RDFFormat dataFormat, Resource... contexts) throws RDFParseException {
-		getClient().performAdd(file, baseURI, dataFormat, this.tx, contexts);
+        if(util.isFormatSupported(dataFormat)) {
+            getClient().performAdd(file, baseURI, dataFormat, this.tx, contexts);
+        }
+        else
+        {
+            throw new MarkLogicRdf4jException("Unsupported RDF format.");
+        }
 	}
 
 	/**
@@ -310,7 +319,13 @@ public class MarkLogicClient {
 	 * @param contexts
 	 */
 	public void sendAdd(InputStream in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
-		getClient().performAdd(in, baseURI, dataFormat, this.tx, contexts);
+        if(util.isFormatSupported(dataFormat)) {
+            getClient().performAdd(in, baseURI, dataFormat, this.tx, contexts);
+        }
+        else
+        {
+            throw new MarkLogicRdf4jException("Unsupported RDF format.");
+        }
 	}
 
 	/**
@@ -322,8 +337,14 @@ public class MarkLogicClient {
 	 * @param contexts
 	 */
 	public void sendAdd(Reader in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
-		//TBD- must deal with char encoding
-		getClient().performAdd(new ReaderInputStream(in, Charset.defaultCharset()), baseURI, dataFormat, this.tx, contexts);
+        if(util.isFormatSupported(dataFormat)) {
+            //TBD- must deal with char encoding
+            getClient().performAdd(new ReaderInputStream(in, Charset.defaultCharset()), baseURI, dataFormat, this.tx, contexts);
+        }
+        else
+        {
+            throw new MarkLogicRdf4jException("Unsupported RDF format.");
+        }
 	}
 
 	/**
@@ -337,9 +358,9 @@ public class MarkLogicClient {
 	 */
 	public void sendAdd(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (WRITE_CACHE_ENABLED) {
-			timerWriteCache.add(subject, predicate, object, contexts);
+			timerWriteCache.add((Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
 		} else {
-			getClient().performAdd(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
+			getClient().performAdd(baseURI, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), this.tx, contexts);
 		}
 	}
 
@@ -354,11 +375,11 @@ public class MarkLogicClient {
 	 */
 	public void sendRemove(String baseURI, Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
 		if (DELETE_CACHE_ENABLED) {
-			timerDeleteCache.add(subject, predicate, object, contexts);
+			timerDeleteCache.add((Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
 		} else {
 			if (WRITE_CACHE_ENABLED)
 				sync();
-			getClient().performRemove(baseURI, (Resource) skolemize(subject), (IRI) skolemize(predicate), skolemize(object), this.tx, contexts);
+			getClient().performRemove(baseURI, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), this.tx, contexts);
 		}
 	}
 
@@ -559,19 +580,6 @@ public class MarkLogicClient {
 	 */
 	private MarkLogicClientImpl getClient(){
 		return this._client;
-	}
-
-	/**
-	 *
-	 * @param s
-	 * @return
-	 */
-	private Value skolemize(Value s) {
-		if (s instanceof org.eclipse.rdf4j.model.BNode) {
-			return getValueFactory().createIRI("http://marklogic.com/semantics/blank/" + s.toString());
-		} else {
-			return s;
-		}
 	}
 
 	/**
