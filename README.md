@@ -23,7 +23,7 @@ Ensure MarkLogic 9.0-2 or greater is installed and running. To use marklogic-rdf
 
 ### Quick Start
 
-The MarkLogic RDF4J API is available via [Maven Central](http://mvnrepository.com/artifact/com.marklogic/marklogic-RDF4J/2.0.0).
+The MarkLogic RDF4J API is available via [Maven Central](http://mvnrepository.com/artifact/com.marklogic/marklogic-RDF4J/1.0.0).
 
 For gradle projects, include the following dependency in your `build.gradle`:
 
