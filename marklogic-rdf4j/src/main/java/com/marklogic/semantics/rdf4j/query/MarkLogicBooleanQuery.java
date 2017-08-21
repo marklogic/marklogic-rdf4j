@@ -44,9 +44,9 @@ public class MarkLogicBooleanQuery extends MarkLogicQuery implements BooleanQuer
     private static final Logger logger = LoggerFactory.getLogger(MarkLogicBooleanQuery.class);
 
     /**
-     * constructor
+     * Constructor
      *
-     * @param client
+     * @param client the MarkLogic
      * @param bindingSet
      * @param baseUri
      * @param queryString
@@ -56,7 +56,7 @@ public class MarkLogicBooleanQuery extends MarkLogicQuery implements BooleanQuer
     }
 
     /**
-     * evaluate boolean query
+     * Evaluate boolean query
      *
      * @return boolean
      * @throws QueryEvaluationException

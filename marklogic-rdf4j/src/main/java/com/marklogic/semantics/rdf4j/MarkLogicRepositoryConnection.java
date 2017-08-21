@@ -549,6 +549,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 }
             }
             GraphQuery query = prepareGraphQuery(EVERYTHING);
+            query.setIncludeInferred(includeInferred);
             setBindings(query, subj, pred, obj);
             GraphQueryResult result = query.evaluate();
             return new RepositoryResult<Statement>(
@@ -628,6 +629,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             }
             else {
                 MarkLogicGraphQuery query = prepareGraphQuery(EVERYTHING);
+                query.setIncludeInferred(includeInferred);
                 setBindings(query, subj, pred, obj, contexts);
                 GraphQueryResult result = query.evaluate();
                 return new RepositoryResult<Statement>(
@@ -705,7 +707,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
         try {
             logger.debug(queryString);
             MarkLogicBooleanQuery query = prepareBooleanQuery(queryString); // baseuri ?
-
+            query.setIncludeInferred(includeInferred);
             setBindings(query, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
             return query.evaluate();
         }

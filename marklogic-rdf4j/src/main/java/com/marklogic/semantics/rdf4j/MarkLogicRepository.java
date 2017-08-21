@@ -146,9 +146,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * constructor inited with java api client DatabaseClient
+     * Constructor.
      *
-     * @param databaseClient the java api client to be used
+     * @param databaseClient a Java Client API DatabaseClient. Can be made with com.marklogic.client.DatabaseClientFactory
      */
     public MarkLogicRepository(DatabaseClient databaseClient) {
         super();
@@ -312,7 +312,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * Sets MarkLogicClient used by this repository.
      *
-     * @param client the MarkLogicClient to be used
+     * @param client the MarkLogicClient to be used, which mediates all the interactions with the MarkLogic database.
      */
     @Override
     public synchronized void setMarkLogicClient(MarkLogicClient client) {
@@ -331,7 +331,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * Sets quadmode for this repository.
      *
-     * @param quadMode the quadMode to be used.
+     * @param quadMode
      */
     public void setQuadMode(boolean quadMode) {
         this.quadMode = quadMode;
