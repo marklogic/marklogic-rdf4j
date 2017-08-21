@@ -24,6 +24,7 @@ import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClientDependent;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
+import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
@@ -68,36 +69,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
 
     private DatabaseClient databaseClient;
 
-    /**
-     * Authentication enumerates the methods for verifying a user and
-     * password with the database.
-     */
-    public enum Authentication {
-        /**
-         * Minimal security unless used with SSL.
-         */
-        BASIC,
-        /**
-         * Moderate security without SSL.
-         */
-        DIGEST,
-        /**
-         * Authentication using Kerberos.
-         */
-        KERBEROS,
-        /**
-         * Authentication using Certificates;
-         */
-        CERTIFICATE;
-        /**
-         * Returns the enumerated value for the case-insensitive name.
-         * @param name	the name of the enumerated value
-         * @return	the enumerated value
-         */
-        static public Authentication valueOfUncased(String name) {
-            return Authentication.valueOf(name.toUpperCase());
-        }
-    }
+    private Util util = Util.getInstance();
+
 
     /**
      * constructor inited with connection URL
@@ -138,7 +111,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.password = password;
         this.auth = auth;
         try {
-            this.databaseClient = getClientBasedOnAuth(host, port, user, password, auth);
+            this.databaseClient = util.getClientBasedOnAuth(host, port, user, password, auth);
         } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
             e.printStackTrace();
         }
@@ -146,9 +119,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * constructor inited with java api client DatabaseClient
+     * Constructor.
      *
-     * @param databaseClient the java api client to be used
+     * @param databaseClient a Java Client API DatabaseClient. Can be made with com.marklogic.client.DatabaseClientFactory
      */
     public MarkLogicRepository(DatabaseClient databaseClient) {
         super();
@@ -164,28 +137,28 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
             DatabaseClientFactory.BasicAuthContext sc = (DatabaseClientFactory.BasicAuthContext) databaseClient.getSecurityContext();
             this.user = sc.getUser();
             this.password = sc.getPassword();
-            this.auth = Authentication.BASIC.toString();
+            this.auth = Util.Authentication.BASIC.toString();
         }
         else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.DigestAuthContext)
         {
             DatabaseClientFactory.DigestAuthContext sc = (DatabaseClientFactory.DigestAuthContext) databaseClient.getSecurityContext();
             this.user = sc.getUser();
             this.password = sc.getPassword();
-            this.auth = Authentication.DIGEST.toString();
+            this.auth = Util.Authentication.DIGEST.toString();
         }
         else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.KerberosAuthContext)
         {
             DatabaseClientFactory.KerberosAuthContext sc = (DatabaseClientFactory.KerberosAuthContext) databaseClient.getSecurityContext();
             this.user = null;
             this.password = null;
-            this.auth = Authentication.KERBEROS.toString();
+            this.auth = Util.Authentication.KERBEROS.toString();
         }
         else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.CertificateAuthContext)
         {
             DatabaseClientFactory.CertificateAuthContext sc = (DatabaseClientFactory.CertificateAuthContext) databaseClient.getSecurityContext();
             this.user = null;
             this.password = null;
-            this.auth = Authentication.CERTIFICATE.toString();
+            this.auth = Util.Authentication.CERTIFICATE.toString();
         }
 
         this.client = new MarkLogicClient(databaseClient);
@@ -220,7 +193,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     protected void initializeInternal() throws RepositoryException
     {
         try {
-            this.databaseClient = getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.auth);
+            this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.auth);
         } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
             e.printStackTrace();
         }
@@ -312,7 +285,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * Sets MarkLogicClient used by this repository.
      *
-     * @param client the MarkLogicClient to be used
+     * @param client the MarkLogicClient to be used, which mediates all the interactions with the MarkLogic database.
      */
     @Override
     public synchronized void setMarkLogicClient(MarkLogicClient client) {
@@ -331,46 +304,10 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     /**
      * Sets quadmode for this repository.
      *
-     * @param quadMode the quadMode to be used.
+     * @param quadMode
      */
     public void setQuadMode(boolean quadMode) {
         this.quadMode = quadMode;
     }
 
-
-    /**
-     * returns client based on auth
-     */
-    private DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth, String... cert) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
-        Authentication type;
-        String certFile;
-        String certPassword;
-
-        if(auth != null)
-        {
-            type = Authentication.valueOfUncased(auth);
-            certFile = cert.length > 0 ? cert[0] : "";
-            certPassword = cert.length > 1 ? cert[1] : "";
-
-            if(type == Authentication.BASIC)
-            {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.BasicAuthContext(user, password));
-            }
-            else if(type == Authentication.DIGEST)
-            {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
-            }
-            else if(type == Authentication.KERBEROS)
-            {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.KerberosAuthContext());
-            }
-            else if(type == Authentication.CERTIFICATE)
-            {
-                //TODO: change parameters
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.CertificateAuthContext(certFile, certPassword));
-            }
-        }
-
-        return null;
-    }
 }
