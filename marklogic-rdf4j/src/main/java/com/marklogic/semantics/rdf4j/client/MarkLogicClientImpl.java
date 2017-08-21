@@ -24,10 +24,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -60,7 +64,7 @@ import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 
 /**
- * internal class for interacting with java api client
+ * Internal class for interacting with Java Client API.
  *
  * @author James Fuller
  */
@@ -79,6 +83,8 @@ class MarkLogicClientImpl {
 
     private DatabaseClient databaseClient;
 
+    private Util util = Util.getInstance();
+
     /**
      * constructor
      *
@@ -89,8 +95,11 @@ class MarkLogicClientImpl {
      * @param auth
      */
     public MarkLogicClientImpl(String host, int port, String user, String password, String auth) {
-        //TODO: Change auth based on parameter
-        setDatabaseClient(DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password)));
+        try {
+            setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, auth));
+        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -103,7 +112,7 @@ class MarkLogicClientImpl {
     }
 
     /**
-     * set databaseclient and instantate related managers
+     * set databaseclient and instantiate related managers.
      *
      * @param databaseClient
      */
