@@ -16,7 +16,7 @@
 package com.marklogic.semantics.rdf4j;
 
 /**
- * specific exception for throwing MarkLogic transaction exceptions
+ * Specific exception for throwing MarkLogic transaction exceptions.
  */
 @SuppressWarnings("serial")
 public class MarkLogicTransactionException extends MarkLogicRdf4jException {

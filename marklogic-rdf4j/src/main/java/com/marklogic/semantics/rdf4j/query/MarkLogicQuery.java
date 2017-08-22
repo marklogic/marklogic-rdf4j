@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * base query class
+ * Base query class
  *
  * @author James Fuller
  */
@@ -56,7 +56,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     private boolean includeInferred;
 
     /**
-     * constructor
+     * Constructor
      *
      * @param client
      * @param bindingSet
@@ -133,7 +133,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * set individual binding
+     * Set individual binding.
      *
      * @param name
      * @param stringValue
@@ -143,7 +143,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * set individual binding and value
+     * Set individual binding and value.
      * @param name
      * @param value
      */
@@ -153,7 +153,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * remove binding
+     * Remove binding.
      *
      * @param name
      */
@@ -163,7 +163,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * clear bindings
+     * Clear bindings.
      *
      */
     @Override
@@ -172,7 +172,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * set true or false to use default inference ruleset
+     * Set true or false to use default inference ruleset.
      *
      * @param includeInferred
      */
@@ -182,7 +182,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * return true or fales if using default inference ruleset
+     * Return true or false if using default inference ruleset.
      *
      * @return boolean
      */
@@ -192,7 +192,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * implemented to honor interface
+     * Implemented to honor interface.
      *
      * @param dataset
      */
@@ -201,7 +201,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * implemented to honor interface
+     * Implemented to honor interface.
      *
      * @return
      */
@@ -211,7 +211,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * sets maximum execution time for query
+     * Sets maximum execution time for query.
      *
      * @param maxExecTime
      */
@@ -220,7 +220,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * getter for MaxExecutionTime
      * @return int
      */
     @Override
@@ -229,7 +229,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * getter for BaseURI.
      * @return
      */
     @Override
@@ -238,7 +238,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * setter for BaseURI.
      * @param baseURI
      */
     @Override
@@ -247,7 +247,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * sets constraining query
+     * Sets constraining query.
      *
      * @param constrainingQueryDefinition
      */
@@ -257,7 +257,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * getter for ConstrainingQueryDefinition.
      * @return
      */
     @Override
@@ -266,7 +266,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * sets the inference rulesets to be used by query
+     * Sets the inference rulesets to be used by query.
      *
      * @param ruleset
      */
@@ -275,7 +275,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * Getter for rulesets.
      * @return
      */
     public SPARQLRuleset[] getRulesets(){
@@ -283,7 +283,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     * sets the graph permissions to be used by query
+     * Sets the graph permissions to be used by query.
      *
      * @param graphPerms
      */
@@ -293,7 +293,7 @@ public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClie
     }
 
     /**
-     *
+     * Sets the graph permissions to be used by query.
      * @return
      */
     @Override

@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by jfuller on 11/2/16.
+ * Delete cache to optimize performance by batching the requests.
  */
 public class TripleDeleteCache extends TripleCache {
 
@@ -46,7 +46,7 @@ public class TripleDeleteCache extends TripleCache {
         super(client, cacheSize);
     }
     /**
-     * flushes the cache, writing triples as graph
+     * Flushes the cache to the server, writing triples as graph.
      *
      * @throws MarkLogicRdf4jException
      */

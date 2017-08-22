@@ -53,7 +53,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * An internal class that straddles Rdf4j and MarkLogic Java API client.
+ * An internal class that straddles Rdf4j and MarkLogic Java client API.
  *
  * @author James Fuller
  */
@@ -87,13 +87,8 @@ public class MarkLogicClient {
 	private Util util = Util.getInstance();
 
 	/**
-	 * constructor init with connection params
+	 * Constructor initialized with connection parameters.
 	 *
-	 * @param host
-	 * @param port
-	 * @param user
-	 * @param password
-	 * @param auth
 	 */
 	public MarkLogicClient(String host, int port, String user, String password,String auth) {
 		this._client = new MarkLogicClientImpl(host,port,user,password,auth);
@@ -101,9 +96,8 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * constructor init with DatabaseClient
+	 * Constructor initialized with DatabaseClient.
 	 *
-	 * @param databaseClient
 	 */
 	public MarkLogicClient(DatabaseClient databaseClient) {
 		this._client = new MarkLogicClientImpl(databaseClient);
@@ -165,7 +159,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 *  forces write cache to flush triples
+	 *  Forces write cache to flush triples.
 	 *
 	 * @throws MarkLogicRdf4jException
 	 */
@@ -292,7 +286,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * add triples from file
+	 * Add triples from file.
 	 *
 	 * @param file
 	 * @param baseURI
@@ -311,7 +305,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * add triples from InputStream
+	 * Add triples from InputStream.
 	 *
 	 * @param in
 	 * @param baseURI
@@ -329,7 +323,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * add triples from Reader
+	 * Add triples from Reader.
 	 *
 	 * @param in
 	 * @param baseURI
@@ -348,7 +342,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * add single triple, if cache is enabled will add triple to cache model
+	 * Add single triple, if cache is enabled will add triple to cache model.
 	 *
 	 * @param baseURI
 	 * @param subject
@@ -365,7 +359,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * remove single triple
+	 * Remove single triple.
 	 *
 	 * @param baseURI
 	 * @param subject
@@ -384,7 +378,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * clears all triples from context
+	 * Clears all triples from context.
 	 *
 	 * @param contexts
 	 */
@@ -393,7 +387,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * clear all triples
+	 * Clear all triples.
 	 *
 	 */
 	public void sendClearAll() throws MarkLogicRdf4jException {
@@ -401,7 +395,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * opens a transaction
+	 * Opens a transaction.
 	 *
 	 * @throws MarkLogicTransactionException
 	 */
@@ -420,7 +414,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * commits a transaction
+	 * Commits a transaction.
 	 *
 	 * @throws MarkLogicTransactionException
 	 */
@@ -440,7 +434,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * rollback transaction
+	 * Rollback transaction.
 	 *
 	 * @throws MarkLogicTransactionException
 	 */
@@ -459,16 +453,16 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 * checks if a transaction currently exists
+	 * Checks if a transaction currently exists.
 	 *
-	 * @return
+	 *
 	 */
 	public boolean isActiveTransaction(){
 		return this.tx != null;
 	}
 
 	/**
-	 * sets tx to null
+	 * sets transaction (tx) to null
 	 *
 	 * @throws MarkLogicTransactionException
 	 */
@@ -562,7 +556,7 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 *exec
+	 * Execute command.
 	 * @param command
 	 */
 	protected void execute(Runnable command) {

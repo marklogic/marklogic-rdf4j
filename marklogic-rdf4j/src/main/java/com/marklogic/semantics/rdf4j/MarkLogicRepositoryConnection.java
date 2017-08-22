@@ -549,6 +549,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                 }
             }
             GraphQuery query = prepareGraphQuery(EVERYTHING);
+            query.setIncludeInferred(includeInferred);
             setBindings(query, subj, pred, obj);
             GraphQueryResult result = query.evaluate();
             return new RepositoryResult<Statement>(
@@ -595,7 +596,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
                         } else {
                             sb.append(",");
                         }
-                        if (notNull(context)) {
+                        if (Util.notNull(context)) {
                             sb.append("IRI(\"").append(context.toString()).append("\")");
                         } else {
                             sb.append("IRI(\"" + DEFAULT_GRAPH_URI + "\")");
@@ -628,6 +629,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             }
             else {
                 MarkLogicGraphQuery query = prepareGraphQuery(EVERYTHING);
+                query.setIncludeInferred(includeInferred);
                 setBindings(query, subj, pred, obj, contexts);
                 GraphQueryResult result = query.evaluate();
                 return new RepositoryResult<Statement>(
@@ -705,7 +707,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
         try {
             logger.debug(queryString);
             MarkLogicBooleanQuery query = prepareBooleanQuery(queryString); // baseuri ?
-
+            query.setIncludeInferred(includeInferred);
             setBindings(query, (Resource) util.skolemize(subject), (IRI) util.skolemize(predicate), util.skolemize(object), contexts);
             return query.evaluate();
         }
@@ -983,7 +985,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     @Override
     public void add(File file, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
         contexts = verifyContextNotNull(contexts);
-	 	if(notNull(baseURI)) {
+	 	if(Util.notNull(baseURI)) {
             getClient().sendAdd(file, baseURI, dataFormat, contexts);
         }else{
             getClient().sendAdd(file, file.toURI().toString(), dataFormat, contexts);
@@ -1023,7 +1025,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     @Override
     public void add(URL url, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
     	contexts = verifyContextNotNull(contexts);
-	  	if(notNull(baseURI)) {
+	  	if(Util.notNull(baseURI)) {
             getClient().sendAdd(new URL(url.toString()).openStream(), baseURI, dataFormat, contexts);
         }else{
             getClient().sendAdd(new URL(url.toString()).openStream(), url.toString(), dataFormat, contexts);
@@ -1293,7 +1295,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void setDefaultGraphPerms(GraphPermissions graphPerms) {
-        if(notNull(graphPerms)) {
+        if(Util.notNull(graphPerms)) {
             this.defaultGraphPerms = graphPerms;
         }else{
             this.defaultGraphPerms = client.emptyGraphPerms();
@@ -1418,7 +1420,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
         SimpleDataset dataset = new SimpleDataset();
         if(contexts.length > 0){
             for (Resource context : contexts) {
-            	if(notNull(context)){
+            	if(Util.notNull(context)){
             		if (context instanceof IRI) {
                         dataset.addDefaultGraph((IRI) context);
                     }
@@ -1483,16 +1485,6 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
         };
     }
 
-    /**
-     * private utility method that tests if an object is null
-     *
-     * TBD -
-     * @param item
-     * @return boolean
-     */
-    private static Boolean notNull(Object item) {
-        return item!=null;
-    }
     
 	/**
 	 * private utility method that verifies that the supplied contexts parameter is not <tt>null</tt>, throwing an

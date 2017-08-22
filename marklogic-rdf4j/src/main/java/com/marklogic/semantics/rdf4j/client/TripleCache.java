@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.TimerTask;
 
 /**
- * Timer implements write cache for efficient adding of triples
+ * Timer implements write cache for efficient adding of triples.
  *
  * @author James Fuller
  */
@@ -59,7 +59,7 @@ public abstract class TripleCache extends TimerTask {
     protected Date lastCacheAccess = new Date();
 
     /**
-     * constructor
+     * Creates a new TripleCache object, using the supplied MarkLogicClient.
      *
      * @param client
      */
@@ -115,7 +115,7 @@ public abstract class TripleCache extends TimerTask {
     }
 
     /**
-     * tests to see if we should flush cache
+     * Tests to see if we should flush cache.
      *
      */
     @Override
@@ -143,8 +143,8 @@ public abstract class TripleCache extends TimerTask {
 
     protected abstract void flush() throws RepositoryException, MalformedQueryException, UpdateExecutionException, IOException;
 
-    /**min
-     * forces the cache to flush if there is anything in it
+    /**
+     * Forces the cache to flush if there is anything in it.
      *
      * @throws MarkLogicRdf4jException
      */
@@ -166,12 +166,7 @@ public abstract class TripleCache extends TimerTask {
     }
 
     /**
-     * add triple to cache Model
-     *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @param contexts
+     * Add triple to cache Model.
      */
     public synchronized void add(Resource subject, IRI predicate, Value object, Resource... contexts) throws MarkLogicRdf4jException {
         cache.add(subject,predicate,object,contexts);

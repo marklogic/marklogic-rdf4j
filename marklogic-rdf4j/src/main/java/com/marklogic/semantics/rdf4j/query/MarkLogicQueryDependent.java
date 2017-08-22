@@ -24,7 +24,7 @@ import com.marklogic.client.semantics.GraphPermissions;
 import com.marklogic.client.semantics.SPARQLRuleset;
 
 /**
- * interface defining MarkLogic semantic features
+ * Interface defining MarkLogic semantic features.
  *
  * @author James Fuller
  */

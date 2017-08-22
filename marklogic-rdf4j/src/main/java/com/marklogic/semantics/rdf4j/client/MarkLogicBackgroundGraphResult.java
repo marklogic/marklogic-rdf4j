@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 /**
- * wrapper on RDF4J BackgroundGraphResult
+ * Wrapper on RDF4J BackgroundGraphResult
  *
  * @author James Fuller
  */
@@ -62,7 +62,8 @@ class MarkLogicBackgroundGraphResult extends BackgroundGraphResult
     }
 
     /**
-     * wrap exception to return false instead of throwing error, debug log
+     * Wrap exception to return false instead of throwing error.
+     * Check debug log.
      *
      */
     @Override
@@ -79,7 +80,8 @@ class MarkLogicBackgroundGraphResult extends BackgroundGraphResult
     }
 
     /**
-     * wrap exception, debug log
+     * Wrap exception.
+     * Check debug log.
      *
      */
     @Override

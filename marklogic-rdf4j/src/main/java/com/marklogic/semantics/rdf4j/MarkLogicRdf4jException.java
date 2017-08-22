@@ -22,7 +22,7 @@ package com.marklogic.semantics.rdf4j;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
 /**
- * specific exception for throwing MarkLogic related errors
+ * Specific exception for throwing MarkLogic related errors.
  *
  * @author James Fuller
  */
