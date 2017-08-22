@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * representation of Repository config
+ * Representation of Repository config
  *
  * @author James Fuller
  */
@@ -55,19 +55,14 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	private String auth;
 
     /**
-	 * base constructor
+	 * Base constructor
 	 */
 	public MarkLogicRepositoryConfig() {
 		super(MarkLogicRepositoryFactory.REPOSITORY_TYPE);
 	}
 
     /**
-	 * constructor initing with all connection details
-	 * @param host
-	 * @param port
-	 * @param user
-	 * @param password
-	 * @param auth
+	 * Constructor initialized with all connection details.
 	 */
 	public MarkLogicRepositoryConfig(String host, int port, String user, String password, String auth) {
         this();
@@ -81,7 +76,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
     }
 
 	/**
-	 * constructor initing with query endpoint
+	 * Constructor initialized with query endpoint
 	 *
 	 * @param queryEndpointUrl
 	 */
@@ -90,7 +85,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	}
 
 	/**
-	 * constructor initing with both query and update endpoint
+	 * Constructor initialized with both query and update endpoint
 	 *
 	 * @param queryEndpointUrl
 	 * @param updateEndpointUrl
@@ -181,7 +176,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 	
 	@Override
 	/**
-	 * validate configuration
+	 * Validate configuration.
 	 *
 	 */
 	public void validate() throws RepositoryConfigException {
@@ -194,7 +189,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 	@Override
 	/**
-	 * export model representation of config
+	 * Export model representation of config.
 	 *
 	 */
 	public Resource export(Model model) {
@@ -212,7 +207,7 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 	@Override
 	/**
-	 * parse graph representation of config
+	 * Parse graph representation of config.
 	 *
 	 */
 	public void parse(Model model, Resource implNode)

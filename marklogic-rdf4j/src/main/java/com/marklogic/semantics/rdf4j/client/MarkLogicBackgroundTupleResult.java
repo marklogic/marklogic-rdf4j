@@ -15,9 +15,9 @@
  */
 package com.marklogic.semantics.rdf4j.client;
 
-import org.eclipse.rdf4j.http.client.QueueCursor;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.impl.QueueCursor;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultParser;
 import org.eclipse.rdf4j.query.resultio.helpers.BackgroundTupleResult;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 
 /**
- * wrapper on RDF4J BackgroundTupleResult
+ * Wrapper on RDF4J BackgroundTupleResult
  *
  * @author James Fuller
  */
@@ -56,8 +56,8 @@ class MarkLogicBackgroundTupleResult extends BackgroundTupleResult {
     }
 
     /**
-     * wrap exception to return false instead of throwing error, debug log
-     *
+     * Wrap exception to return false instead of throwing error.
+     * Check debug log.
      */
     @Override
     public boolean hasNext()
@@ -72,8 +72,8 @@ class MarkLogicBackgroundTupleResult extends BackgroundTupleResult {
     }
 
     /**
-     * wrap exception, debug log
-     *
+     * Wrap exception.
+     * Check debug log.
      */
     @Override
     protected void handleClose() throws QueryEvaluationException {

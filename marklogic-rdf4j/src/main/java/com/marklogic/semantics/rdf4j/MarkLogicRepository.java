@@ -73,7 +73,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
 
 
     /**
-     * constructor inited with connection URL
+     * Constructor initialized with connection URL
      *
      * @param connectionString
      */
@@ -93,7 +93,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
 
     /**
      *
-     * constructor inited with connection vars to MarkLogic server
+     * Constructor initialized with connection vars to MarkLogic server.
      *
      * @param host the host with the REST server
      * @param port the port for the REST server

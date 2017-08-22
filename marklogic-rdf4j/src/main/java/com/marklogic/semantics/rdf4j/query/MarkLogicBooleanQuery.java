@@ -46,7 +46,7 @@ public class MarkLogicBooleanQuery extends MarkLogicQuery implements BooleanQuer
     /**
      * Constructor
      *
-     * @param client the MarkLogic
+     * @param client
      * @param bindingSet
      * @param baseUri
      * @param queryString

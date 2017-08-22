@@ -43,7 +43,7 @@ public class MarkLogicRepositoryFactory implements RepositoryFactory {
 
     @Override
     /**
-     * returns repository type
+     * getter for repository type.
      *
      */
     public String getRepositoryType() {
@@ -61,7 +61,7 @@ public class MarkLogicRepositoryFactory implements RepositoryFactory {
 
     @Override
     /**
-     * instantiate and return repository
+     * Instantiate and return repository object.
      *
      */
     public Repository getRepository(RepositoryImplConfig config) throws RepositoryConfigException {

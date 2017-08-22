@@ -52,7 +52,7 @@ public class Example1_Simple {
         logger.info("number of triples: {}", conn.size());
 
         // add triples from a file
-        File inputFile = new File("marklogic-rdf4j-examples/src/main/resources/testdata/test-small.owl");
+        File inputFile = new File("src/main/resources/testdata/test-small.owl");
         conn.add(inputFile, null, RDFFormat.RDFXML, (Resource) null);
 
         logger.info("number of triples: {}", conn.size());

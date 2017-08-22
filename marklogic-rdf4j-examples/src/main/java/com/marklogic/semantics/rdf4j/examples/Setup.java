@@ -26,7 +26,7 @@ public class Setup {
     public static MarkLogicRepository loadPropsAndInit() {
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream("marklogic-rdf4j-examples/gradle.properties"));
+            props.load(new FileInputStream("gradle.properties"));
         } catch (IOException e) {
             System.err.println("problem loading properties file.");
             System.exit(1);

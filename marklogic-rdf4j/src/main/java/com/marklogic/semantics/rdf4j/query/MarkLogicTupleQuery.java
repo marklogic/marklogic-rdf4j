@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * tuple query
+ * Tuple query.
  *
  * @author James Fuller
  */
@@ -44,7 +44,7 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     protected final long pageLength=-1; // this value is a flag to not set setPageLength()
 
     /**
-     * constructor
+     * Constructor
      *
      * @param client
      * @param bindingSet
@@ -56,7 +56,7 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * evaluate tuple query
+     * Evaluate tuple query.
      *
      * @return TupleQueryResult
      * @throws QueryEvaluationException
@@ -67,7 +67,7 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * evaluate tuple query with pagination
+     * Evaluate tuple query with pagination.
      *
      * @param start
      * @param pageLength
@@ -89,7 +89,7 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * evaluate tuple query w/ TupleQueryResulthandler
+     * Evaluate tuple query with TupleQueryResulthandler.
      *
      * @param resultHandler
      * @throws QueryEvaluationException
@@ -111,7 +111,7 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * evaluate tuple query w/ TupleQueryResulthandler with pagination
+     * Evaluate tuple query with TupleQueryResulthandler and pagination.
      *
      * @param resultHandler
      * @throws QueryEvaluationException

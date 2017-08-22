@@ -28,7 +28,7 @@ import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
 /**
- * interface defining MarkLogic semantic features
+ * Interface defining MarkLogic semantic features.
  *
  * @author James Fuller
  */
