@@ -1,6 +1,6 @@
-#marklogic-rdf4j-repository examples
+#marklogic-rdf4j examples
 
-This directory contains a sample project that demonstrates usage of marklogic-rdf4j-repository. 
+This directory contains a sample project that demonstrates usage of marklogic-rdf4j. 
 
 For development branches, it points to the local user's Maven repository.
 
