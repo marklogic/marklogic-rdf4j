@@ -72,7 +72,7 @@ Verify that Java API client has been deployed to your local maven repo.
 3. Edit marklogic-RDF4J/build.gradle to use that snapshot
 
 ```
-    compile('com.marklogic:java-client-api:5.0-SNAPSHOT') 
+    compile('com.marklogic:marklogic-client-api:5.0-SNAPSHOT') 
 
 ```
 
