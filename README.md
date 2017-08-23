@@ -68,7 +68,8 @@ mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true deploy
 ```
 
 Verify that Java API client has been deployed to your local maven repo.
-3. Rdit marklogic-RDF4J/build.gradle to use that snapshot
+
+3. Edit marklogic-RDF4J/build.gradle to use that snapshot
 
 ```
     compile('com.marklogic:java-client-api:5.0-SNAPSHOT') 
