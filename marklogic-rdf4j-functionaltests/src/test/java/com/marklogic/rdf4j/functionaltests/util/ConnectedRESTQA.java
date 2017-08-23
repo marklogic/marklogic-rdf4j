@@ -67,12 +67,10 @@ public abstract class ConnectedRESTQA {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectedRESTQA.class);
 	private static String host = "localhost";
 		
-
-	
 	public static void createDB(String dbName)	{
+		DefaultHttpClient client = null;
 		try {	
-
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(host, 8002),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -95,6 +93,9 @@ public abstract class ConnectedRESTQA {
 		}catch (Exception e) {
 			// writing error to Log
 			e.printStackTrace();
+		}
+		finally{
+			client.close();
 		}
 	}
 	public static String getBootStrapHostFromML() {
@@ -139,8 +140,9 @@ public abstract class ConnectedRESTQA {
 	 * 
 	 */
 	public static void createForest(String fName,String dbName)	{
+		DefaultHttpClient client = null;
 		try{
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(host, 8002),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -169,6 +171,9 @@ public abstract class ConnectedRESTQA {
 		}catch (Exception e) {
 			// writing error to Log
 			e.printStackTrace();
+		}
+		finally{
+			client.close();
 		}
 	}
 	/*
@@ -248,22 +253,28 @@ public abstract class ConnectedRESTQA {
 		}
 	}
 	public static void associateRESTServerWithDB(String restServerName,String dbName)throws Exception{
-		DefaultHttpClient client = new DefaultHttpClient();
-
-		client.getCredentialsProvider().setCredentials(
-				new AuthScope(host, 8002),
-				new UsernamePasswordCredentials("admin", "admin"));
-		String  body = "{\"content-database\": \""+dbName+"\",\"group-name\": \"Default\"}";
-
-		HttpPut put = new HttpPut("http://"+host+":8002/manage/v2/servers/"+restServerName+"/properties?server-type=http");
-		put.addHeader("Content-type", "application/json");
-		put.setEntity(new StringEntity(body));
-
-		HttpResponse response2 = client.execute(put);
-		HttpEntity respEntity = response2.getEntity();
-		if(respEntity != null){
-			String content =  EntityUtils.toString(respEntity);
-			System.out.println(content);
+		DefaultHttpClient client = null;
+		try{
+			client = new DefaultHttpClient();
+	
+			client.getCredentialsProvider().setCredentials(
+					new AuthScope(host, 8002),
+					new UsernamePasswordCredentials("admin", "admin"));
+			String  body = "{\"content-database\": \""+dbName+"\",\"group-name\": \"Default\"}";
+	
+			HttpPut put = new HttpPut("http://"+host+":8002/manage/v2/servers/"+restServerName+"/properties?server-type=http");
+			put.addHeader("Content-type", "application/json");
+			put.setEntity(new StringEntity(body));
+	
+			HttpResponse response2 = client.execute(put);
+			HttpEntity respEntity = response2.getEntity();
+			if(respEntity != null){
+				String content =  EntityUtils.toString(respEntity);
+				System.out.println(content);
+			}
+		}
+		finally{
+			client.close();
 		}
 	}
 	/*
@@ -455,8 +466,9 @@ public abstract class ConnectedRESTQA {
 	 */
 
 	public static void createRESTUser(String usrName, String pass, String... roleNames ){
+		DefaultHttpClient client = null;
 		try{
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(host, 8002),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -506,6 +518,9 @@ public abstract class ConnectedRESTQA {
 		}catch (Exception e) {
 			// writing error to Log
 			e.printStackTrace();
+		}
+		finally{
+			client.close();
 		}
 	}
 
@@ -705,8 +720,9 @@ public abstract class ConnectedRESTQA {
 	}
 	
 	public static String[] getHosts()	{
+		DefaultHttpClient client = null;
 		try{
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope( host, 8002),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -728,6 +744,9 @@ public abstract class ConnectedRESTQA {
 		}catch (Exception e) {
 			// writing error to Log
 			e.printStackTrace();
+		}
+		finally{
+			client.close();
 		}
 		return null;
 	}
@@ -800,8 +819,9 @@ public abstract class ConnectedRESTQA {
 	}
 
 	public static void clearDB(int port){
+		DefaultHttpClient client = null;
 		try{
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(host, port),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -812,6 +832,9 @@ public abstract class ConnectedRESTQA {
 		}catch (Exception e) {
 			// writing error to Log
 			e.printStackTrace();
+		}
+		finally{
+			client.close();
 		}
 	}
 	public static void waitForServerRestart()
@@ -1006,8 +1029,9 @@ public abstract class ConnectedRESTQA {
 	 */
 	public static void setDatabaseProperties(String dbName,String propName, ObjectNode objNode ) throws IOException{
 		InputStream jsonstream=null;
+		DefaultHttpClient client = null;
 		try{
-			DefaultHttpClient client = new DefaultHttpClient();
+			client = new DefaultHttpClient();
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(host, 8002),
 					new UsernamePasswordCredentials("admin", "admin"));
@@ -1055,6 +1079,7 @@ public abstract class ConnectedRESTQA {
 			e.printStackTrace();
 		}
 		finally{
+			client.close();
 			if(jsonstream == null){}
 			else{
 				jsonstream.close();
