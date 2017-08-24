@@ -1,0 +1,5 @@
+com.marklogic.semantics.rdf4j
+com.marklogic.semantics.rdf4j.client
+com.marklogic.semantics.rdf4j.config
+com.marklogic.semantics.rdf4j.query
+com.marklogic.semantics.rdf4j.utils
