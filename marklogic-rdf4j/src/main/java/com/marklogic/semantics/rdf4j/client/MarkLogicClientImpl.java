@@ -94,12 +94,8 @@ class MarkLogicClientImpl {
      * @param password
      * @param auth
      */
-    public MarkLogicClientImpl(String host, int port, String user, String password, String auth) {
-        try {
-            setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, auth));
-        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
-            e.printStackTrace();
-        }
+    public MarkLogicClientImpl(String host, int port, String user, String password, String database, String auth) {
+        setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, database, auth));
     }
 
     /**

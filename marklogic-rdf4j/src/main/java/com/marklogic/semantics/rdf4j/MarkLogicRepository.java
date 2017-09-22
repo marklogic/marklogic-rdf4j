@@ -34,11 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
 /**
  *
@@ -62,6 +58,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     private String user;
     private String password;
     private String auth;
+    private String database;
+    private DatabaseClientFactory.SecurityContext securityContext;
 
     private boolean quadMode;
 
@@ -102,6 +100,21 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      * @param auth the type of authentication applied to the request
      */
     public MarkLogicRepository(String host, int port, String user, String password, String auth) {
+        this(host, port, user, password, null, auth);
+    }
+
+    /**
+     *
+     * Constructor initialized with connection vars to MarkLogic server.
+     *
+     * @param host the host with the REST server
+     * @param port the port for the REST server
+     * @param user the user with read, write, or administrative privileges
+     * @param password the password for the user
+     * @param auth the type of authentication applied to the request
+     * @param database
+     */
+    public MarkLogicRepository(String host, int port, String user, String password, String database, String auth) {
         super();
         this.f = SimpleValueFactory.getInstance();
         this.quadMode = true;
@@ -110,11 +123,41 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.user = user;
         this.password = password;
         this.auth = auth;
-        try {
-            this.databaseClient = util.getClientBasedOnAuth(host, port, user, password, auth);
-        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
-            e.printStackTrace();
-        }
+        this.database = database;
+        this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
+        this.client = new MarkLogicClient(databaseClient);
+    }
+
+    /**
+     *
+     * Constructor initialized with connection vars to MarkLogic server.
+     *
+     * @param host the host with the REST server
+     * @param port the port for the REST server
+     * @param securityContext a Java Client API SecurityContext. Can be made with com.marklogic.client.DatabaseClientFactory
+     */
+    public MarkLogicRepository(String host, int port, DatabaseClientFactory.SecurityContext securityContext) {
+        this(host, port, null, securityContext);
+    }
+
+    /**
+     *
+     * Constructor initialized with connection vars to MarkLogic server.
+     *
+     * @param host the host with the REST server
+     * @param port the port for the REST server
+     * @param database
+     * @param securityContext a Java Client API SecurityContext. Can be made with com.marklogic.client.DatabaseClientFactory
+     */
+    public MarkLogicRepository(String host, int port, String database, DatabaseClientFactory.SecurityContext securityContext) {
+        super();
+        this.f = SimpleValueFactory.getInstance();
+        this.quadMode = true;
+        this.host = host;
+        this.port = port;
+        this.database = database;
+        this.securityContext = securityContext;
+        this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
         this.client = new MarkLogicClient(databaseClient);
     }
 
@@ -126,41 +169,12 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     public MarkLogicRepository(DatabaseClient databaseClient) {
         super();
         this.f = SimpleValueFactory.getInstance();
-
         this.databaseClient = databaseClient;
         this.quadMode = true;
         this.host = databaseClient.getHost();
         this.port = databaseClient.getPort();
-
-        if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.BasicAuthContext)
-        {
-            DatabaseClientFactory.BasicAuthContext sc = (DatabaseClientFactory.BasicAuthContext) databaseClient.getSecurityContext();
-            this.user = sc.getUser();
-            this.password = sc.getPassword();
-            this.auth = Util.Authentication.BASIC.toString();
-        }
-        else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.DigestAuthContext)
-        {
-            DatabaseClientFactory.DigestAuthContext sc = (DatabaseClientFactory.DigestAuthContext) databaseClient.getSecurityContext();
-            this.user = sc.getUser();
-            this.password = sc.getPassword();
-            this.auth = Util.Authentication.DIGEST.toString();
-        }
-        else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.KerberosAuthContext)
-        {
-            DatabaseClientFactory.KerberosAuthContext sc = (DatabaseClientFactory.KerberosAuthContext) databaseClient.getSecurityContext();
-            this.user = null;
-            this.password = null;
-            this.auth = Util.Authentication.KERBEROS.toString();
-        }
-        else if(databaseClient.getSecurityContext() instanceof DatabaseClientFactory.CertificateAuthContext)
-        {
-            DatabaseClientFactory.CertificateAuthContext sc = (DatabaseClientFactory.CertificateAuthContext) databaseClient.getSecurityContext();
-            this.user = null;
-            this.password = null;
-            this.auth = Util.Authentication.CERTIFICATE.toString();
-        }
-
+        this.database = databaseClient.getDatabase();
+        this.securityContext = databaseClient.getSecurityContext();
         this.client = new MarkLogicClient(databaseClient);
     }
     
@@ -192,12 +206,19 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     @Deprecated
     protected void initializeInternal() throws RepositoryException
     {
-        try {
-            this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.auth);
-        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
-            e.printStackTrace();
+        if(this.databaseClient == null || this.client == null || this.databaseClient.getClientImplementation() == null)
+        {
+            if(this.securityContext == null)
+            {
+                this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
+                this.client = new MarkLogicClient(databaseClient);
+            }
+            else
+            {
+                this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
+                this.client = new MarkLogicClient(databaseClient);
+            }
         }
-        this.client = new MarkLogicClient(databaseClient);
     }
 
     /**
@@ -267,6 +288,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         return new MarkLogicRepositoryConnection(this, getMarkLogicClient(), quadMode);
     }
 
+    //TODO: Check and refactor.
     /**
      * Returns MarkLogicClient object which manages communication to ML server via Java api client
      *
@@ -274,10 +296,15 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      */
     @Override
     public synchronized MarkLogicClient getMarkLogicClient() {
-        if(null != databaseClient){
+        if(this.securityContext == null)
+        {
+            this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
             this.client = new MarkLogicClient(databaseClient);
-        }else{
-            this.client = new MarkLogicClient(host, port, user, password, auth);
+        }
+        else
+        {
+            this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
+            this.client = new MarkLogicClient(databaseClient);
         }
         return this.client;
     }

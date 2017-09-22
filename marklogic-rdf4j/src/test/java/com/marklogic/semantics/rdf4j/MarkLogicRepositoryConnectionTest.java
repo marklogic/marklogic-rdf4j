@@ -19,6 +19,8 @@
  */
 package com.marklogic.semantics.rdf4j;
 
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryConfig;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryFactory;
 
@@ -93,7 +95,8 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         //conn.clear();
         if(conn.isOpen()){conn.clear();}
         conn.close();
-        rep.shutDown();
+        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
+        //rep.shutDown();
         conn=null;
         logger.info("tearDown complete.");
     }
@@ -1432,6 +1435,142 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         result = conn.getStatements(null, null, null, null);
         model = Iterations.addAll(result, new LinkedHashModel());
         Assert.assertEquals(0, model.size());
+    }
+
+    @Test
+    public void testConnectionWithMLClientApiObjectWithDatabase()
+    {
+        DatabaseClient databaseClient = DatabaseClientFactory.newClient(host, port, "marklogic-rdf4j-test-content", new DatabaseClientFactory.DigestAuthContext(user, password));
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(databaseClient);
+        markLogicRepository.initialize();
+        MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
+        ValueFactory vf =  con.getValueFactory();
+        Resource context10 = vf.createIRI("http://marklogic.com/test/context10");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        con.begin();
+        con.add(alice, name, alicesName, context10);
+        con.commit();
+        RepositoryResult<Statement> result = con.getStatements(alice, null, null, context10);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+
+        markLogicRepository.shutDown();
+        markLogicRepository.initialize();
+        con = markLogicRepository.getConnection();
+        result = con.getStatements(alice, null, null, context10);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+        con.clear();
+    }
+
+    @Test
+    public void testConnectionWithMLConnectionVariablesWithoutDatabase()
+    {
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, user, password, "DIGEST");
+        markLogicRepository.initialize();
+        MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
+        ValueFactory vf =  con.getValueFactory();
+        Resource context10 = vf.createIRI("http://marklogic.com/test/context10");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        con.begin();
+        con.add(alice, name, alicesName, context10);
+        con.commit();
+        RepositoryResult<Statement> result = con.getStatements(alice, null, null, context10);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+
+        markLogicRepository.shutDown();
+        markLogicRepository.initialize();
+        con = markLogicRepository.getConnection();
+        result = con.getStatements(alice, null, null, context10);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+        con.clear();
+    }
+
+    @Test
+    public void testConnectionWithMLConnectionVariablesWithDatabase()
+    {
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, user, password, "marklogic-rdf4j-test-content", "DIGEST");
+        markLogicRepository.initialize();
+        MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
+        ValueFactory vf =  con.getValueFactory();
+        Resource context11 = vf.createIRI("http://marklogic.com/test/context11");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        con.begin();
+        con.add(alice, name, alicesName, context11);
+        con.commit();
+        RepositoryResult<Statement> result = con.getStatements(alice, null, null, context11);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+
+        markLogicRepository.shutDown();
+        markLogicRepository.initialize();
+        con = markLogicRepository.getConnection();
+        result = con.getStatements(alice, null, null, context11);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+        con.clear();
+    }
+
+    @Test
+    public void testConnectionWithMLClientApiSecurityContextWithoutDatabase()
+    {
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
+        markLogicRepository.initialize();
+        MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
+        ValueFactory vf =  con.getValueFactory();
+        Resource context12 = vf.createIRI("http://marklogic.com/test/context12");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        con.begin();
+        con.add(alice, name, alicesName, context12);
+        con.commit();
+        RepositoryResult<Statement> result = con.getStatements(alice, null, null, context12);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+
+        markLogicRepository.shutDown();
+        markLogicRepository.initialize();
+        con = markLogicRepository.getConnection();
+        result = con.getStatements(alice, null, null, context12);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+        con.clear();
+    }
+
+    @Test
+    public void testConnectionWithMLClientApiSecurityContextWithDatabase()
+    {
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, "marklogic-rdf4j-test-content", new DatabaseClientFactory.DigestAuthContext(user, password));
+        markLogicRepository.initialize();
+        MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
+        ValueFactory vf =  con.getValueFactory();
+        Resource context12 = vf.createIRI("http://marklogic.com/test/context12");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        Literal alicesName = vf.createLiteral("Alice");
+        con.begin();
+        con.add(alice, name, alicesName, context12);
+        con.commit();
+        RepositoryResult<Statement> result = con.getStatements(alice, null, null, context12);
+        Model model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+
+        markLogicRepository.shutDown();
+        markLogicRepository.initialize();
+        con = markLogicRepository.getConnection();
+        result = con.getStatements(alice, null, null, context12);
+        model = Iterations.addAll(result, new LinkedHashModel());
+        Assert.assertEquals(1, model.size());
+        con.clear();
     }
 }
 

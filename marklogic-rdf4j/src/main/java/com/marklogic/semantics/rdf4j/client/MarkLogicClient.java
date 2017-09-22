@@ -90,8 +90,8 @@ public class MarkLogicClient {
 	 * Constructor initialized with connection parameters.
 	 *
 	 */
-	public MarkLogicClient(String host, int port, String user, String password,String auth) {
-		this._client = new MarkLogicClientImpl(host,port,user,password,auth);
+	public MarkLogicClient(String host, int port, String user, String password, String database, String auth) {
+		this._client = new MarkLogicClientImpl(host, port, user, password, database, auth);
 		this.initTimer();
 	}
 
