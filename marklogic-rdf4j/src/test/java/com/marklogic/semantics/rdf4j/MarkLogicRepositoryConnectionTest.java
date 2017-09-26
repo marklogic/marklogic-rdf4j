@@ -722,6 +722,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         conn.clear(context1);
     }
 
+    // https://github.com/eclipse/rdf4j/issues/772
     @Test
     public void testExportStatements()
             throws Exception {
@@ -743,7 +744,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
                 "\txmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" +
                 "\n" +
                 "<rdf:Description rdf:about=\"http://example.org/people/alice\">\n" +
-                "\t<name xmlns=\"http://example.org/ontology/\" rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">Alice</name>\n" +
+                "\t<name xmlns=\"http://example.org/ontology/\">Alice</name>\n" +
                 "</rdf:Description>\n" +
                 "\n" +
                 "</rdf:RDF>";
@@ -754,6 +755,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/108
+    // https://github.com/eclipse/rdf4j/issues/772
     @Test
     public void testExportStatementsAllNull()
             throws Exception {
@@ -775,7 +777,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
                 "\txmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" +
                 "\n" +
                 "<rdf:Description rdf:about=\"http://example.org/people/alice\">\n" +
-                "\t<name xmlns=\"http://example.org/ontology/\" rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">Alice</name>\n" +
+                "\t<name xmlns=\"http://example.org/ontology/\">Alice</name>\n" +
                 "</rdf:Description>\n" +
                 "\n" +
                 "</rdf:RDF>";
