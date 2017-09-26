@@ -27,7 +27,6 @@ import com.marklogic.semantics.rdf4j.client.MarkLogicClient;
 import com.marklogic.semantics.rdf4j.client.MarkLogicClientDependent;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.Dataset;
 import org.eclipse.rdf4j.query.Query;
 import org.eclipse.rdf4j.query.impl.AbstractQuery;

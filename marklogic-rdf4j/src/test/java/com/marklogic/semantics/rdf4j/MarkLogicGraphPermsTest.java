@@ -85,7 +85,8 @@ public class MarkLogicGraphPermsTest extends Rdf4jTestBase {
         logger.debug("tearing down...");
         conn.close();
         conn = null;
-        rep.shutDown();
+        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
+        //rep.shutDown();
         rep = null;
         logger.info("tearDown complete.");
 
