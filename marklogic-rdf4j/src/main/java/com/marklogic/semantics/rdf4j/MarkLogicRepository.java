@@ -43,9 +43,6 @@ import java.net.URL;
  * in all SPARQL forms, rulesets for inferencing, efficient
  * size queries, combination queries,  base uri, and permissions.
  *
- * @author James Fuller
- * @version 1.0.0
- *
  */
 public class MarkLogicRepository extends AbstractRepository implements Repository,MarkLogicClientDependent {
 
@@ -98,7 +95,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      * @param user the user with read, write, or administrative privileges
      * @param password the password for the user
      * @param auth the type of authentication applied to the request
+     * @deprecated since 1.1.0 use {@link MarkLogicRepository#MarkLogicRepository(java.lang.String, int, com.marklogic.client.DatabaseClientFactory.SecurityContext)} instead.
      */
+    @Deprecated
     public MarkLogicRepository(String host, int port, String user, String password, String auth) {
         this(host, port, user, password, null, auth);
     }
@@ -112,8 +111,10 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      * @param user the user with read, write, or administrative privileges
      * @param password the password for the user
      * @param auth the type of authentication applied to the request
-     * @param database
+     * @param database the MarkLogic database to be used.
+     * @deprecated since 1.1.0 use {@link MarkLogicRepository#MarkLogicRepository(java.lang.String, int, java.lang.String, com.marklogic.client.DatabaseClientFactory.SecurityContext)} instead.
      */
+    @Deprecated
     public MarkLogicRepository(String host, int port, String user, String password, String database, String auth) {
         super();
         this.f = SimpleValueFactory.getInstance();
@@ -146,7 +147,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      *
      * @param host the host with the REST server
      * @param port the port for the REST server
-     * @param database
+     * @param database the MarkLogic database to be used.
      * @param securityContext a Java Client API SecurityContext. Can be made with com.marklogic.client.DatabaseClientFactory
      */
     public MarkLogicRepository(String host, int port, String database, DatabaseClientFactory.SecurityContext securityContext) {
@@ -162,7 +163,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     }
 
     /**
-     * Constructor.
+     * Constructor initialized with MarkLogic Java Client Api DatabaseClient.
      *
      * @param databaseClient a Java Client API DatabaseClient. Can be made with com.marklogic.client.DatabaseClientFactory
      */
