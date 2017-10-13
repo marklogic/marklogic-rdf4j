@@ -1341,8 +1341,8 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public void setDefaultRulesets(SPARQLRuleset ... ruleset ) {
-        this.defaultRulesets = ruleset;
-        //this.client.setRulesets(ruleset);
+        //this.defaultRulesets = ruleset;
+        this.client.setDefaultRulesets(ruleset);
     }
 
     /**
@@ -1352,7 +1352,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      */
     @Override
     public SPARQLRuleset[] getDefaultRulesets() {
-        return this.defaultRulesets;
+        return this.client.getDefaultRulesets();
     }
 
 

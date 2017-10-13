@@ -15,7 +15,7 @@ implementation exposing [MarkLogic](http://www.marklogic.com) semantic
 
 ## Before you start
 
-The markLogic-rd4j API supports [RDF4J v2.2.1](http://rdf4j.org/).
+The markLogic-rd4j API supports [RDF4J v2.2.2](http://rdf4j.org/).
 
 ### Setup MarkLogic
 

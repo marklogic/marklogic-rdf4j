@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.UnrecoverableKeyException;
@@ -93,37 +95,29 @@ public class Util {
                 || dataFormat.equals(RDFFormat.N3);
     }
 
+    public DatabaseClient getClientBasedOnAuth(String host, int port, String database, DatabaseClientFactory.SecurityContext securityContext)
+    {
+        return DatabaseClientFactory.newClient(host, port, database, securityContext);
+    }
+
     /**
      * Public utility that returns DatabaseClient based on auth
      * @return DatabaseClient
      */
-    public DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth, String... cert) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
+    public DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String database, String auth) {
         Authentication type;
-        String certFile;
-        String certPassword;
 
         if(auth != null)
         {
             type = Authentication.valueOfUncased(auth);
-            certFile = cert.length > 0 ? cert[0] : "";
-            certPassword = cert.length > 1 ? cert[1] : "";
 
             if(type == Authentication.BASIC)
             {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.BasicAuthContext(user, password));
+                return DatabaseClientFactory.newClient(host, port, database, new DatabaseClientFactory.BasicAuthContext(user, password));
             }
             else if(type == Authentication.DIGEST)
             {
                 return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
-            }
-            else if(type == Authentication.KERBEROS)
-            {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.KerberosAuthContext());
-            }
-            else if(type == Authentication.CERTIFICATE)
-            {
-                //TODO: change parameters
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.CertificateAuthContext(certFile, certPassword));
             }
         }
 
