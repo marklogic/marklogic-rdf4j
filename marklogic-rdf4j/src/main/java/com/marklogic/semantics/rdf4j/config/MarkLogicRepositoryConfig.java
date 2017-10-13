@@ -216,7 +216,6 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 		try {
 			IRI iri = Models.getPropertyIRI(model, implNode, QUERY_ENDPOINT).orElse(null);
-			System.out.println(iri);
 			if (iri != null) {
 				setQueryEndpointUrl(iri.stringValue());
 			}

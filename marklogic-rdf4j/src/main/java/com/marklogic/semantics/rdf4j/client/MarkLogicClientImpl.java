@@ -161,7 +161,7 @@ class MarkLogicClientImpl {
     public InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset)){qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred){qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())) {
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -209,7 +209,7 @@ class MarkLogicClientImpl {
     public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset)) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -237,7 +237,7 @@ class MarkLogicClientImpl {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         qdef.setIncludeDefaultRulesets(includeInferred);
-        if (Util.notNull(ruleset)) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -261,7 +261,7 @@ class MarkLogicClientImpl {
     public void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset) ) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         qdef.setIncludeDefaultRulesets(includeInferred);
         sparqlManager.clearPageLength();

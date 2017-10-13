@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -76,7 +77,9 @@ public class MarkLogicClient {
 
 	private Transaction tx = null;
 
-	private TripleWriteCache timerWriteCache;
+    private SPARQLRuleset[] defaultRulesets;
+
+    private TripleWriteCache timerWriteCache;
 	private Timer writeTimer;
 	private TripleDeleteCache timerDeleteCache;
 	private Timer deleteTimer;
@@ -498,7 +501,23 @@ public class MarkLogicClient {
 	 * @param rulesets
 	 */
 	public void setRulesets(SPARQLRuleset... rulesets){
-		getClient().setRulesets(rulesets);
+	    if(this.defaultRulesets != null)
+        {
+            if(rulesets != null)
+            {
+                SPARQLRuleset[] resultantRuleset = Arrays.copyOf(rulesets, rulesets.length + defaultRulesets.length);
+                System.arraycopy(defaultRulesets, 0, resultantRuleset, rulesets.length, defaultRulesets.length);
+                getClient().setRulesets(resultantRuleset);
+            }
+            else
+            {
+                getClient().setRulesets(this.defaultRulesets);
+            }
+        }
+        else
+        {
+            getClient().setRulesets(rulesets);
+        }
 	}
 
 	/**
@@ -508,6 +527,15 @@ public class MarkLogicClient {
 	 */
 	public SPARQLRuleset[] getRulesets(){
 		return getClient().getRulesets();
+	}
+
+	public void setDefaultRulesets(SPARQLRuleset... rulesets)
+    {
+        this.defaultRulesets = rulesets;
+    }
+
+	public SPARQLRuleset[] getDefaultRulesets() {
+		return this.defaultRulesets;
 	}
 
 	/**

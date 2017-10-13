@@ -21,9 +21,11 @@ package com.marklogic.semantics.rdf4j;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
+import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryConfig;
 import com.marklogic.semantics.rdf4j.config.MarkLogicRepositoryFactory;
 
+import com.marklogic.semantics.rdf4j.query.MarkLogicQuery;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
@@ -666,7 +668,6 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
 
         String alicesNamesId = alicesName.getID();
         BNode copyOfAliceName = vf.createBNode(alicesNamesId);
-        System.out.println(alicesNamesId);
         Assert.assertTrue(conn.hasStatement(null, null, copyOfAliceName, false));
     }
 
@@ -720,6 +721,74 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Assert.assertFalse(conn.hasStatement(st1, false, (Resource) null));
 
         conn.clear(context1);
+    }
+
+    // https://github.com/marklogic/marklogic-rdf4j/issues/16
+    @Test
+    public void testHasStatementIncludeInferredCheck()
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context13 = vf.createIRI("http://marklogic.com/test/context13");
+        IRI micah = vf.createIRI("http://example.org/people/micah");
+        IRI fname = vf.createIRI("http://example.org/ontology/fname");
+        IRI lname = vf.createIRI("http://example.org/ontology/lname");
+        Literal micahlname = vf.createLiteral("Dubinko");
+        Literal micahfname = vf.createLiteral("Micah");
+        IRI developPrototypeOf = vf.createIRI("http://example.org/ontology/developPrototypeOf");
+        IRI semantics = vf.createIRI("http://example.org/ontology/Semantics");
+        IRI type = vf.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        IRI sEngineer = vf.createIRI("http://example.org/ontology/SeniorEngineer");
+        IRI worksFor = vf.createIRI("http://example.org/ontology/worksFor");
+        IRI ml = vf.createIRI("http://example.org/ontology/MarkLogic");
+        IRI john = vf.createIRI("http://example.org/people/john");
+        Literal johnfname = vf.createLiteral("John");
+        Literal johnlname = vf.createLiteral("Snelson");
+        IRI writeFuncSpecOf = vf.createIRI("http://example.org/ontology/writeFuncSpecOf");
+        IRI inference = vf.createIRI("http://example.org/ontology/Inference");
+        IRI lEngineer = vf.createIRI("http://example.org/ontology/LeadEngineer");
+        IRI design = vf.createIRI("http://example.org/ontology/design");
+        IRI develop = vf.createIRI("http://example.org/ontology/develop");
+        IRI eqProperty = vf.createIRI("http://www.w3.org/2002/07/owl#equivalentProperty");
+
+        conn.add(micah, lname, micahlname, context13);
+        conn.add(micah, fname, micahfname, context13);
+        conn.add(micah, developPrototypeOf, semantics, context13);
+        conn.add(micah, type, sEngineer, context13);
+        conn.add(micah, worksFor, ml, context13);
+
+        conn.add(john, fname, johnfname, context13);
+        conn.add(john, lname, johnlname, context13);
+        conn.add(john, writeFuncSpecOf, inference, context13);
+        conn.add(john, type, lEngineer, context13);
+        conn.add(john, worksFor, ml, context13);
+
+        conn.add(writeFuncSpecOf, eqProperty, design, context13);
+        conn.add(developPrototypeOf, eqProperty, design, context13);
+        conn.add(design, eqProperty, develop, context13);
+
+        conn.setDefaultRulesets(SPARQLRuleset.EQUIVALENT_PROPERTY);
+
+        Assert.assertTrue(conn.hasStatement(john, design, inference, true, context13));
+        Assert.assertTrue(conn.hasStatement(john, design, inference, true));
+
+		Assert.assertFalse(conn.hasStatement(john, design, inference, false, context13));
+		Assert.assertFalse(conn.hasStatement(john, design, inference, false));
+
+        String query = "select  (count (?s)  as ?totalcount) where {?s ?p ?o .} ";
+        TupleQuery tupleQuery =  conn.prepareTupleQuery(QueryLanguage.SPARQL, query);
+        ((MarkLogicQuery) tupleQuery).setRulesets(SPARQLRuleset.EQUIVALENT_CLASS);
+
+        try (TupleQueryResult result = tupleQuery.evaluate()) {
+            while (result.hasNext()) {
+                BindingSet solution = result.next();
+                assertTrue(solution.hasBinding("totalcount"));
+                Value count = solution.getValue("totalcount");
+                Assert.assertEquals(25, Integer.parseInt(count.stringValue()));
+            }
+        }
+
+        conn.setDefaultRulesets(null);
+        conn.clear();
     }
 
     // https://github.com/eclipse/rdf4j/issues/772
