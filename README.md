@@ -1,4 +1,4 @@
-# marklogic-rdf4j v1.0.0
+# marklogic-rdf4j v1.1.0
 
 ## Introduction
 
@@ -28,13 +28,13 @@ server.
 ### Quick Start
 
 The markLogic-rdf4j API is available via [Maven
-Central](http://central.maven.org/maven2/artifact/com.marklogic/marklogic-rdf4j/1.0.0).
+Central](http://central.maven.org/maven2/artifact/com.marklogic/marklogic-rdf4j/1.1.0).
 
 For gradle projects, include the following dependency in your `build.gradle`:
 
 ```
 dependencies {
-    compile group: 'com.marklogic', name: 'marklogic-rdf4j', version: '1.0.0'
+    compile group: 'com.marklogic', name: 'marklogic-rdf4j', version: '1.1.0'
 }
 ```
 
@@ -44,7 +44,7 @@ For maven projects, include in your pom.xml:
 <dependency>
     <groupId>com.marklogic</groupId>
     <artifactId>marklogic-rdf4j</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -55,7 +55,7 @@ This section describes how to build and test marklogic-rdf4j API from _develop_ 
 #### Setup MarkLogic Java API Client (optional)
 
 marklogic-rdf4j depends on 
-[MarkLogic Java API Client v4.0-1](http://mvnrepository.com/artifact/com.marklogic/marklogic-client-api/4.0.1)
+[MarkLogic Java API Client v4.0-2](http://mvnrepository.com/artifact/com.marklogic/marklogic-client-api/4.0.2)
 and should pull down this version from maven central.
 
 To optionally build marklogic-rdf4j with _develop_ branch version of MarkLogic Java API Client:
@@ -108,7 +108,7 @@ optionally you can build the jar without running tests.
 gradle build -x test
 ```
 
-and copy resultant build/lib/marklogic-rdf4j-1.0.0.jar.
+and copy resultant build/lib/marklogic-rdf4j-1.1.0.jar.
 
 ### Examples
 
