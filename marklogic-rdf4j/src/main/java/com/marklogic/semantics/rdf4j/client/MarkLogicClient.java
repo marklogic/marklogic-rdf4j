@@ -464,7 +464,11 @@ public class MarkLogicClient {
 		return this.tx != null;
 	}
 
-	/**
+    public Transaction getTransaction() {
+        return tx;
+    }
+
+    /**
 	 * sets transaction (tx) to null
 	 *
 	 * @throws MarkLogicTransactionException
