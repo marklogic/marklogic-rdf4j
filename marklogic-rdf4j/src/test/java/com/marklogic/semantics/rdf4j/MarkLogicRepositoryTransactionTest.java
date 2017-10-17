@@ -19,7 +19,12 @@
  */
 package com.marklogic.semantics.rdf4j;
 
+import com.marklogic.client.document.DocumentDescriptor;
+import com.marklogic.client.document.DocumentManager;
+import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.Format;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.eclipse.rdf4j.IsolationLevels;
@@ -27,6 +32,8 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
@@ -190,4 +197,31 @@ public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {
         assertEquals("expected 4",conn.size(), 4L);
     }
 
+    // https://github.com/marklogic/marklogic-sesame/issues/358
+    @Test
+    public void testTransactionAccessForMultiModelData()
+    {
+        Resource context3 = conn.getValueFactory().createIRI("http://marklogic.com/test/context3");
+        ValueFactory f = conn.getValueFactory();
+        IRI alice = f.createIRI("http://example.org/people/alice");
+        IRI name = f.createIRI("http://example.org/ontology/name");
+        IRI person = f.createIRI("http://example.org/ontology/Person");
+        Literal alicesName = f.createLiteral("Alice");
+
+        conn.begin();
+        conn.add(alice, name, alicesName, context3);
+        conn.add(alice, RDF.TYPE, person, context3);
+
+        File file = new File("src/test/resources/testdata/bbq1.xml");
+        DocumentManager docMgr = adminClient.newDocumentManager();
+        String docId = "/tx-rollback/bbq1.xml";
+        FileHandle handle = new FileHandle(file);
+        handle.set(file);
+        handle.setFormat(Format.XML);
+        docMgr.write(docId, handle, conn.getTransaction());
+        DocumentDescriptor documentDescriptor = docMgr.exists(docId, conn.getTransaction());
+        Assert.assertEquals(docId, documentDescriptor.getUri());
+        Assert.assertNull(docMgr.exists(docId));
+        conn.rollback();
+    }
 }
