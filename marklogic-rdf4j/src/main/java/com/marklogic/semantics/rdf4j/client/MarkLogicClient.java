@@ -77,9 +77,9 @@ public class MarkLogicClient {
 
 	private Transaction tx = null;
 
-    private SPARQLRuleset[] defaultRulesets;
+	private SPARQLRuleset[] defaultRulesets;
 
-    private TripleWriteCache timerWriteCache;
+	private TripleWriteCache timerWriteCache;
 	private Timer writeTimer;
 	private TripleDeleteCache timerDeleteCache;
 	private Timer deleteTimer;
@@ -464,7 +464,11 @@ public class MarkLogicClient {
 		return this.tx != null;
 	}
 
-	/**
+	public Transaction getTransaction() {
+        return tx;
+    }
+
+    /**
 	 * sets transaction (tx) to null
 	 *
 	 * @throws MarkLogicTransactionException
