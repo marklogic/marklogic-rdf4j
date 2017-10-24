@@ -730,7 +730,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     // TBD- should refactor
     @Override
     public void export(RDFHandler handler, Resource... contexts) throws RepositoryException, RDFHandlerException {
-        exportStatements(null, null, null, true, handler);
+        exportStatements(null, null, null, false, handler, contexts);
     }
 
     /**
