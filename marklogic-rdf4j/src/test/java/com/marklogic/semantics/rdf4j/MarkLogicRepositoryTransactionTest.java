@@ -220,8 +220,13 @@ public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {
         handle.setFormat(Format.XML);
         docMgr.write(docId, handle, conn.getTransaction());
         DocumentDescriptor documentDescriptor = docMgr.exists(docId, conn.getTransaction());
+
         Assert.assertEquals(docId, documentDescriptor.getUri());
         Assert.assertNull(docMgr.exists(docId));
+
         conn.rollback();
+
+        Assert.assertNull(conn.getTransaction());
+        Assert.assertNull(docMgr.exists(docId));
     }
 }
