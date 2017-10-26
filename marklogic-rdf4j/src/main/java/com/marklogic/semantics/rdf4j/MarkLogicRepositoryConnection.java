@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import com.marklogic.client.Transaction;
 import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
@@ -729,7 +730,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     // TBD- should refactor
     @Override
     public void export(RDFHandler handler, Resource... contexts) throws RepositoryException, RDFHandlerException {
-        exportStatements(null, null, null, true, handler);
+        exportStatements(null, null, null, false, handler, contexts);
     }
 
     /**
@@ -1434,6 +1435,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
         }
         query.setDataset(dataset);
+    }
+
+    public Transaction getTransaction()
+    {
+        return this.client.getTransaction();
     }
 
     /**
