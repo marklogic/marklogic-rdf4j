@@ -87,8 +87,7 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         conn = null;
         if(rep != null)
         {
-            // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
-            //rep.shutDown();
+            rep.shutDown();
         }
         rep = null;
         logger.info("tearDown complete.");

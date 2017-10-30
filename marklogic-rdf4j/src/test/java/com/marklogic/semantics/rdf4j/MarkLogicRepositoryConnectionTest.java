@@ -97,8 +97,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         //conn.clear();
         if(conn.isOpen()){conn.clear();}
         conn.close();
-        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
-        //rep.shutDown();
+        rep.shutDown();
         conn=null;
         logger.info("tearDown complete.");
     }

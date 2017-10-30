@@ -56,8 +56,7 @@ public class MarkLogicRepositoryTest extends Rdf4jTestBase {
         rep.initialize();
 
         Assert.assertTrue(rep instanceof Repository);
-        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
-        //rep.shutDown();
+        rep.shutDown();
     }
 
     @Test
@@ -115,8 +114,7 @@ public class MarkLogicRepositoryTest extends Rdf4jTestBase {
         RepositoryConnection conn = rep.getConnection();
         Assert.assertTrue(conn instanceof RepositoryConnection);
         conn.close();
-        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
-        //rep.shutDown();
+        rep.shutDown();
     }
 
     @Test

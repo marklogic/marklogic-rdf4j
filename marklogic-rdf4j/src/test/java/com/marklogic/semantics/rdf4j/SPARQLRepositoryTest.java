@@ -64,8 +64,7 @@ public class SPARQLRepositoryTest extends Rdf4jTestBase {
         if(conn.isOpen()){conn.clear();}
         conn.close();
         conn = null;
-        // TODO: Un-comment line when issue 811 gets resolved. https://github.com/marklogic/java-client-api/issues/811
-        //rep.shutDown();
+        rep.shutDown();
         rep = null;
         logger.info("tearDown complete.");
     }
