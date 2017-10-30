@@ -55,7 +55,7 @@ This section describes how to build and test marklogic-rdf4j API from _develop_ 
 #### Setup MarkLogic Java API Client (optional)
 
 marklogic-rdf4j depends on 
-[MarkLogic Java API Client v4.0-2](http://mvnrepository.com/artifact/com.marklogic/marklogic-client-api/4.0.2)
+[MarkLogic Java API Client v4.0-3](http://mvnrepository.com/artifact/com.marklogic/marklogic-client-api/4.0.3)
 and should pull down this version from maven central.
 
 To optionally build marklogic-rdf4j with _develop_ branch version of MarkLogic Java API Client:
