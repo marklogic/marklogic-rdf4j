@@ -80,6 +80,7 @@ public class Example4_Load_Triples {
         }finally {
             simple.teardown();
         }
+        System.exit(0);
     }
 }
 

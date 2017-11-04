@@ -15,6 +15,7 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 
 import java.io.FileInputStream;
@@ -36,6 +37,6 @@ public class Setup {
         String user = props.getProperty("writerUser");
         String pass = props.getProperty("writerPassword");
 
-        return new MarkLogicRepository(host,port,user,pass,"DIGEST");
+        return new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, pass));
     }
 }

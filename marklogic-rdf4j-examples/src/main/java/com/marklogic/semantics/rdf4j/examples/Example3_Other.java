@@ -57,6 +57,7 @@ public class Example3_Other {
         }finally {
             simple.teardown();
         }
+        System.exit(0);
     }
 }
 

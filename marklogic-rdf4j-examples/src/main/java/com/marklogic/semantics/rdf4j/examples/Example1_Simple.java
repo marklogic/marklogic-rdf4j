@@ -15,6 +15,7 @@
  */
 package com.marklogic.semantics.rdf4j.examples;
 
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
@@ -42,7 +43,7 @@ public class Example1_Simple {
     public static void main(String... args) throws RepositoryException, IOException, RDFParseException, MalformedQueryException, QueryEvaluationException {
 
         // instantiate repository
-        MarkLogicRepository repo = new MarkLogicRepository("localhost",8200,"admin","admin","DIGEST");
+        MarkLogicRepository repo = new MarkLogicRepository("localhost",8200, new DatabaseClientFactory.DigestAuthContext("admin", "admin"));
         repo.initialize();
 
         // get repository connection
@@ -92,6 +93,8 @@ public class Example1_Simple {
         // close connection and shutdown repository
         conn.close();
         repo.shutDown();
+
+        System.exit(0);
     }
 }
 
