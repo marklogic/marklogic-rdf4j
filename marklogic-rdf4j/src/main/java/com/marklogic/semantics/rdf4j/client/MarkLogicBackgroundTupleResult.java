@@ -28,7 +28,7 @@ import java.io.InputStream;
 /**
  * Wrapper on RDF4J BackgroundTupleResult
  *
- * @author James Fuller
+ *
  */
 class MarkLogicBackgroundTupleResult extends BackgroundTupleResult {
 

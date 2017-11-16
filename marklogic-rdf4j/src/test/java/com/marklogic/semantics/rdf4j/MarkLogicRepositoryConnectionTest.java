@@ -66,7 +66,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * tests add, remove, hasSatement, getStatements, export, etc
  *
- * @author James Fuller
+ *
  */
 // @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {

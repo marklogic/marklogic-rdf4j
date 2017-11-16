@@ -24,7 +24,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 /**
  * Specific exception for throwing MarkLogic related errors.
  *
- * @author James Fuller
+ *
  */
 @SuppressWarnings("serial")
 public class MarkLogicRdf4jException extends RepositoryException {

@@ -56,7 +56,7 @@ import com.marklogic.semantics.rdf4j.Rdf4jTestBase;
 /**
  * test TupleQuery
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
 

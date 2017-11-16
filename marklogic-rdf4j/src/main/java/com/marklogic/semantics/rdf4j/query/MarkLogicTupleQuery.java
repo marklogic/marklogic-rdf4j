@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Tuple query.
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,MarkLogicQueryDependent {
 

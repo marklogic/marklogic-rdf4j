@@ -56,7 +56,7 @@ import java.util.concurrent.Executors;
 /**
  * An internal class that straddles Rdf4j and MarkLogic Java client API.
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicClient {
 

@@ -62,7 +62,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 /**
  * Internal class for interacting with Java Client API.
  *
- * @author James Fuller
+ *
  */
 class MarkLogicClientImpl {
 

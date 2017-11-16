@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * tests MarkLogicRespository
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryTest extends Rdf4jTestBase {
 

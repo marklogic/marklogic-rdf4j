@@ -30,7 +30,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 /**
  * Interface defining MarkLogic semantic features.
  *
- * @author James Fuller
+ *
  */
 interface MarkLogicRepositoryConnectionDependent {
 

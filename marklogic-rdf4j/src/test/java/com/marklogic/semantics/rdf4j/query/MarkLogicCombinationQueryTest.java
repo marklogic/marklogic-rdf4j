@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * test MarkLogic combination query
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicCombinationQueryTest extends Rdf4jTestBase {
 

@@ -36,7 +36,7 @@ import static com.marklogic.semantics.rdf4j.Rdf4jTestBase.*;
 /**
  * test factory
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryFactoryTest extends Rdf4jTestBase {
 

@@ -45,7 +45,7 @@ import static org.junit.Assert.assertThat;
 /**
  * test transactions
  *
- * @author James Fuller
+ *
  */
 // @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MarkLogicRepositoryTransactionTest extends Rdf4jTestBase {

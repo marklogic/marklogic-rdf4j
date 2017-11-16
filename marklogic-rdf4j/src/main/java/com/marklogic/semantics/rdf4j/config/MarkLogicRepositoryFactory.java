@@ -33,7 +33,7 @@ import java.net.URL;
 /**
  * A factory for instantiating MarkLogicRepository objects.
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryFactory implements RepositoryFactory {
 

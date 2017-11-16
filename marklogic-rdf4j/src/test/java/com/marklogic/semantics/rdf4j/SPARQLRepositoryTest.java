@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * test connectivity to SPARQLRepository with v1/graphs/sparql
  *
- * @author James Fuller
+ *
  */
 public class SPARQLRepositoryTest extends Rdf4jTestBase {
 

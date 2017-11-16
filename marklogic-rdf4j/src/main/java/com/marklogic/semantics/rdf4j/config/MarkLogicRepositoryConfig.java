@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Representation of Repository config
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 

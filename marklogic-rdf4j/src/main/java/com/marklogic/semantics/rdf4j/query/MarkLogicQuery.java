@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Base query class
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicQuery extends AbstractQuery implements Query,MarkLogicClientDependent,MarkLogicQueryDependent {
 

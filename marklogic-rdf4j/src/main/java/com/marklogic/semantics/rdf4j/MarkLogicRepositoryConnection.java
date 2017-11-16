@@ -86,7 +86,7 @@ import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
 /**
  * RepositoryConnection to MarkLogic triplestore
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection implements RepositoryConnection,MarkLogicRepositoryConnectionDependent {
 

@@ -29,7 +29,7 @@
 </ul>
 If you need something to help you configure and deploy MarkLogic
 application servers, try
-<a href="https://github.com/rjrudin/ml-gradle">ml-gradle</a>.
+<a href="https://github.com/marklogic-community/ml-gradle">ml-gradle</a>.
 
 Note: If you are starting with 8.0-4 MarkLogic installation on your local
 machine, the configuration of ml-gradle out of the box will set up a test
@@ -40,6 +40,7 @@ server for you.
     RDF4J uses a {@link org.eclipse.rdf4j.repository.Repository} to represent a quad store and {@link org.eclipse.rdf4j.repository.RepositoryConnection} to connect to a quad store.
 
 <pre>
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import com.marklogic.semantics.rdf4j.query.MarkLogicTupleQuery;
@@ -67,7 +68,7 @@ public class Example1_Simple {
     public static void main(String... args) throws RepositoryException, IOException, RDFParseException, MalformedQueryException, QueryEvaluationException {
 
         // instantiate repository
-        MarkLogicRepository repo = new MarkLogicRepository("localhost",8200,"admin","admin","DIGEST");
+        MarkLogicRepository repo = new MarkLogicRepository("localhost",8200, new DatabaseClientFactory.DigestAuthContext("admin", "admin"));
         repo.initialize();
 
         // get repository connection
@@ -77,7 +78,7 @@ public class Example1_Simple {
         logger.info("number of triples: {}", conn.size());
 
         // add triples from a file
-        File inputFile = new File("marklogic-rdf4j-examples/src/main/resources/testdata/test-small.owl");
+        File inputFile = new File("src/main/resources/testdata/test-small.owl");
         conn.add(inputFile, null, RDFFormat.RDFXML, (Resource) null);
 
         logger.info("number of triples: {}", conn.size());
@@ -92,7 +93,7 @@ public class Example1_Simple {
         conn.add(john, RDFS.LABEL, f.createLiteral("John", XMLSchema.STRING),context2);
 
         // check if triples with subject john exist in repository
-        String checkJohnQuery = "ASK { <http://example.org/john> ?p ?o .}";
+        String checkJohnQuery = "ASK { &lt;http://example.org/john&gt; ?p ?o .}";
         BooleanQuery booleanJohnQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, checkJohnQuery);
         logger.info("result of query: {}",booleanJohnQuery.evaluate());
 
@@ -204,7 +205,7 @@ public class Example1_Simple {
 <p>
 <pre>
         //update query
-        String updatequery = "INSERT DATA { GRAPH <http://marklogic.com/test/context10> {  <http://marklogic.com/test/subject> <pp1> <oo1> } }";
+        String updatequery = "INSERT DATA { GRAPH &lt;http://marklogic.com/test/context10&gt; {  &lt;http://marklogic.com/test/subject&gt; &lt;pp1&gt; &lt;oo1&gt; } }";
         MarkLogicUpdateQuery updateQuery = conn.prepareUpdate(QueryLanguage.SPARQL, updatequery,"http://marklogic.com/test/baseuri");
 
         // set perms to be applied to data

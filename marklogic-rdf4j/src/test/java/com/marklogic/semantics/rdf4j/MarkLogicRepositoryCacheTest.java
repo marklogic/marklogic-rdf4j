@@ -41,7 +41,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * tests write cache
  *
- * @author James Fuller
+ *
  */
 // @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MarkLogicRepositoryCacheTest extends Rdf4jTestBase {

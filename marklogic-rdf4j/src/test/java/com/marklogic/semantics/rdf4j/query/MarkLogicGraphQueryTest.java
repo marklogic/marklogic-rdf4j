@@ -40,7 +40,7 @@ import java.io.FileNotFoundException;
 /**
  * test GraphQuery
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
 
