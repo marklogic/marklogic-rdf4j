@@ -21,7 +21,6 @@ dependencies {
     compile('org.slf4j:slf4j-api:1.7.10')
     compile "ch.qos.logback:logback-classic:$logbackVersion"
     compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
-
 }
 
 sourceSets {
@@ -30,6 +29,12 @@ sourceSets {
       srcDir 'src/main/java'
     }
   }
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+    mavenCentral()
 }
 
 configurations {

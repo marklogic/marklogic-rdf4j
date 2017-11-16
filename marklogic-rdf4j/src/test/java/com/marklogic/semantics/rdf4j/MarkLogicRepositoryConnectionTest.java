@@ -1538,7 +1538,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
     @Test
     public void testConnectionWithMLConnectionVariablesWithoutDatabase()
     {
-        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, user, password, "DIGEST");
+        MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
         markLogicRepository.initialize();
         MarkLogicRepositoryConnection con = markLogicRepository.getConnection();
         ValueFactory vf =  con.getValueFactory();

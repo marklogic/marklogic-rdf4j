@@ -1,5 +1,6 @@
 package com.marklogic.semantics.rdf4j.benchmarks;
 
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import com.marklogic.semantics.rdf4j.MarkLogicRepositoryConnection;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -38,7 +39,7 @@ public class MarkLogicRepositoryConnectionNaivePerfTest {
         String pass = props.getProperty("mlPassword");
         // extrude to semantics.utils
 
-        MarkLogicRepository rep = new MarkLogicRepository(host,port,user,pass,"DIGEST");
+        MarkLogicRepository rep = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, pass));
         rep.initialize();
 
         MarkLogicRepositoryConnection conn = rep.getConnection();
