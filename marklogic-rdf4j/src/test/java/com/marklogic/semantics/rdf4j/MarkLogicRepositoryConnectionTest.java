@@ -50,10 +50,7 @@ import org.eclipse.rdf4j.rio.rdfxml.RDFXMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1562,6 +1559,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         con.clear();
     }
 
+    @Deprecated
     @Test
     public void testConnectionWithMLConnectionVariablesWithDatabase()
     {

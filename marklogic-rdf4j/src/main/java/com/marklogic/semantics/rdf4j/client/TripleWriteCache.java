@@ -53,34 +53,27 @@ public class TripleWriteCache extends TripleCache {
 
     protected synchronized void flush() throws RepositoryException, MalformedQueryException, UpdateExecutionException, IOException {
         if (cache.isEmpty()) { return; }
-        StringBuffer entireQuery = new StringBuffer();
+        StringBuilder entireQuery = new StringBuilder();
         SPARQLQueryBindingSet bindingSet = new SPARQLQueryBindingSet();
 
         for (Namespace ns :cache.getNamespaces()){
-            entireQuery.append("PREFIX "+ns.getPrefix()+": <"+ns.getName()+">. ");
+            entireQuery.append("PREFIX ").append(ns.getPrefix()).append(": <").append(ns.getName()).append(">. ");
         }
         entireQuery.append("INSERT DATA { ");
 
-        Set<Resource> distinctCtx = new HashSet<Resource>();
-        for (Resource context :cache.contexts()) {
-            distinctCtx.add(context);
-        }
+        Set<Resource> distinctCtx = new HashSet<>();
+        distinctCtx.addAll(cache.contexts());
 
         for (Resource ctx : distinctCtx) {
                if (ctx != null) {
-                   entireQuery.append(" GRAPH <" + ctx + "> { ");
+                   entireQuery.append(" GRAPH <").append(ctx).append("> { ");
                }
                 for (Statement stmt : cache.filter(null, null, null, ctx)) {
-                    if (stmt.getSubject() instanceof org.eclipse.rdf4j.model.BNode) {
-                        entireQuery.append("<http://marklogic.com/semantics/blank/" + stmt.getSubject().stringValue() + "> ");
-                    }else {
-                        entireQuery.append("<" + stmt.getSubject().stringValue() + "> ");
-                    }
-                    if (stmt.getPredicate() instanceof org.eclipse.rdf4j.model.BNode) {
-                        entireQuery.append("<http://marklogic.com/semantics/blank/" + stmt.getPredicate().stringValue() + "> ");
-                    }else{
-                        entireQuery.append("<" + stmt.getPredicate().stringValue() + "> ");
-                    }
+
+                    entireQuery.append("<").append(stmt.getSubject().stringValue()).append("> ");
+
+                    entireQuery.append("<").append(stmt.getPredicate().stringValue()).append("> ");
+
                     Value object=stmt.getObject();
                     if (object instanceof Literal) {
                         Literal lit = (Literal) object;
@@ -88,16 +81,12 @@ public class TripleWriteCache extends TripleCache {
                         entireQuery.append(SPARQLUtil.encodeString(lit.getLabel()));
                         entireQuery.append("\"");
                         if(null == lit.getLanguage().orElse(null)) {
-                            entireQuery.append("^^<" + lit.getDatatype().stringValue() + ">");
+                            entireQuery.append("^^<").append(lit.getDatatype().stringValue()).append(">");
                         }else{
-                            entireQuery.append("@" + lit.getLanguage().orElse(null));
+                            entireQuery.append("@").append(lit.getLanguage().orElse(null));
                         }
                     } else {
-                        if (stmt.getObject() instanceof org.eclipse.rdf4j.model.BNode) {
-                            entireQuery.append("<http://marklogic.com/semantics/blank/" + stmt.getObject().stringValue() + "> ");
-                        }else {
-                            entireQuery.append("<" + object.stringValue() + "> ");
-                        }
+                            entireQuery.append("<").append(object.stringValue()).append("> ");
                     }
                     entireQuery.append(".");
                 }

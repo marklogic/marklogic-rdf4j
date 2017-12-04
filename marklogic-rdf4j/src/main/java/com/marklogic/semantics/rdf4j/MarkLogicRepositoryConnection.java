@@ -1073,7 +1073,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     	Iterator <? extends Statement> iter = statements.iterator();
 	    while(iter.hasNext()){
 	    	Statement st = iter.next();
-	        add(st, mergeResource(st.getContext(), contexts));
+	        add(st, contexts);
 	    }
 	}
 
