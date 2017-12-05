@@ -69,10 +69,10 @@ mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true deploy
 
 Verify that Java API client has been deployed to your local maven repo.
 
-3. Edit marklogic-RDF4J/build.gradle to use that snapshot
+3. Edit marklogic-RDF4J/build.gradle to use that build
 
 ```
-    compile('com.marklogic:marklogic-client-api:5.0-SNAPSHOT') 
+    compile('com.marklogic:marklogic-client-api:4.0.3') 
 
 ```
 
@@ -95,7 +95,7 @@ gradle marklogic-rdf4j:test
 
 #### Build and Deploy
 
-Build and deploy a local maven marklogic-rdf4j snapshot by running;
+Build and deploy a local maven marklogic-rdf4j build by running;
 
 ```
 gradle marklogic-rdf4j:install
