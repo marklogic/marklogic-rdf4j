@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * tests MarkLogic graph permissions
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicGraphPermsTest extends Rdf4jTestBase {
 

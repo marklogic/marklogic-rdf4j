@@ -56,7 +56,7 @@ import com.marklogic.semantics.rdf4j.Rdf4jTestBase;
 /**
  * test TupleQuery
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
 
@@ -85,7 +85,10 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
         logger.debug("tearing down...");
         if(conn != null){conn.close();}
         conn = null;
-        if(rep != null){rep.shutDown();}
+        if(rep != null)
+        {
+            rep.shutDown();
+        }
         rep = null;
         logger.info("tearDown complete.");
         GraphManager gmgr = writerClient.newGraphManager();

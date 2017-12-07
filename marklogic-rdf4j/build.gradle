@@ -5,7 +5,7 @@ buildscript {
         maven{ url "https://plugins.gradle.org/m2/"}
     }
     dependencies {
-        classpath "gradle.plugin.com.marklogic:ml-gradle:2.4.0"
+        classpath "gradle.plugin.com.marklogic:ml-gradle:3.0.0"
     }
 }
 
@@ -29,6 +29,7 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 repositories {
+    jcenter()
     mavenLocal()
     mavenCentral()
 }
@@ -40,9 +41,9 @@ jacocoTestReport {
 }
 
 dependencies {
-    compile('org.eclipse.rdf4j:rdf4j-runtime:2.2.1')
+    compile('org.eclipse.rdf4j:rdf4j-runtime:2.2.2')
 
-    compile('com.marklogic:marklogic-client-api:4.0.1') {
+    compile('com.marklogic:marklogic-client-api:4.0.3') {
         exclude(group: 'org.slf4j')
         exclude(group: 'ch.qos.logback')
     }

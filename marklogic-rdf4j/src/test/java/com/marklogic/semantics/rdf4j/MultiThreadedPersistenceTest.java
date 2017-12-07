@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2017 MarkLogic Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.marklogic.semantics.rdf4j;
 
 // https://github.com/marklogic/marklogic-sesame/issues/282
@@ -51,7 +66,7 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
 
     @Test
     public void multiThreadedPersist() throws RepositoryException, InterruptedException {
-        final PersistenceService persistenceService = new PersistenceService(host, port, adminUser, adminPassword, DatabaseClientFactory.Authentication.DIGEST.toString());
+        final PersistenceService persistenceService = new PersistenceService(host, port, adminUser, adminPassword);
 
         //persist data with multiple threads against the persistence service - simulate multiple concurrent requests against a tomcat deployed ingestion service
         //results in intermittent MarkLogicTransactionExceptions in executor threads
@@ -84,8 +99,8 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
     class PersistenceService {
         private MarkLogicRepository markLogicRepository;
 
-        public PersistenceService(String host, int port, String user, String password, String digest) {
-            markLogicRepository = new MarkLogicRepository(host, port, user, password, digest);
+        public PersistenceService(String host, int port, String user, String password) {
+            markLogicRepository = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
             try {
                 markLogicRepository.initialize();
             } catch (RepositoryException e) {
@@ -118,7 +133,7 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
 
     @Test
     public void singleConnectionMultiThreadedPersist() throws RepositoryException, InterruptedException {
-        final SingleConnectionPersistenceService persistenceService = new SingleConnectionPersistenceService(host, port, adminUser, adminPassword, DatabaseClientFactory.Authentication.DIGEST.toString());
+        final SingleConnectionPersistenceService persistenceService = new SingleConnectionPersistenceService(host, port, adminUser, adminPassword);
 
         //persist data with multiple threads against singleConnectionPersistence service - simulate multiple concurrent requests against a tomcat deployed ingestion service
         //results in intermittent MarkLogicTransactionExceptions in executor threads
@@ -155,8 +170,8 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
     class SingleConnectionPersistenceService {
         private MarkLogicRepositoryConnection connection;
 
-        public SingleConnectionPersistenceService(String host, int port, String user, String password, String digest) {
-            MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, user, password, digest);
+        public SingleConnectionPersistenceService(String host, int port, String user, String password) {
+            MarkLogicRepository markLogicRepository = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
             try {
                 markLogicRepository.initialize();
                 connection = markLogicRepository.getConnection();
@@ -186,7 +201,7 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
 
     @Test
     public void multipleConnectionMultiThreadedPersist() throws RepositoryException, InterruptedException {
-        final MultipleConnectionPersistenceService persistenceService = new MultipleConnectionPersistenceService(host, port, adminUser, adminPassword, DatabaseClientFactory.Authentication.DIGEST.toString());
+        final MultipleConnectionPersistenceService persistenceService = new MultipleConnectionPersistenceService(host, port, adminUser, adminPassword);
 
         //persist data with multiple threads against singleConnectionPersistence service - simulate multiple concurrent requests against a tomcat deployed ingestion service
         //results in intermittent MarkLogicTransactionExceptions in executor threads
@@ -224,7 +239,7 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
     class MultipleConnectionPersistenceService {
         MarkLogicRepository markLogicRepository;
 
-        public MultipleConnectionPersistenceService(String host, int port, String user, String password, String digest) {
+        public MultipleConnectionPersistenceService(String host, int port, String user, String password) {
             try {
                 DatabaseClient databaseClient = DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
                 markLogicRepository = new MarkLogicRepository(databaseClient);

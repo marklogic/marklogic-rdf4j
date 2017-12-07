@@ -29,7 +29,7 @@ import java.nio.charset.Charset;
 /**
  * Wrapper on RDF4J BackgroundGraphResult
  *
- * @author James Fuller
+ *
  */
 
 class MarkLogicBackgroundGraphResult extends BackgroundGraphResult

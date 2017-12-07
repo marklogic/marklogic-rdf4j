@@ -39,7 +39,7 @@ import java.io.IOException;
 /**
  * graph query
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicGraphQuery extends MarkLogicQuery implements GraphQuery,MarkLogicQueryDependent {
 

@@ -22,7 +22,7 @@ package com.marklogic.semantics.rdf4j.client;
 /**
  * Common interface for objects that are dependent on {@link MarkLogicClient}.
  *
- * @author James Fuller
+ *
  */
 public interface MarkLogicClientDependent {
 

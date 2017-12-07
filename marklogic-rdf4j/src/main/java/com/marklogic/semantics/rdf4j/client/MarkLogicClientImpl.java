@@ -24,9 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.FailedRequestException;
 import com.marklogic.client.ForbiddenUserException;
 import com.marklogic.client.Transaction;
@@ -66,7 +62,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 /**
  * Internal class for interacting with Java Client API.
  *
- * @author James Fuller
+ *
  */
 class MarkLogicClientImpl {
 
@@ -94,12 +90,8 @@ class MarkLogicClientImpl {
      * @param password
      * @param auth
      */
-    public MarkLogicClientImpl(String host, int port, String user, String password, String auth) {
-        try {
-            setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, auth));
-        } catch (UnrecoverableKeyException | CertificateException | KeyManagementException | IOException e) {
-            e.printStackTrace();
-        }
+    public MarkLogicClientImpl(String host, int port, String user, String password, String database, String auth) {
+        setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, database, auth));
     }
 
     /**
@@ -165,7 +157,7 @@ class MarkLogicClientImpl {
     public InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset)){qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred){qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())) {
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -213,7 +205,7 @@ class MarkLogicClientImpl {
     public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset)) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -241,7 +233,7 @@ class MarkLogicClientImpl {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         qdef.setIncludeDefaultRulesets(includeInferred);
-        if (Util.notNull(ruleset)) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
@@ -265,7 +257,7 @@ class MarkLogicClientImpl {
     public void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset) ) {qdef.setRulesets(ruleset);}
+        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         qdef.setIncludeDefaultRulesets(includeInferred);
         sparqlManager.clearPageLength();

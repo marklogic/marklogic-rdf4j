@@ -38,7 +38,7 @@ import java.io.FileNotFoundException;
 /**
  * test UpdateQuery
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicUpdateQueryTest extends Rdf4jTestBase {
 

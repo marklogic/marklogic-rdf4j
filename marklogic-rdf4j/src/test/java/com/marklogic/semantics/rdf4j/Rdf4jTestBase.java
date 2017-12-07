@@ -26,7 +26,7 @@ import java.util.Properties;
 
 /** utility base class for additional test setup config
  *
- * @author James Fuller
+ *
  */
 public class Rdf4jTestBase {
 

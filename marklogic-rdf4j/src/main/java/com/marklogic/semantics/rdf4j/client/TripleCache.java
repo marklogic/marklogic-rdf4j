@@ -36,7 +36,7 @@ import java.util.TimerTask;
 /**
  * Timer implements write cache for efficient adding of triples.
  *
- * @author James Fuller
+ *
  */
 public abstract class TripleCache extends TimerTask {
 

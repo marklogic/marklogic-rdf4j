@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * tests MarkLogicRespository
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryTest extends Rdf4jTestBase {
 
@@ -63,7 +63,7 @@ public class MarkLogicRepositoryTest extends Rdf4jTestBase {
     public void negativeTestRepo2()
             throws Exception {
 
-        Repository rep = new MarkLogicRepository(host, port, user, password, "DIGEST");
+        Repository rep = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
         rep.initialize();
         rep.shutDown();
 
@@ -78,7 +78,7 @@ public class MarkLogicRepositoryTest extends Rdf4jTestBase {
     public void testRepo()
             throws Exception {
 
-        Repository rep = new MarkLogicRepository(host, port, user, password, "DIGEST");
+        Repository rep = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
         rep.initialize();
         rep.shutDown();
 
@@ -93,7 +93,7 @@ public class MarkLogicRepositoryTest extends Rdf4jTestBase {
     public void testRepo2()
             throws Exception {
 
-        MarkLogicRepository rep = new MarkLogicRepository(host, port, user, password, "DIGEST");
+        MarkLogicRepository rep = new MarkLogicRepository(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
         rep.initialize();
         rep.shutDown();
 

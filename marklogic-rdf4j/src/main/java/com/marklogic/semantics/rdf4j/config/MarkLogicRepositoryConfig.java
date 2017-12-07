@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Representation of Repository config
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
@@ -216,7 +216,6 @@ public class MarkLogicRepositoryConfig extends AbstractRepositoryImplConfig {
 
 		try {
 			IRI iri = Models.getPropertyIRI(model, implNode, QUERY_ENDPOINT).orElse(null);
-			System.out.println(iri);
 			if (iri != null) {
 				setQueryEndpointUrl(iri.stringValue());
 			}

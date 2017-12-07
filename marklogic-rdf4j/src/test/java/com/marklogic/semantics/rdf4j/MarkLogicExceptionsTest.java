@@ -45,7 +45,7 @@ import static junit.framework.TestCase.fail;
 /**
  * tests that the correct exceptions are thrown
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicExceptionsTest extends Rdf4jTestBase {
 

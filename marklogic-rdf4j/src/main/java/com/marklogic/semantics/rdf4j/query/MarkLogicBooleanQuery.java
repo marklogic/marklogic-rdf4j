@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * boolean query
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicBooleanQuery extends MarkLogicQuery implements BooleanQuery,MarkLogicQueryDependent {
 

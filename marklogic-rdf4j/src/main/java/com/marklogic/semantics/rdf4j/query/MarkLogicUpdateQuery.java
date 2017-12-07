@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * Update query
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicUpdateQuery extends MarkLogicQuery implements Update,MarkLogicQueryDependent {
 

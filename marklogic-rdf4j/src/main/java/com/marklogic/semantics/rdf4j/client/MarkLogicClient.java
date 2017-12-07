@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -55,7 +56,7 @@ import java.util.concurrent.Executors;
 /**
  * An internal class that straddles Rdf4j and MarkLogic Java client API.
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicClient {
 
@@ -76,6 +77,8 @@ public class MarkLogicClient {
 
 	private Transaction tx = null;
 
+	private SPARQLRuleset[] defaultRulesets;
+
 	private TripleWriteCache timerWriteCache;
 	private Timer writeTimer;
 	private TripleDeleteCache timerDeleteCache;
@@ -90,8 +93,8 @@ public class MarkLogicClient {
 	 * Constructor initialized with connection parameters.
 	 *
 	 */
-	public MarkLogicClient(String host, int port, String user, String password,String auth) {
-		this._client = new MarkLogicClientImpl(host,port,user,password,auth);
+	public MarkLogicClient(String host, int port, String user, String password, String database, String auth) {
+		this._client = new MarkLogicClientImpl(host, port, user, password, database, auth);
 		this.initTimer();
 	}
 
@@ -461,7 +464,11 @@ public class MarkLogicClient {
 		return this.tx != null;
 	}
 
-	/**
+	public Transaction getTransaction() {
+        return tx;
+    }
+
+    /**
 	 * sets transaction (tx) to null
 	 *
 	 * @throws MarkLogicTransactionException
@@ -498,7 +505,23 @@ public class MarkLogicClient {
 	 * @param rulesets
 	 */
 	public void setRulesets(SPARQLRuleset... rulesets){
-		getClient().setRulesets(rulesets);
+	    if(this.defaultRulesets != null)
+        {
+            if(rulesets != null)
+            {
+                SPARQLRuleset[] resultantRuleset = Arrays.copyOf(rulesets, rulesets.length + defaultRulesets.length);
+                System.arraycopy(defaultRulesets, 0, resultantRuleset, rulesets.length, defaultRulesets.length);
+                getClient().setRulesets(resultantRuleset);
+            }
+            else
+            {
+                getClient().setRulesets(this.defaultRulesets);
+            }
+        }
+        else
+        {
+            getClient().setRulesets(rulesets);
+        }
 	}
 
 	/**
@@ -508,6 +531,15 @@ public class MarkLogicClient {
 	 */
 	public SPARQLRuleset[] getRulesets(){
 		return getClient().getRulesets();
+	}
+
+	public void setDefaultRulesets(SPARQLRuleset... rulesets)
+    {
+        this.defaultRulesets = rulesets;
+    }
+
+	public SPARQLRuleset[] getDefaultRulesets() {
+		return this.defaultRulesets;
 	}
 
 	/**

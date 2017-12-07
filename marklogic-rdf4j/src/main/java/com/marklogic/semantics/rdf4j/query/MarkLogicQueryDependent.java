@@ -26,7 +26,7 @@ import com.marklogic.client.semantics.SPARQLRuleset;
 /**
  * Interface defining MarkLogic semantic features.
  *
- * @author James Fuller
+ *
  */
 interface MarkLogicQueryDependent {
 

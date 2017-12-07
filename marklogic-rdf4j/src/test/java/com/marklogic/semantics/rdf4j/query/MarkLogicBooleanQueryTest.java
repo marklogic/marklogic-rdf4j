@@ -37,7 +37,7 @@ import java.io.FileNotFoundException;
 /**
  * test BooleanQuery
  *
- * @author James Fuller
+ *
  */
 public class MarkLogicBooleanQueryTest extends Rdf4jTestBase {
 

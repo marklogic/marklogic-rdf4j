@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2017 MarkLogic Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.marklogic.semantics.rdf4j.utils;
 
 import com.marklogic.client.DatabaseClient;
@@ -6,10 +21,6 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
 public class Util {
     private static Util util = null;
@@ -93,37 +104,29 @@ public class Util {
                 || dataFormat.equals(RDFFormat.N3);
     }
 
+    public DatabaseClient getClientBasedOnAuth(String host, int port, String database, DatabaseClientFactory.SecurityContext securityContext)
+    {
+        return DatabaseClientFactory.newClient(host, port, database, securityContext);
+    }
+
     /**
      * Public utility that returns DatabaseClient based on auth
      * @return DatabaseClient
      */
-    public DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String auth, String... cert) throws UnrecoverableKeyException, CertificateException, KeyManagementException, IOException {
+    public DatabaseClient getClientBasedOnAuth(String host, int port, String user, String password, String database, String auth) {
         Authentication type;
-        String certFile;
-        String certPassword;
 
         if(auth != null)
         {
             type = Authentication.valueOfUncased(auth);
-            certFile = cert.length > 0 ? cert[0] : "";
-            certPassword = cert.length > 1 ? cert[1] : "";
 
             if(type == Authentication.BASIC)
             {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.BasicAuthContext(user, password));
+                return DatabaseClientFactory.newClient(host, port, database, new DatabaseClientFactory.BasicAuthContext(user, password));
             }
             else if(type == Authentication.DIGEST)
             {
                 return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.DigestAuthContext(user, password));
-            }
-            else if(type == Authentication.KERBEROS)
-            {
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.KerberosAuthContext());
-            }
-            else if(type == Authentication.CERTIFICATE)
-            {
-                //TODO: change parameters
-                return DatabaseClientFactory.newClient(host, port, new DatabaseClientFactory.CertificateAuthContext(certFile, certPassword));
             }
         }
 

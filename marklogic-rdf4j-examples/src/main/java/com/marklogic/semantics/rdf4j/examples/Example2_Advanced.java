@@ -144,5 +144,7 @@ public class Example2_Advanced {
         // close connection and shutdown repository
         conn.close();
         repo.shutDown();
+
+        System.exit(0);
     }
 }
