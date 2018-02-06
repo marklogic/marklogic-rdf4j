@@ -1640,5 +1640,13 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Assert.assertEquals(1, model.size());
         con.clear();
     }
+
+    @Test
+    public void testDatabaseClientAccess()
+    {
+        DatabaseClient databaseClient = conn.getDatabaseClient();
+        Assert.assertEquals(host, databaseClient.getHost());
+        Assert.assertEquals(port, databaseClient.getPort());
+    }
 }
 

@@ -64,7 +64,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
  *
  *
  */
-class MarkLogicClientImpl {
+public class MarkLogicClientImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(MarkLogicClientImpl.class);
 

@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 
+import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.Transaction;
 import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.IsolationLevel;
@@ -1434,6 +1435,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
         }
         query.setDataset(dataset);
+    }
+
+    public DatabaseClient getDatabaseClient()
+    {
+        return this.client.getClient().getDatabaseClient();
     }
 
     public Transaction getTransaction()
