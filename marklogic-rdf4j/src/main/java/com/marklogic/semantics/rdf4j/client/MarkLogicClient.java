@@ -542,6 +542,14 @@ public class MarkLogicClient {
 		return this.defaultRulesets;
 	}
 
+    public int getOptimizeLevel() {
+        return getClient().getOptimizeLevel();
+    }
+
+    public void setOptimizeLevel(int optimizeLevel) {
+        getClient().setOptimizeLevel(optimizeLevel);
+    }
+
 	/**
 	 * setter for QueryDefinition
 	 *

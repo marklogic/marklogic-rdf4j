@@ -1288,6 +1288,23 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     *
+     * @param optimizeLevel
+     */
+    public void setOptimizeLevel(int optimizeLevel)
+    {
+        this.client.setOptimizeLevel(optimizeLevel);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getOptimizeLevel()
+    {
+        return this.client.getOptimizeLevel();
+    }
 
     /**
      * sets default graph permissions to be used by all queries

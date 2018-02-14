@@ -88,6 +88,21 @@ public class MarkLogicBooleanQueryTest extends Rdf4jTestBase {
     }
 
     @Test
+    public void testBooleanQueryWithOptimizeLevel()
+            throws Exception {
+        String queryString = "ASK {GRAPH <http://example.org/test/g27> {<http://semanticbible.org/ns/2006/NTNames#Shelah1> ?p ?o}}";
+        conn.setOptimizeLevel(0);
+        BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        boolean results = booleanQuery.evaluate();
+        Assert.assertEquals(false, results);
+        queryString = "ASK {GRAPH <http://example.org/test/g27> {<http://semanticbible.org/ns/2006/NTNames#Shelah> ?p ?o}}";
+        booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        results = booleanQuery.evaluate();
+        Assert.assertEquals(true, results);
+        conn.setOptimizeLevel(-1);
+    }
+
+    @Test
     public void testBooleanQueryWithOverloadedMethods()
             throws Exception {
         String queryString = "ASK { <http://semanticbible.org/ns/2006/NTNames#Shelah1> ?p ?o}";

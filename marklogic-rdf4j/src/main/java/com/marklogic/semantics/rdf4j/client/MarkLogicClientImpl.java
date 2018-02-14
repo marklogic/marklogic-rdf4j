@@ -71,6 +71,7 @@ public class MarkLogicClientImpl {
     private static final String DEFAULT_GRAPH_URI = "http://marklogic.com/semantics#default-graph";
 
     private SPARQLRuleset[] ruleset;
+    private int optimizeLevel = -1;
     private QueryDefinition constrainingQueryDef;
     private GraphPermissions graphPerms;
 
@@ -166,6 +167,7 @@ public class MarkLogicClientImpl {
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
         }
         qdef.setIncludeDefaultRulesets(includeInferred);
+        qdef.setOptimizeLevel(optimizeLevel);
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         if(pageLength > 0){
             sparqlManager.setPageLength(pageLength);
@@ -215,6 +217,7 @@ public class MarkLogicClientImpl {
         	}
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         qdef.setIncludeDefaultRulesets(includeInferred);
+        qdef.setOptimizeLevel(optimizeLevel);
         sparqlManager.executeDescribe(qdef, handle, tx);
         return new BufferedInputStream(handle.get());
     }
@@ -233,6 +236,7 @@ public class MarkLogicClientImpl {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         qdef.setIncludeDefaultRulesets(includeInferred);
+        qdef.setOptimizeLevel(optimizeLevel);
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
@@ -260,6 +264,7 @@ public class MarkLogicClientImpl {
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
         qdef.setIncludeDefaultRulesets(includeInferred);
+        qdef.setOptimizeLevel(optimizeLevel);
         sparqlManager.clearPageLength();
         try {
             sparqlManager.executeUpdate(qdef, tx);
@@ -445,6 +450,14 @@ public class MarkLogicClientImpl {
      */
     public void performClearAll(Transaction tx) {
         graphManager.deleteGraphs(tx);
+    }
+
+    public int getOptimizeLevel() {
+        return optimizeLevel;
+    }
+
+    public void setOptimizeLevel(int optimizeLevel) {
+        this.optimizeLevel = optimizeLevel;
     }
 
     /**

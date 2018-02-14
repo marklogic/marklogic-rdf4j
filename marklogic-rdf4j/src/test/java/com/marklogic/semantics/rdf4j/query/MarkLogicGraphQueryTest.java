@@ -97,6 +97,24 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
     }
 
     @Test
+    public void testConstructQueryWithOptimizeLevel()
+            throws Exception {
+        String queryString = "PREFIX nn: <http://semanticbible.org/ns/2006/NTNames#>\n" +
+                "PREFIX test: <http://marklogic.com#test>\n" +
+                "\n" +
+                "construct { ?s  test:test \"0\"} WHERE  {?s nn:childOf nn:Eve . }";
+        conn.setOptimizeLevel(0);
+        GraphQuery graphQuery = conn.prepareGraphQuery(QueryLanguage.SPARQL, queryString);
+        GraphQueryResult results = graphQuery.evaluate();
+        Statement st1 = results.next();
+        Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#Abel", st1.getSubject().stringValue());
+        Statement st2 = results.next();
+        Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#Cain", st2.getSubject().stringValue());
+        results.close();
+        conn.setOptimizeLevel(-1);
+    }
+
+    @Test
     public void testGraphQueryWithBaseURIInline()
             throws Exception {
         String queryString ="BASE <http://marklogic.com/test/baseuri>\n" +
