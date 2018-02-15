@@ -1,4 +1,4 @@
-# marklogic-rdf4j v1.1.0
+# marklogic-rdf4j v1.1-SNAPSHOT
 
 ## Introduction
 
@@ -108,7 +108,7 @@ optionally you can build the jar without running tests.
 gradle build -x test
 ```
 
-and copy resultant build/lib/marklogic-rdf4j-1.1.0.jar.
+and copy resultant marklogic-rdf4j/build/libs/marklogic-rdf4j-1.1-SNAPSHOT.jar.
 
 ### Examples
 
