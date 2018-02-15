@@ -1292,7 +1292,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      *
      * @param optimizeLevel
      */
-    public void setOptimizeLevel(int optimizeLevel)
+    public void setOptimizeLevel(Integer optimizeLevel)
     {
         this.client.setOptimizeLevel(optimizeLevel);
     }
@@ -1301,7 +1301,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      *
      * @return
      */
-    public int getOptimizeLevel()
+    public Integer getOptimizeLevel()
     {
         return this.client.getOptimizeLevel();
     }

@@ -71,7 +71,7 @@ public class MarkLogicClientImpl {
     private static final String DEFAULT_GRAPH_URI = "http://marklogic.com/semantics#default-graph";
 
     private SPARQLRuleset[] ruleset;
-    private int optimizeLevel = -1;
+    private Integer optimizeLevel;
     private QueryDefinition constrainingQueryDef;
     private GraphPermissions graphPerms;
 
@@ -167,8 +167,8 @@ public class MarkLogicClientImpl {
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
         }
         qdef.setIncludeDefaultRulesets(includeInferred);
-        qdef.setOptimizeLevel(optimizeLevel);
         if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
+        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
         if(pageLength > 0){
             sparqlManager.setPageLength(pageLength);
         }else{
@@ -206,7 +206,7 @@ public class MarkLogicClientImpl {
      */
     public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
@@ -215,9 +215,9 @@ public class MarkLogicClientImpl {
             qdef.setResponseTransform(getConstrainingQueryDefinition().getResponseTransform());
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
         	}
-        if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
+        if (Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
+        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
         qdef.setIncludeDefaultRulesets(includeInferred);
-        qdef.setOptimizeLevel(optimizeLevel);
         sparqlManager.executeDescribe(qdef, handle, tx);
         return new BufferedInputStream(handle.get());
     }
@@ -236,7 +236,7 @@ public class MarkLogicClientImpl {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         qdef.setIncludeDefaultRulesets(includeInferred);
-        qdef.setOptimizeLevel(optimizeLevel);
+        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
         if (Util.notNull(getConstrainingQueryDefinition())){
         	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
@@ -260,11 +260,11 @@ public class MarkLogicClientImpl {
      */
     public void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
-        if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
+        if (Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
+        if (Util.notNull(optimizeLevel)){qdef.setOptimizeLevel(optimizeLevel);}
         qdef.setIncludeDefaultRulesets(includeInferred);
-        qdef.setOptimizeLevel(optimizeLevel);
         sparqlManager.clearPageLength();
         try {
             sparqlManager.executeUpdate(qdef, tx);
@@ -452,11 +452,11 @@ public class MarkLogicClientImpl {
         graphManager.deleteGraphs(tx);
     }
 
-    public int getOptimizeLevel() {
+    public Integer getOptimizeLevel() {
         return optimizeLevel;
     }
 
-    public void setOptimizeLevel(int optimizeLevel) {
+    public void setOptimizeLevel(Integer optimizeLevel) {
         this.optimizeLevel = optimizeLevel;
     }
 

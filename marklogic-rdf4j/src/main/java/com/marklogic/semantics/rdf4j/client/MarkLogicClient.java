@@ -542,11 +542,11 @@ public class MarkLogicClient {
 		return this.defaultRulesets;
 	}
 
-    public int getOptimizeLevel() {
+    public Integer getOptimizeLevel() {
         return getClient().getOptimizeLevel();
     }
 
-    public void setOptimizeLevel(int optimizeLevel) {
+    public void setOptimizeLevel(Integer optimizeLevel) {
         getClient().setOptimizeLevel(optimizeLevel);
     }
 

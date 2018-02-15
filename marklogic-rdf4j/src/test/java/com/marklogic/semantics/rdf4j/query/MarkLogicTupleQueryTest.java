@@ -169,50 +169,14 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
     }
 
     @Test
-    public void testSPARQLQueryWithOptimizeLevel()
-            throws Exception {
-        try {
-            for (int i=0; i<101;i++){
-                String queryString = "select * { ?s ?p ?o } limit 2 ";
-                conn.setOptimizeLevel(1);
-                TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
-                TupleQueryResult results = tupleQuery.evaluate();
-
-                Assert.assertEquals(results.getBindingNames().get(0), "s");
-                Assert.assertEquals(results.getBindingNames().get(1), "p");
-                Assert.assertEquals(results.getBindingNames().get(2), "o");
-
-                BindingSet bindingSet = results.next();
-
-                Value sV = bindingSet.getValue("s");
-                Value pV = bindingSet.getValue("p");
-                Value oV = bindingSet.getValue("o");
-
-                Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata", sV.stringValue());
-                Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#altitude", pV.stringValue());
-                Assert.assertEquals("0", oV.stringValue());
-
-                BindingSet bindingSet1 = results.next();
-
-                Value sV1 = bindingSet1.getValue("s");
-                Value pV1 = bindingSet1.getValue("p");
-                Value oV1 = bindingSet1.getValue("o");
-
-                Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#BabylonGeodata", sV1.stringValue());
-                Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#altitude", pV1.stringValue());
-                Assert.assertEquals("0", oV1.stringValue());
-                results.close();
-            }
-        }
-        catch(Exception ex)
-        {
-            throw ex;
-        }
-        finally {
-            conn.setOptimizeLevel(-1);
-            conn.close();
-            Thread.sleep(1000);
-        }
+    public void testPrepareTupleQueryWithOptimizeLevel() throws Exception{
+        String queryString = "select ?s ?p ?o { ?s ?p ?o } limit 10 ";
+        TupleQuery tupleQuery = conn.prepareTupleQuery(queryString,"http://marklogic.com/test/baseuri");
+        conn.setOptimizeLevel(0);
+        TupleQueryResult results = tupleQuery.evaluate();
+        Assert.assertNotNull(results);
+        conn.setOptimizeLevel(null);
+        results.close();
     }
 
     @Test
