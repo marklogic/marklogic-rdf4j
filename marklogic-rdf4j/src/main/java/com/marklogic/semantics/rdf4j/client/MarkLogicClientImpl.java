@@ -527,7 +527,6 @@ public class MarkLogicClientImpl {
     /**
      * Close client.
      *
-     * @return
      */
     public void close() {
         // close MarkLogicClientImpl
