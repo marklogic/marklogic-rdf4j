@@ -23,6 +23,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
@@ -69,6 +70,8 @@ public class MarkLogicClientImpl {
     private Util util = Util.getInstance();
 
     private String[] stringContexts;
+
+    private Pattern[] patterns = new Pattern[]{Pattern.compile("&"), Pattern.compile("<"), Pattern.compile(">")};
 
     /**
      * Constructor initialized with connection parameters.
@@ -306,11 +309,11 @@ public class MarkLogicClientImpl {
      */
     // performAdd
     public void performAdd(File file, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
+        List<Future<?>> futures = new ArrayList<>();
+
         if (dataFormat.supportsContexts()) {
             //Quads
-
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
-            List<Future<?>> futures = new ArrayList<>();
 
             RDFParser parser = Rio.createParser(dataFormat);
             parseQuads(tx, executor, futures, parser);
@@ -331,11 +334,9 @@ public class MarkLogicClientImpl {
             }
 
             executor.shutdown();
+
         } else {
             //triples
-
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
-            List<Future<?>> futures = new ArrayList<>();
 
             if (contexts.length == 0) {
                 stringContexts = new String[1];
@@ -354,7 +355,7 @@ public class MarkLogicClientImpl {
             //To create graph document
             for (String con : stringContexts) {
                 futures.add(executor.submit(() -> {
-                    performUpdateQuery("CREATE GRAPH <" + con + ">", null, tx, true, null);
+                    performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(con) + ">", null, tx, true, null);
                 }));
             }
 
@@ -391,12 +392,11 @@ public class MarkLogicClientImpl {
      * @throws RDFParseException
      */
     public void performAdd(InputStream in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
+        List<Future<?>> futures = new ArrayList<>();
 
         if (dataFormat.supportsContexts()) {
             //Quads
-
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
-            List<Future<?>> futures = new ArrayList<>();
 
             RDFParser parser = Rio.createParser(dataFormat);
             parseQuads(tx, executor, futures, parser);
@@ -420,9 +420,6 @@ public class MarkLogicClientImpl {
         } else {
             //triples
 
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
-            List<Future<?>> futures = new ArrayList<>();
-
             if (contexts.length == 0) {
                 stringContexts = new String[1];
                 stringContexts[0] = DEFAULT_GRAPH_URI;
@@ -440,7 +437,7 @@ public class MarkLogicClientImpl {
             //To create graph document
             for (String con : stringContexts) {
                 futures.add(executor.submit(() -> {
-                    performUpdateQuery("CREATE SILENT GRAPH <" + con + ">", null, tx, true, null);
+                    performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(con) + ">", null, tx, true, null);
                 }));
             }
 
@@ -889,7 +886,7 @@ public class MarkLogicClientImpl {
                     //To create graph document
                     if (!graphSet.contains(graph)) {
                         futures.add(executor.submit(() -> {
-                            performUpdateQuery("CREATE SILENT GRAPH <" + graph + ">", null, tx, true, null);
+                            performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(graph) + ">", null, tx, true, null);
                         }));
                         graphSet.add(graph);
                     }
@@ -924,7 +921,7 @@ public class MarkLogicClientImpl {
                     //To create graph document
                     if (!graphSet.contains(DEFAULT_GRAPH_URI)) {
                         futures.add(executor.submit(() -> {
-                            performUpdateQuery("CREATE SILENT GRAPH <" + DEFAULT_GRAPH_URI + ">", null, tx, true, null);
+                            performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(DEFAULT_GRAPH_URI) + ">", null, tx, true, null);
                         }));
                         graphSet.add(DEFAULT_GRAPH_URI);
                     }
@@ -987,5 +984,15 @@ public class MarkLogicClientImpl {
         } else {
             return "<sem:object>" + object.stringValue() + "</sem:object>\n";
         }
+    }
+
+    private String escapeXml(String _in) {
+        if (null == _in) {
+            return "";
+        }
+        return patterns[2].matcher(
+                patterns[1].matcher(
+                        patterns[0].matcher(_in).replaceAll("&amp;"))
+                        .replaceAll("&lt;")).replaceAll("&gt;");
     }
 }
