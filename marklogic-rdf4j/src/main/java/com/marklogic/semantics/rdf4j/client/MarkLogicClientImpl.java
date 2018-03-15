@@ -69,8 +69,6 @@ public class MarkLogicClientImpl {
 
     private Util util = Util.getInstance();
 
-    private String[] stringContexts;
-
     private Pattern[] patterns = new Pattern[]{Pattern.compile("&"), Pattern.compile("<"), Pattern.compile(">")};
 
     /**
@@ -338,29 +336,12 @@ public class MarkLogicClientImpl {
         } else {
             //triples
 
-            if (contexts.length == 0) {
-                stringContexts = new String[1];
-                stringContexts[0] = DEFAULT_GRAPH_URI;
-            } else {
-                stringContexts = new String[contexts.length];
-                for (int i = 0; i < contexts.length; i++) {
-                    if (Util.notNull(contexts[i])) {
-                        stringContexts[i] = contexts[i].toString();
-                    } else {
-                        stringContexts[i] = DEFAULT_GRAPH_URI;
-                    }
-                }
-            }
+            String[] userContexts = prepareUserContexts(contexts);
+            insertGraphDocuments(tx, executor, futures, new HashSet<String>(Arrays.asList(userContexts)));
 
-            //To create graph document
-            for (String con : stringContexts) {
-                futures.add(executor.submit(() -> {
-                    performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(con) + ">", null, tx, true, null);
-                }));
-            }
 
             RDFParser parser = Rio.createParser(dataFormat);
-            parseTriples(tx, parser, executor, futures);
+            parseTriples(tx, parser, executor, futures, userContexts);
 
             try {
                 InputStream in = new FileInputStream(file);
@@ -420,29 +401,11 @@ public class MarkLogicClientImpl {
         } else {
             //triples
 
-            if (contexts.length == 0) {
-                stringContexts = new String[1];
-                stringContexts[0] = DEFAULT_GRAPH_URI;
-            } else {
-                stringContexts = new String[contexts.length];
-                for (int i = 0; i < contexts.length; i++) {
-                    if (Util.notNull(contexts[i])) {
-                        stringContexts[i] = contexts[i].toString();
-                    } else {
-                        stringContexts[i] = DEFAULT_GRAPH_URI;
-                    }
-                }
-            }
-
-            //To create graph document
-            for (String con : stringContexts) {
-                futures.add(executor.submit(() -> {
-                    performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(con) + ">", null, tx, true, null);
-                }));
-            }
+            String[] userContexts = prepareUserContexts(contexts);
+            insertGraphDocuments(tx, executor, futures, new HashSet<String>(Arrays.asList(userContexts)));
 
             RDFParser parser = Rio.createParser(dataFormat);
-            parseTriples(tx, parser, executor, futures);
+            parseTriples(tx, parser, executor, futures, userContexts);
 
             try {
                 parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org");
@@ -733,7 +696,7 @@ public class MarkLogicClientImpl {
         }
     }
 
-    private void parseTriples(Transaction tx, RDFParser parser, ThreadPoolExecutor executor, List<Future<?>> futures) {
+    private void parseTriples(Transaction tx, RDFParser parser, ThreadPoolExecutor executor, List<Future<?>> futures, String[] userContexts) {
         parser.setRDFHandler(new RDFHandler() {
             StringBuffer sb;
             int i = -1;
@@ -753,7 +716,7 @@ public class MarkLogicClientImpl {
             void endDoc() {
                 sb.append("</sem:triples>\n");
                 String st = sb.toString();
-                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(stringContexts);
+                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(userContexts);
                 writeSet.add("/triplestore/" + UUID.randomUUID() + ".xml", metadata, new StringHandle(st));
 
                 n++;
@@ -869,7 +832,11 @@ public class MarkLogicClientImpl {
                 }
 
                 //flush remaining documents when DOCS_PER_BATCH is not full
-                futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+                if(!writeSet.isEmpty()) {
+                    futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+                }
+
+                insertGraphDocuments(tx, executor, futures, graphSet);
             }
 
             @Override
@@ -885,9 +852,6 @@ public class MarkLogicClientImpl {
 
                     //To create graph document
                     if (!graphSet.contains(graph)) {
-                        futures.add(executor.submit(() -> {
-                            performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(graph) + ">", null, tx, true, null);
-                        }));
                         graphSet.add(graph);
                     }
 
@@ -920,9 +884,6 @@ public class MarkLogicClientImpl {
 
                     //To create graph document
                     if (!graphSet.contains(DEFAULT_GRAPH_URI)) {
-                        futures.add(executor.submit(() -> {
-                            performUpdateQuery("CREATE SILENT GRAPH <" + escapeXml(DEFAULT_GRAPH_URI) + ">", null, tx, true, null);
-                        }));
                         graphSet.add(DEFAULT_GRAPH_URI);
                     }
 
@@ -994,5 +955,53 @@ public class MarkLogicClientImpl {
                 patterns[1].matcher(
                         patterns[0].matcher(_in).replaceAll("&amp;"))
                         .replaceAll("&lt;")).replaceAll("&gt;");
+    }
+
+    private void insertGraphDocuments(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, Set<String> graphSet){
+        int MAX_GRAPHS_PER_REQUEST = 100;
+        int max = MAX_GRAPHS_PER_REQUEST;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(String graph: graphSet){
+            if(max == 1){
+                max = MAX_GRAPHS_PER_REQUEST;
+                stringBuilder.append("CREATE SILENT GRAPH <").append(escapeXml(graph)).append(">;");
+                String graphsQuery = stringBuilder.toString();
+                futures.add(executor.submit(()->{
+                    performUpdateQuery(graphsQuery, null, tx, true, null);
+                }));
+                stringBuilder = new StringBuilder();
+            }
+            else {
+                max--;
+                stringBuilder.append("CREATE SILENT GRAPH <").append(escapeXml(graph)).append(">;");
+            }
+        }
+
+        //flush remaining graph documents when max_graphs_per_request is not satisfied.
+        String graphsQuery = stringBuilder.toString();
+        if(!graphsQuery.equals("")) {
+            futures.add(executor.submit(() -> {
+                performUpdateQuery(graphsQuery, null, tx, true, null);
+            }));
+        }
+    }
+
+    private String[] prepareUserContexts(Resource... contexts){
+        String[] userContexts;
+        if (contexts.length == 0) {
+            userContexts = new String[1];
+            userContexts[0] = DEFAULT_GRAPH_URI;
+        } else {
+            userContexts = new String[contexts.length];
+            for (int i = 0; i < contexts.length; i++) {
+                if (Util.notNull(contexts[i])) {
+                    userContexts[i] = contexts[i].toString();
+                } else {
+                    userContexts[i] = DEFAULT_GRAPH_URI;
+                }
+            }
+        }
+        return userContexts;
     }
 }
