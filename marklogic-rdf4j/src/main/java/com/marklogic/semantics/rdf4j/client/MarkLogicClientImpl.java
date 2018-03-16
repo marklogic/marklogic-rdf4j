@@ -699,7 +699,7 @@ public class MarkLogicClientImpl {
     private void parseTriples(Transaction tx, RDFParser parser, ThreadPoolExecutor executor, List<Future<?>> futures, String[] userContexts) {
         parser.setRDFHandler(new RDFHandler() {
             StringBuffer sb;
-            int i = -1;
+            int i = 0;
             int T_PER_DOC = 1000;
             int DOCS_PER_BATCH = 4;
             int n = 0;
@@ -747,8 +747,8 @@ public class MarkLogicClientImpl {
             @Override
             public void handleStatement(Statement st) throws RDFHandlerException {
                 i++;
-                if (i == T_PER_DOC) {
-                    i = 0;
+                if (i > T_PER_DOC) {
+                    i = 1;
                     endDoc();
                     startDoc();
                 }
@@ -817,8 +817,6 @@ public class MarkLogicClientImpl {
             public void startRDF() throws RDFHandlerException {
                 documentManager = databaseClient.newXMLDocumentManager();
                 graphCache = new ConcurrentHashMap<>();
-                graphCache.put(DEFAULT_GRAPH_URI, new StringBuilder());
-                startDoc();
                 tripleCounts = new ConcurrentHashMap<>();
                 writeSet = documentManager.newWriteSet();
                 graphSet = new HashSet<>();
@@ -858,8 +856,8 @@ public class MarkLogicClientImpl {
                     if (tripleCounts.containsKey(graph)) {
                         int j = 1 + tripleCounts.get(graph);
                         tripleCounts.put(graph, j);
-                        if (j == T_PER_DOC) {
-                            tripleCounts.put(graph, 0);
+                        if (j > T_PER_DOC) {
+                            tripleCounts.put(graph, 1);
                             endDoc(graph);
                             graphCache.put(graph, new StringBuilder());
                             startDoc(graphCache.get(graph));
@@ -873,9 +871,14 @@ public class MarkLogicClientImpl {
                     triple(graphCache.get(graph), st);
                 } else {
                     //Triple
+                    if (!graphCache.containsKey(DEFAULT_GRAPH_URI)){
+                        graphCache.put(DEFAULT_GRAPH_URI, new StringBuilder());
+                        startDoc();
+                    }
+
                     i++;
-                    if (i == T_PER_DOC) {
-                        i = 0;
+                    if (i > T_PER_DOC) {
+                        i = 1;
                         endDoc();
                         StringBuilder sb = new StringBuilder();
                         graphCache.put(DEFAULT_GRAPH_URI, sb);
