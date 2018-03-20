@@ -19,50 +19,37 @@
  */
 package com.marklogic.semantics.rdf4j.client;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
+import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.StringHandle;
+import com.marklogic.client.semantics.*;
 import com.marklogic.semantics.rdf4j.utils.Util;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.query.SPARQLQueryBindingSet;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.FailedRequestException;
 import com.marklogic.client.ForbiddenUserException;
 import com.marklogic.client.Transaction;
 import com.marklogic.client.impl.SPARQLBindingsImpl;
-import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.query.QueryDefinition;
-import com.marklogic.client.semantics.GraphManager;
-import com.marklogic.client.semantics.GraphPermissions;
-import com.marklogic.client.semantics.RDFTypes;
-import com.marklogic.client.semantics.SPARQLBindings;
-import com.marklogic.client.semantics.SPARQLQueryDefinition;
-import com.marklogic.client.semantics.SPARQLQueryManager;
-import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 
 /**
  * Internal class for interacting with Java Client API.
- *
- *
  */
 public class MarkLogicClientImpl {
 
@@ -82,6 +69,8 @@ public class MarkLogicClientImpl {
 
     private Util util = Util.getInstance();
 
+    private Pattern[] patterns = new Pattern[]{Pattern.compile("&"), Pattern.compile("<"), Pattern.compile(">")};
+
     /**
      * Constructor initialized with connection parameters.
      *
@@ -96,7 +85,7 @@ public class MarkLogicClientImpl {
     }
 
     /**
-     *  set databaseclient
+     * set databaseclient
      *
      * @param databaseClient
      */
@@ -157,21 +146,29 @@ public class MarkLogicClientImpl {
      */
     public InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset) && includeInferred){qdef.setRulesets(ruleset);}
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
+        if (Util.notNull(ruleset) && includeInferred) {
+            qdef.setRulesets(ruleset);
+        }
         if (Util.notNull(getConstrainingQueryDefinition())) {
-        	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
+            qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
             qdef.setCollections(getConstrainingQueryDefinition().getCollections());
             qdef.setResponseTransform(getConstrainingQueryDefinition().getResponseTransform());
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
         }
         qdef.setIncludeDefaultRulesets(includeInferred);
-        if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
-        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
-        if(pageLength > 0){
+        if (Util.notNull(graphPerms)) {
+            qdef.setUpdatePermissions(graphPerms);
+        }
+        if (Util.notNull(optimizeLevel)) {
+            qdef.setOptimizeLevel(optimizeLevel);
+        }
+        if (pageLength > 0) {
             sparqlManager.setPageLength(pageLength);
-        }else{
+        } else {
             sparqlManager.clearPageLength();
         }
         sparqlManager.executeSelect(qdef, handle, start, tx);
@@ -180,6 +177,7 @@ public class MarkLogicClientImpl {
 
     /**
      * Executes GraphQuery
+     *
      * @param queryString
      * @param bindings
      * @param tx
@@ -204,19 +202,27 @@ public class MarkLogicClientImpl {
      * @return
      * @throws JsonProcessingException
      */
-    public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
+    public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
-        if (Util.notNull(getConstrainingQueryDefinition())){
-        	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
+        if (Util.notNull(ruleset) && includeInferred) {
+            qdef.setRulesets(ruleset);
+        }
+        if (Util.notNull(getConstrainingQueryDefinition())) {
+            qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
             qdef.setCollections(getConstrainingQueryDefinition().getCollections());
             qdef.setResponseTransform(getConstrainingQueryDefinition().getResponseTransform());
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
-        	}
-        if (Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
-        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
+        }
+        if (Util.notNull(graphPerms)) {
+            qdef.setUpdatePermissions(graphPerms);
+        }
+        if (Util.notNull(optimizeLevel)) {
+            qdef.setOptimizeLevel(optimizeLevel);
+        }
         qdef.setIncludeDefaultRulesets(includeInferred);
         sparqlManager.executeDescribe(qdef, handle, tx);
         return new BufferedInputStream(handle.get());
@@ -234,19 +240,27 @@ public class MarkLogicClientImpl {
      */
     public boolean performBooleanQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
         qdef.setIncludeDefaultRulesets(includeInferred);
-        if (Util.notNull(optimizeLevel)){ qdef.setOptimizeLevel(optimizeLevel); }
-        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
-        if (Util.notNull(getConstrainingQueryDefinition())){
-        	qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
+        if (Util.notNull(optimizeLevel)) {
+            qdef.setOptimizeLevel(optimizeLevel);
+        }
+        if (Util.notNull(ruleset) && includeInferred) {
+            qdef.setRulesets(ruleset);
+        }
+        if (Util.notNull(getConstrainingQueryDefinition())) {
+            qdef.setConstrainingQueryDefinition(getConstrainingQueryDefinition());
             qdef.setDirectory(getConstrainingQueryDefinition().getDirectory());
             qdef.setCollections(getConstrainingQueryDefinition().getCollections());
             qdef.setResponseTransform(getConstrainingQueryDefinition().getResponseTransform());
             qdef.setOptionsName(getConstrainingQueryDefinition().getOptionsName());
-        	}
-        if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
-        return sparqlManager.executeAsk(qdef,tx);
+        }
+        if (Util.notNull(graphPerms)) {
+            qdef.setUpdatePermissions(graphPerms);
+        }
+        return sparqlManager.executeAsk(qdef, tx);
     }
 
     /**
@@ -260,17 +274,23 @@ public class MarkLogicClientImpl {
      */
     public void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
-        if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
-        if (Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
-        if (Util.notNull(optimizeLevel)){qdef.setOptimizeLevel(optimizeLevel);}
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
+        if (Util.notNull(ruleset) && includeInferred) {
+            qdef.setRulesets(ruleset);
+        }
+        if (Util.notNull(graphPerms)) {
+            qdef.setUpdatePermissions(graphPerms);
+        }
+        if (Util.notNull(optimizeLevel)) {
+            qdef.setOptimizeLevel(optimizeLevel);
+        }
         qdef.setIncludeDefaultRulesets(includeInferred);
         sparqlManager.clearPageLength();
         try {
             sparqlManager.executeUpdate(qdef, tx);
-        }
-        catch (ForbiddenUserException e)
-        {
+        } catch (ForbiddenUserException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
@@ -286,28 +306,59 @@ public class MarkLogicClientImpl {
      * @throws RDFParseException
      */
     // performAdd
-    // as we use mergeGraphs, baseURI is always file.toURI
     public void performAdd(File file, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException {
-        try {
-            graphManager.setDefaultMimetype(dataFormat.getDefaultMIMEType());
-            if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
-                graphManager.mergeGraphs(new FileHandle(file),tx);
-            } else {
-                if (contexts.length>0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if(Util.notNull(contexts[i])){
-                            graphManager.mergeAs(contexts[i].toString(), new FileHandle(file), getGraphPerms(),tx);
-                        }else{
-                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file), getGraphPerms(), tx);
-                        }
-                    }
-                } else {
-                    graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file), getGraphPerms(),tx);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
+        List<Future<?>> futures = new ArrayList<>();
+
+        if (dataFormat.supportsContexts()) {
+            //Quads
+
+            RDFParser parser = Rio.createParser(dataFormat);
+            parseQuads(tx, executor, futures, parser);
+
+            try {
+                InputStream in = new FileInputStream(file);
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : file.toURI().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (FailedRequestException e) {
-            logger.error(e.getLocalizedMessage());
-            throw new RDFParseException("Request to MarkLogic server failed, check file and format.");
+
+            executor.shutdown();
+
+        } else {
+            //triples
+
+            String[] userContexts = prepareUserContexts(contexts);
+            insertGraphDocuments(tx, executor, futures, new HashSet<String>(Arrays.asList(userContexts)));
+
+
+            RDFParser parser = Rio.createParser(dataFormat);
+            parseTriples(tx, parser, executor, futures, userContexts);
+
+            try {
+                InputStream in = new FileInputStream(file);
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : file.toURI().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            executor.shutdown();
         }
     }
 
@@ -322,30 +373,55 @@ public class MarkLogicClientImpl {
      * @throws RDFParseException
      */
     public void performAdd(InputStream in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
-        try {
-            graphManager.setDefaultMimetype(dataFormat.getDefaultMIMEType());
-            if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
-                graphManager.mergeGraphs(new InputStreamHandle(in),tx);
-            } else {
-                if (contexts.length > 0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if (Util.notNull(contexts[i])) {
-                            graphManager.mergeAs(contexts[i].toString(), new InputStreamHandle(in), getGraphPerms(), tx);
-                        } else {
-                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new InputStreamHandle(in),getGraphPerms(), tx);
-                        }
-                    }
-                } else {
-                    graphManager.mergeAs(DEFAULT_GRAPH_URI, new InputStreamHandle(in),getGraphPerms(), tx);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(18);
+        List<Future<?>> futures = new ArrayList<>();
+
+        if (dataFormat.supportsContexts()) {
+            //Quads
+
+            RDFParser parser = Rio.createParser(dataFormat);
+            parseQuads(tx, executor, futures, parser);
+
+            try {
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
                 }
             }
-            in.close();
-        } catch (FailedRequestException e) {
-            logger.error(e.getLocalizedMessage());
-            throw new RDFParseException("Request to MarkLogic server failed, check input is valid.");
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            throw new MarkLogicRdf4jException("IO error");
+
+            executor.shutdown();
+
+        } else {
+            //triples
+
+            String[] userContexts = prepareUserContexts(contexts);
+            insertGraphDocuments(tx, executor, futures, new HashSet<String>(Arrays.asList(userContexts)));
+
+            RDFParser parser = Rio.createParser(dataFormat);
+            parseTriples(tx, parser, executor, futures, userContexts);
+
+            try {
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            executor.shutdown();
         }
     }
 
@@ -362,7 +438,7 @@ public class MarkLogicClientImpl {
      */
     public void performAdd(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
-        if(contexts.length>0) {
+        if (contexts.length > 0) {
             if (Util.notNull(baseURI)) sb.append("BASE <" + baseURI + ">\n");
             sb.append("INSERT DATA { ");
             for (int i = 0; i < contexts.length; i++) {
@@ -375,15 +451,21 @@ public class MarkLogicClientImpl {
             sb.append("}");
         } else {
             sb.append("INSERT DATA { GRAPH <" + DEFAULT_GRAPH_URI + "> {?s ?p ?o .}}");
-        }  
+        }
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(sb.toString());
-        if (Util.notNull(ruleset) ) {qdef.setRulesets(ruleset);}
-        if(Util.notNull(graphPerms)){ qdef.setUpdatePermissions(graphPerms);}
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
+        if (Util.notNull(ruleset)) {
+            qdef.setRulesets(ruleset);
+        }
+        if (Util.notNull(graphPerms)) {
+            qdef.setUpdatePermissions(graphPerms);
+        }
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
 
-        if(Util.notNull(subject)) qdef.withBinding("s", subject.stringValue());
-        if(Util.notNull(predicate)) qdef.withBinding("p", predicate.stringValue());
-        if(Util.notNull(object)) bindObject(qdef, "o", object);
+        if (Util.notNull(subject)) qdef.withBinding("s", subject.stringValue());
+        if (Util.notNull(predicate)) qdef.withBinding("p", predicate.stringValue());
+        if (Util.notNull(object)) bindObject(qdef, "o", object);
         sparqlManager.executeUpdate(qdef, tx);
     }
 
@@ -401,25 +483,26 @@ public class MarkLogicClientImpl {
     public void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
         String[] contextArgs = null;
-        if(contexts.length>0)
-        {	if (Util.notNull(baseURI))sb.append("BASE <" + baseURI + ">\n");
+        if (contexts.length > 0) {
+            if (Util.notNull(baseURI)) sb.append("BASE <" + baseURI + ">\n");
             contextArgs = new String[contexts.length];
             for (int i = 0; i < contexts.length; i++) {
-                if(Util.notNull(contexts[i])){
+                if (Util.notNull(contexts[i])) {
                     contextArgs[i] = contexts[i].stringValue();
-                }
-                else{
-                	contextArgs[i] = DEFAULT_GRAPH_URI;
+                } else {
+                    contextArgs[i] = DEFAULT_GRAPH_URI;
                 }
             }
         }
         sb.append("DELETE WHERE { GRAPH ?ctx { ?s ?p ?o .}}");
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(sb.toString());
-        if(Util.notNull(contextArgs)) qdef.setUsingNamedGraphUris(contextArgs);
-        if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
-        if(Util.notNull(subject)) qdef.withBinding("s", subject.stringValue());
-        if(Util.notNull(predicate)) qdef.withBinding("p", predicate.stringValue());
-        if(Util.notNull(object)) bindObject(qdef, "o", object);
+        if (Util.notNull(contextArgs)) qdef.setUsingNamedGraphUris(contextArgs);
+        if (Util.notNull(baseURI) && !baseURI.isEmpty()) {
+            qdef.setBaseUri(baseURI);
+        }
+        if (Util.notNull(subject)) qdef.withBinding("s", subject.stringValue());
+        if (Util.notNull(predicate)) qdef.withBinding("p", predicate.stringValue());
+        if (Util.notNull(object)) bindObject(qdef, "o", object);
         sparqlManager.executeUpdate(qdef, tx);
     }
 
@@ -430,7 +513,7 @@ public class MarkLogicClientImpl {
      * @param contexts
      */
     public void performClear(Transaction tx, Resource... contexts) {
-        if(contexts.length>0) {
+        if (contexts.length > 0) {
             for (int i = 0; i < contexts.length; i++) {
                 if (Util.notNull(contexts[i])) {
                     graphManager.delete(contexts[i].stringValue(), tx);
@@ -438,7 +521,7 @@ public class MarkLogicClientImpl {
                     graphManager.delete(DEFAULT_GRAPH_URI, tx);
                 }
             }
-        }else{
+        } else {
             graphManager.delete(DEFAULT_GRAPH_URI, tx);
         }
     }
@@ -474,16 +557,16 @@ public class MarkLogicClientImpl {
      *
      * @param rulesets
      */
-    public void setRulesets(SPARQLRuleset ... rulesets) {
-        if(Util.notNull(rulesets)) {
+    public void setRulesets(SPARQLRuleset... rulesets) {
+        if (Util.notNull(rulesets)) {
             List<SPARQLRuleset> list = new ArrayList<>();
-            for(Object r : rulesets) {
-                if(r != null && rulesets.length > 0) {
-                    list.add((SPARQLRuleset)r);
+            for (Object r : rulesets) {
+                if (r != null && rulesets.length > 0) {
+                    list.add((SPARQLRuleset) r);
                 }
             }
             this.ruleset = list.toArray(new SPARQLRuleset[list.size()]);
-        }else{
+        } else {
             this.ruleset = null;
         }
     }
@@ -526,7 +609,6 @@ public class MarkLogicClientImpl {
 
     /**
      * Close client.
-     *
      */
     public void close() {
         // close MarkLogicClientImpl
@@ -570,7 +652,7 @@ public class MarkLogicClientImpl {
      */
     private static SPARQLQueryDefinition bindObject(SPARQLQueryDefinition qdef, String variableName, Value object) throws MarkLogicRdf4jException {
         SPARQLBindings bindings = qdef.getBindings();
-        if(object != null){
+        if (object != null) {
             if (object instanceof IRI) {
                 bindings.bind(variableName, object.stringValue());
             } else if (object instanceof Literal) {
@@ -578,16 +660,16 @@ public class MarkLogicClientImpl {
                 if (lit.getLanguage().orElse(null) != null) {
                     String languageTag = lit.getLanguage().orElse(null);
                     bindings.bind(variableName, lit.getLabel(), Locale.forLanguageTag(languageTag));
-                }else if (((Literal) object).getDatatype() != null) {
+                } else if (((Literal) object).getDatatype() != null) {
                     try {
                         String xsdType = lit.getDatatype().toString();
                         String fragment = new java.net.URI(xsdType).getFragment();
-                        bindings.bind(variableName,lit.getLabel(),RDFTypes.valueOf(fragment.toUpperCase()));
+                        bindings.bind(variableName, lit.getLabel(), RDFTypes.valueOf(fragment.toUpperCase()));
                     } catch (URISyntaxException e) {
                         logger.error(e.getLocalizedMessage());
                         throw new MarkLogicRdf4jException("Problem with object datatype.");
                     }
-                }else {
+                } else {
                     // assume we have a string value
                     bindings.bind(variableName, lit.getLabel(), RDFTypes.STRING);
                 }
@@ -595,5 +677,325 @@ public class MarkLogicClientImpl {
             qdef.setBindings(bindings);
         }
         return qdef;
+    }
+
+    class Task implements Runnable {
+        private DocumentWriteSet writeSet;
+        private Transaction tx;
+        private XMLDocumentManager documentManager;
+
+        Task(DocumentWriteSet writeSet, Transaction tx, XMLDocumentManager documentManager) {
+            this.writeSet = writeSet;
+            this.tx = tx;
+            this.documentManager = documentManager;
+        }
+
+        @Override
+        public void run() {
+            documentManager.write(writeSet, tx);
+        }
+    }
+
+    private void parseTriples(Transaction tx, RDFParser parser, ThreadPoolExecutor executor, List<Future<?>> futures, String[] userContexts) {
+        parser.setRDFHandler(new RDFHandler() {
+            StringBuffer sb;
+            int i = 0;
+            int T_PER_DOC = 1000;
+            int DOCS_PER_BATCH = 4;
+            int n = 0;
+
+
+            XMLDocumentManager documentManager = databaseClient.newXMLDocumentManager();
+            DocumentWriteSet writeSet = documentManager.newWriteSet();
+
+            void startDoc() {
+                sb = new StringBuffer();
+                sb.append("<sem:triples xmlns:sem=\"http://marklogic.com/semantics\">\n");
+            }
+
+            void endDoc() {
+                sb.append("</sem:triples>\n");
+                String st = sb.toString();
+                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(userContexts);
+                writeSet.add("/triplestore/" + UUID.randomUUID() + ".xml", metadata, new StringHandle(st));
+
+                n++;
+                if (n == DOCS_PER_BATCH) {
+                    n = 0;
+                    futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+                    writeSet = documentManager.newWriteSet();
+                }
+            }
+
+            @Override
+            public void startRDF() throws RDFHandlerException {
+                startDoc();
+            }
+
+            @Override
+            public void endRDF() throws RDFHandlerException {
+                endDoc();
+                //flush remaining documents when DOCS_PER_BATCH is not full
+                futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+            }
+
+            @Override
+            public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
+
+            }
+
+            @Override
+            public void handleStatement(Statement st) throws RDFHandlerException {
+                i++;
+                if (i > T_PER_DOC) {
+                    i = 1;
+                    endDoc();
+                    startDoc();
+                }
+
+                sb.append("<sem:triple>\n");
+                sb.append(subject(st.getSubject()));
+                sb.append(predicate(st.getPredicate()));
+                sb.append(object(st.getObject()));
+                sb.append("</sem:triple>\n");
+            }
+
+            @Override
+            public void handleComment(String comment) throws RDFHandlerException {
+
+            }
+        });
+    }
+
+    private void parseQuads(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, RDFParser parser) {
+        parser.setRDFHandler(new RDFHandler() {
+
+            int i = 0;
+            int T_PER_DOC = 100;
+            int DOCS_PER_BATCH = 3000;
+            int n = 0;
+
+            XMLDocumentManager documentManager = databaseClient.newXMLDocumentManager();
+            DocumentWriteSet writeSet = documentManager.newWriteSet();
+
+            public void startDoc() {
+                startDoc(graphCache.get(DEFAULT_GRAPH_URI));
+            }
+
+            public void startDoc(StringBuilder sb) {
+                sb.append("<sem:triples xmlns:sem=\"http://marklogic.com/semantics\">\n");
+            }
+
+            public void endDoc() {
+                endDoc(DEFAULT_GRAPH_URI);
+            }
+
+            public void endDoc(String graph) {
+                StringBuilder sb = graphCache.get(graph);
+                sb.append("</sem:triples>\n");
+
+                String st = sb.toString();
+                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(graph);
+                writeSet.add("/triplestore/" + UUID.randomUUID() + ".xml", metadata, new StringHandle(st));
+
+                n++;
+                if (n == DOCS_PER_BATCH) {
+                    n = 0;
+                    futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+                    writeSet = documentManager.newWriteSet();
+                }
+
+                graphCache.remove(graph);
+            }
+
+
+            Map<String, StringBuilder> graphCache;
+            Map<String, Integer> tripleCounts;
+            Set<String> graphSet;
+
+            @Override
+            public void startRDF() throws RDFHandlerException {
+                documentManager = databaseClient.newXMLDocumentManager();
+                graphCache = new ConcurrentHashMap<>();
+                tripleCounts = new ConcurrentHashMap<>();
+                writeSet = documentManager.newWriteSet();
+                graphSet = new HashSet<>();
+            }
+
+            @Override
+            public void endRDF() throws RDFHandlerException {
+
+                for (String key : graphCache.keySet()) {
+                    endDoc(key);
+                }
+
+                //flush remaining documents when DOCS_PER_BATCH is not full
+                if(!writeSet.isEmpty()) {
+                    futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
+                }
+
+                insertGraphDocuments(tx, executor, futures, graphSet);
+            }
+
+            @Override
+            public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
+
+            }
+
+            @Override
+            public void handleStatement(Statement st) throws RDFHandlerException {
+                if (st.getContext() != null) {
+                    //Quad
+                    String graph = st.getContext().toString();
+
+                    //To create graph document
+                    if (!graphSet.contains(graph)) {
+                        graphSet.add(graph);
+                    }
+
+                    if (tripleCounts.containsKey(graph)) {
+                        int j = 1 + tripleCounts.get(graph);
+                        tripleCounts.put(graph, j);
+                        if (j > T_PER_DOC) {
+                            tripleCounts.put(graph, 1);
+                            endDoc(graph);
+                            graphCache.put(graph, new StringBuilder());
+                            startDoc(graphCache.get(graph));
+                        }
+                    } else {
+                        tripleCounts.put(graph, 1);
+                        graphCache.put(graph, new StringBuilder());
+                        startDoc(graphCache.get(graph));
+                    }
+
+                    triple(graphCache.get(graph), st);
+                } else {
+                    //Triple
+                    if (!graphCache.containsKey(DEFAULT_GRAPH_URI)){
+                        graphCache.put(DEFAULT_GRAPH_URI, new StringBuilder());
+                        startDoc();
+                    }
+
+                    i++;
+                    if (i > T_PER_DOC) {
+                        i = 1;
+                        endDoc();
+                        StringBuilder sb = new StringBuilder();
+                        graphCache.put(DEFAULT_GRAPH_URI, sb);
+                        startDoc(graphCache.get(DEFAULT_GRAPH_URI));
+                    }
+
+                    //To create graph document
+                    if (!graphSet.contains(DEFAULT_GRAPH_URI)) {
+                        graphSet.add(DEFAULT_GRAPH_URI);
+                    }
+
+                    triple(graphCache.get(DEFAULT_GRAPH_URI), st);
+                }
+            }
+
+            @Override
+            public void handleComment(String comment) throws RDFHandlerException {
+
+            }
+
+            private void triple(StringBuilder sb, Statement st) {
+                sb.append("<sem:triple>\n");
+                sb.append(subject(st.getSubject()));
+                sb.append(predicate(st.getPredicate()));
+                sb.append(object(st.getObject()));
+                sb.append("</sem:triple>\n");
+            }
+        });
+    }
+
+    private String subject(Value subject) {
+        if (subject instanceof org.eclipse.rdf4j.model.BNode) {
+            //Skolemization using toString()
+            return "<sem:subject>http://marklogic.com/semantics/blank/" + subject.toString() + "</sem:subject>\n";
+        } else {
+            return "<sem:subject>" + subject.stringValue() + "</sem:subject>\n";
+        }
+    }
+
+    private String predicate(Value predicate) {
+        return "<sem:predicate>" + predicate.stringValue() + "</sem:predicate>\n";
+    }
+
+    private String object(Value object) {
+        if (object instanceof Literal) {
+            Literal lit = (Literal) object;
+            String lang = lit.getLanguage().orElse("");
+            String type = lit.getDatatype().toString();
+
+            if (!lang.equals("")) {
+                lang = " xml:lang=\"" + lang + "\"";
+            }
+
+            if ("".equals(lang)) {
+                if (type == null) {
+                    type = "http://www.w3.org/2001/XMLSchema#string";
+                }
+                type = " datatype=\"" + type + "\"";
+            } else {
+                type = "";
+            }
+
+            return "<sem:object" + type + lang + ">" + object.stringValue() + "</sem:object>\n";
+        } else if (object instanceof org.eclipse.rdf4j.model.BNode) {
+            //Skolemization using toString()
+            return "<sem:object>http://marklogic.com/semantics/blank/" + object.toString() + "</sem:object>\n";
+        } else {
+            return "<sem:object>" + object.stringValue() + "</sem:object>\n";
+        }
+    }
+
+    //TODO: Check for valid graph IRIs. Waiting on https://github.com/eclipse/rdf4j/issues/69
+    private void insertGraphDocuments(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, Set<String> graphSet){
+        int MAX_GRAPHS_PER_REQUEST = 100;
+        int max = MAX_GRAPHS_PER_REQUEST;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(String graph: graphSet){
+            if(max == 1){
+                max = MAX_GRAPHS_PER_REQUEST;
+                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
+                String graphsQuery = stringBuilder.toString();
+                futures.add(executor.submit(()->{
+                    performUpdateQuery(graphsQuery, null, tx, true, null);
+                }));
+                stringBuilder = new StringBuilder();
+            }
+            else {
+                max--;
+                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
+            }
+        }
+
+        //flush remaining graph documents when max_graphs_per_request is not satisfied.
+        String graphsQuery = stringBuilder.toString();
+        if(!graphsQuery.equals("")) {
+            futures.add(executor.submit(() -> {
+                performUpdateQuery(graphsQuery, null, tx, true, null);
+            }));
+        }
+    }
+
+    private String[] prepareUserContexts(Resource... contexts){
+        String[] userContexts;
+        if (contexts.length == 0) {
+            userContexts = new String[1];
+            userContexts[0] = DEFAULT_GRAPH_URI;
+        } else {
+            userContexts = new String[contexts.length];
+            for (int i = 0; i < contexts.length; i++) {
+                if (Util.notNull(contexts[i])) {
+                    userContexts[i] = contexts[i].toString();
+                } else {
+                    userContexts[i] = DEFAULT_GRAPH_URI;
+                }
+            }
+        }
+        return userContexts;
     }
 }
