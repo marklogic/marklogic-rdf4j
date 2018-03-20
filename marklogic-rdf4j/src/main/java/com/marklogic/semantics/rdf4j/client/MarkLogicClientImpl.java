@@ -950,16 +950,7 @@ public class MarkLogicClientImpl {
         }
     }
 
-    private String escapeXml(String _in) {
-        if (null == _in) {
-            return "";
-        }
-        return patterns[2].matcher(
-                patterns[1].matcher(
-                        patterns[0].matcher(_in).replaceAll("&amp;"))
-                        .replaceAll("&lt;")).replaceAll("&gt;");
-    }
-
+    //TODO: Check for valid graph IRIs. Waiting on https://github.com/eclipse/rdf4j/issues/69
     private void insertGraphDocuments(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, Set<String> graphSet){
         int MAX_GRAPHS_PER_REQUEST = 100;
         int max = MAX_GRAPHS_PER_REQUEST;
@@ -968,7 +959,7 @@ public class MarkLogicClientImpl {
         for(String graph: graphSet){
             if(max == 1){
                 max = MAX_GRAPHS_PER_REQUEST;
-                stringBuilder.append("CREATE SILENT GRAPH <").append(escapeXml(graph)).append(">;");
+                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
                 String graphsQuery = stringBuilder.toString();
                 futures.add(executor.submit(()->{
                     performUpdateQuery(graphsQuery, null, tx, true, null);
@@ -977,7 +968,7 @@ public class MarkLogicClientImpl {
             }
             else {
                 max--;
-                stringBuilder.append("CREATE SILENT GRAPH <").append(escapeXml(graph)).append(">;");
+                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
             }
         }
 
