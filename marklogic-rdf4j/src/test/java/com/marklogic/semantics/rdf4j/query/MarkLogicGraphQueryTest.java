@@ -240,13 +240,17 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
 
     // result.close() throws an NPE
     // https://github.com/marklogic/marklogic-sesame/issues/257
+    // https://github.com/eclipse/rdf4j/issues/896
     @Test
     public void testPrepareGraphQueryClose() throws Exception
     {
         String query = "DESCRIBE <http://example.org/ontology/name>";
         GraphQuery queryObj = conn.prepareGraphQuery(query);
-        GraphQueryResult result = queryObj.evaluate();
-        result.close();
+        try (GraphQueryResult result = queryObj.evaluate()) {
+            while (result.hasNext()) {
+                result.next();
+            }
+        }
     }
 
 }
