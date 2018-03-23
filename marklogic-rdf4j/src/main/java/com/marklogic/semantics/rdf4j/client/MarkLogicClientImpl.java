@@ -23,7 +23,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.regex.Pattern;
 
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
@@ -69,8 +68,6 @@ public class MarkLogicClientImpl {
     private DatabaseClient databaseClient;
 
     private Util util = Util.getInstance();
-
-    private Pattern[] patterns = new Pattern[]{Pattern.compile("&"), Pattern.compile("<"), Pattern.compile(">")};
 
     /**
      * Constructor initialized with connection parameters.
