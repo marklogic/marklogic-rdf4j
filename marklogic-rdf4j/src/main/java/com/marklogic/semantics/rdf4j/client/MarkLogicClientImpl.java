@@ -1000,11 +1000,11 @@ public class MarkLogicClientImpl {
 
     private static String validateIRI(String in) {
         try {
-            in = new ParsedIRI(in).toString();
+            return new ParsedIRI(in).toString();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        return in;
+        return ParsedIRI.create(in).toString();
     }
 }
