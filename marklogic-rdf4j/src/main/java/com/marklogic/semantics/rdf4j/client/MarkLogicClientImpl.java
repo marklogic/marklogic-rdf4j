@@ -381,7 +381,7 @@ public class MarkLogicClientImpl {
             parseQuads(tx, executor, futures, parser);
 
             try {
-                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org");
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org/");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -406,7 +406,7 @@ public class MarkLogicClientImpl {
             parseTriples(tx, parser, executor, futures, userContexts);
 
             try {
-                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org");
+                parser.parse(in, Util.notNull(baseURI) ? baseURI : "http://example.org/");
             } catch (IOException e) {
                 e.printStackTrace();
             }
