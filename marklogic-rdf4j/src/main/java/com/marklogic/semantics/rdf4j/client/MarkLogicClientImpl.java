@@ -31,6 +31,7 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.client.semantics.*;
 import com.marklogic.semantics.rdf4j.utils.Util;
+import org.eclipse.rdf4j.common.net.ParsedIRI;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -830,7 +831,7 @@ public class MarkLogicClientImpl {
                 }
 
                 //flush remaining documents when DOCS_PER_BATCH is not full
-                if(!writeSet.isEmpty()) {
+                if (!writeSet.isEmpty()) {
                     futures.add(executor.submit(new Task(writeSet, tx, documentManager)));
                 }
 
@@ -871,7 +872,7 @@ public class MarkLogicClientImpl {
                     triple(graphCache.get(graph), st);
                 } else {
                     //Triple
-                    if (!graphCache.containsKey(DEFAULT_GRAPH_URI)){
+                    if (!graphCache.containsKey(DEFAULT_GRAPH_URI)) {
                         graphCache.put(DEFAULT_GRAPH_URI, new StringBuilder());
                         startDoc();
                     }
@@ -950,38 +951,36 @@ public class MarkLogicClientImpl {
         }
     }
 
-    //TODO: Check for valid graph IRIs. Waiting on https://github.com/eclipse/rdf4j/issues/69
-    private void insertGraphDocuments(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, Set<String> graphSet){
+    private void insertGraphDocuments(Transaction tx, ThreadPoolExecutor executor, List<Future<?>> futures, Set<String> graphSet) {
         int MAX_GRAPHS_PER_REQUEST = 100;
         int max = MAX_GRAPHS_PER_REQUEST;
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(String graph: graphSet){
-            if(max == 1){
+        for (String graph : graphSet) {
+            if (max == 1) {
                 max = MAX_GRAPHS_PER_REQUEST;
-                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
+                stringBuilder.append("CREATE SILENT GRAPH <").append(validateIRI(graph)).append(">;");
                 String graphsQuery = stringBuilder.toString();
-                futures.add(executor.submit(()->{
+                futures.add(executor.submit(() -> {
                     performUpdateQuery(graphsQuery, null, tx, true, null);
                 }));
                 stringBuilder = new StringBuilder();
-            }
-            else {
+            } else {
                 max--;
-                stringBuilder.append("CREATE SILENT GRAPH <").append(graph).append(">;");
+                stringBuilder.append("CREATE SILENT GRAPH <").append(validateIRI(graph)).append(">;");
             }
         }
 
         //flush remaining graph documents when max_graphs_per_request is not satisfied.
         String graphsQuery = stringBuilder.toString();
-        if(!graphsQuery.equals("")) {
+        if (!graphsQuery.equals("")) {
             futures.add(executor.submit(() -> {
                 performUpdateQuery(graphsQuery, null, tx, true, null);
             }));
         }
     }
 
-    private String[] prepareUserContexts(Resource... contexts){
+    private String[] prepareUserContexts(Resource... contexts) {
         String[] userContexts;
         if (contexts.length == 0) {
             userContexts = new String[1];
@@ -997,5 +996,15 @@ public class MarkLogicClientImpl {
             }
         }
         return userContexts;
+    }
+
+    private static String validateIRI(String in) {
+        try {
+            in = new ParsedIRI(in).toString();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return in;
     }
 }
