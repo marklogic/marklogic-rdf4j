@@ -999,9 +999,7 @@ public class MarkLogicClientImpl {
         try {
             return new ParsedIRI(in).toString();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            throw new RDFParseException(e.getMessage());
         }
-
-        return ParsedIRI.create(in).toString();
     }
 }
