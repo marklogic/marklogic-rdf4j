@@ -521,7 +521,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 	}
 	
 	
-	@Test
+	@Ignore
 	public void testMultiThreadedAdd() throws Exception {
 
 		class MyRunnable implements Runnable {
