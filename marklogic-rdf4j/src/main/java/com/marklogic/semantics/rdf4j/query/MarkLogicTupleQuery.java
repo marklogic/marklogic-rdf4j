@@ -56,7 +56,8 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * Evaluate tuple query.
+     * Evaluate tuple query. Note: take care to always close the TupleQueryResult after use to free any resources it keeps hold of.
+     * It is recommended to use the try-with-resources pattern as TupleQueryResult implements AutoCloseable.
      *
      * @return TupleQueryResult
      * @throws QueryEvaluationException
@@ -67,7 +68,8 @@ public class MarkLogicTupleQuery extends MarkLogicQuery implements TupleQuery,Ma
     }
 
     /**
-     * Evaluate tuple query with pagination.
+     * Evaluate tuple query with pagination. Note: take care to always close the TupleQueryResult after use to free any resources it keeps hold of.
+     * It is recommended to use the try-with-resources pattern as TupleQueryResult implements AutoCloseable.
      *
      * @param start
      * @param pageLength
