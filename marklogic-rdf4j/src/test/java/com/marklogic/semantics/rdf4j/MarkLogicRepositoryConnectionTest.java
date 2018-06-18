@@ -667,6 +667,22 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         Assert.assertTrue(conn.hasStatement(null, null, copyOfAliceName, false));
     }
 
+    // https://github.com/marklogic/marklogic-rdf4j/issues/39
+    @Test
+    public void testBNodeSkolmization() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        BNode alicesName = vf.createBNode();
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context1);
+        final GraphQueryResult evaluate = conn.prepareGraphQuery("DESCRIBE <http://example.org/people/alice>").evaluate();
+
+        Assert.assertTrue(evaluate.hasNext());
+    }
+
     // https://github.com/marklogic/marklogic-sesame/issues/363
     @Test
     public void testMultiContextDelete()

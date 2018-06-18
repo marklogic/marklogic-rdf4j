@@ -87,7 +87,7 @@ public class Util {
      */
     public Value skolemize(Value s) {
         if (s instanceof org.eclipse.rdf4j.model.BNode) {
-            return SimpleValueFactory.getInstance().createIRI("http://marklogic.com/semantics/blank/" + s.toString());
+            return SimpleValueFactory.getInstance().createIRI("http://marklogic.com/semantics/blank/" + s.stringValue());
         } else {
             return s;
         }
