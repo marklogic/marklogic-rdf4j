@@ -49,7 +49,7 @@ public class SPARQLRepositoryTest extends Rdf4jTestBase {
             throws Exception {
         logger.debug("setting up test");
         SPARQLRepository sr = new SPARQLRepository("http://"+host+":"+port+"/v1/graphs/sparql");
-        sr.setUsernameAndPassword("admin","admin");
+        sr.setUsernameAndPassword(adminUser, adminPassword);
         sr.initialize();
         f = sr.getValueFactory();
         conn = (SPARQLConnection) sr.getConnection();
