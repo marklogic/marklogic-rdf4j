@@ -43,7 +43,7 @@ jacocoTestReport {
 dependencies {
     compile('org.eclipse.rdf4j:rdf4j-runtime:2.3.0')
 
-    compile('com.marklogic:marklogic-client-api:4.0.3') {
+    compile('com.marklogic:marklogic-client-api:4.0.4') {
         exclude(group: 'org.slf4j')
         exclude(group: 'ch.qos.logback')
     }
