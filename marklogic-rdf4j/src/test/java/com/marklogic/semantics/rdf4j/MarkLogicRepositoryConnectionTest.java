@@ -30,6 +30,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
+import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -678,6 +679,24 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         BNode alicesName = vf.createBNode();
         Statement st1 = vf.createStatement(alice, name, alicesName);
         conn.add(st1, context1);
+        final GraphQueryResult evaluate = conn.prepareGraphQuery("DESCRIBE <http://example.org/people/alice>").evaluate();
+
+        Assert.assertTrue(evaluate.hasNext());
+    }
+
+    // https://github.com/marklogic/marklogic-rdf4j/issues/39
+    // TODO Enable test once we are on rdf4j library 2.4.0
+    @Ignore
+    public void testBNodeSkolmizationWithRioParser() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+
+        final Model model = Rio.parse(new StringReader("<"+alice+"> <http://www.perceive.net/schemas/relationship/enemyOf> _:b1 ."), "", RDFFormat.TURTLE);
+
+        conn.add(model, context1);
+
         final GraphQueryResult evaluate = conn.prepareGraphQuery("DESCRIBE <http://example.org/people/alice>").evaluate();
 
         Assert.assertTrue(evaluate.hasNext());
