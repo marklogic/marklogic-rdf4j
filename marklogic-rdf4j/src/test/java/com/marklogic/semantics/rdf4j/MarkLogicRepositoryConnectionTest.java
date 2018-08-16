@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.common.iteration.Iteration;
 import org.eclipse.rdf4j.common.iteration.Iterations;
+import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -50,10 +51,7 @@ import org.eclipse.rdf4j.rio.rdfxml.RDFXMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -668,6 +666,40 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         String alicesNamesId = alicesName.getID();
         BNode copyOfAliceName = vf.createBNode(alicesNamesId);
         Assert.assertTrue(conn.hasStatement(null, null, copyOfAliceName, false));
+    }
+
+    // https://github.com/marklogic/marklogic-rdf4j/issues/39
+    @Test
+    public void testBNodeSkolmization() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+        IRI name = vf.createIRI("http://example.org/ontology/name");
+        BNode alicesName = vf.createBNode();
+        Statement st1 = vf.createStatement(alice, name, alicesName);
+        conn.add(st1, context1);
+        final GraphQueryResult evaluate = conn.prepareGraphQuery("DESCRIBE <http://example.org/people/alice>").evaluate();
+
+        Assert.assertTrue(evaluate.hasNext());
+    }
+
+    // https://github.com/marklogic/marklogic-rdf4j/issues/39
+    // TODO Enable test once we are on rdf4j library 2.4.0
+    @Ignore
+    public void testBNodeSkolmizationWithRioParser() throws Exception
+    {
+        ValueFactory vf = conn.getValueFactory();
+        Resource context1 = vf.createIRI("http://marklogic.com/test/context1");
+        IRI alice = vf.createIRI("http://example.org/people/alice");
+
+        final Model model = Rio.parse(new StringReader("<"+alice+"> <http://www.perceive.net/schemas/relationship/enemyOf> _:b1 ."), "", RDFFormat.TURTLE);
+
+        conn.add(model, context1);
+
+        final GraphQueryResult evaluate = conn.prepareGraphQuery("DESCRIBE <http://example.org/people/alice>").evaluate();
+
+        Assert.assertTrue(evaluate.hasNext());
     }
 
     // https://github.com/marklogic/marklogic-sesame/issues/363
@@ -1562,6 +1594,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         con.clear();
     }
 
+    @Deprecated
     @Test
     public void testConnectionWithMLConnectionVariablesWithDatabase()
     {
@@ -1641,6 +1674,14 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
         model = Iterations.addAll(result, new LinkedHashModel());
         Assert.assertEquals(1, model.size());
         con.clear();
+    }
+
+    @Test
+    public void testDatabaseClientAccess()
+    {
+        DatabaseClient databaseClient = conn.getDatabaseClient();
+        Assert.assertEquals(host, databaseClient.getHost());
+        Assert.assertEquals(port, databaseClient.getPort());
     }
 }
 

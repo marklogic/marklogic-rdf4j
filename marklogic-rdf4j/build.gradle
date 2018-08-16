@@ -41,9 +41,9 @@ jacocoTestReport {
 }
 
 dependencies {
-    compile('org.eclipse.rdf4j:rdf4j-runtime:2.2.2')
+    compile('org.eclipse.rdf4j:rdf4j-runtime:2.3.2')
 
-    compile('com.marklogic:marklogic-client-api:4.0.3') {
+    compile('com.marklogic:marklogic-client-api:4.1.0') {
         exclude(group: 'org.slf4j')
         exclude(group: 'ch.qos.logback')
     }
@@ -140,6 +140,12 @@ publishing {
   }
   repositories {
     maven {
+      if(project.hasProperty("mavenUser")) {
+          credentials {
+              username mavenUser
+              password mavenPassword
+          }
+      }
       url publishUrl
     }
   }

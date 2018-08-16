@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class SPARQLRepositoryTest extends Rdf4jTestBase {
             throws Exception {
         logger.debug("setting up test");
         SPARQLRepository sr = new SPARQLRepository("http://"+host+":"+port+"/v1/graphs/sparql");
-        sr.setUsernameAndPassword("admin","admin");
+        sr.setUsernameAndPassword(adminUser, adminPassword);
         sr.initialize();
         f = sr.getValueFactory();
         conn = (SPARQLConnection) sr.getConnection();

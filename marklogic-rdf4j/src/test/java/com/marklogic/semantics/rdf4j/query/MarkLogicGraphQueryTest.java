@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,6 +94,21 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
         Statement st2 = results.next();
         Assert.assertEquals("http://semanticbible.org/ns/2006/NTNames#Cain", st2.getSubject().stringValue());
         results.close();
+    }
+
+    @Test
+    public void testConstructQueryWithOptimizeLevel()
+            throws Exception {
+        String queryString = "PREFIX nn: <http://semanticbible.org/ns/2006/NTNames#>\n" +
+                "PREFIX test: <http://marklogic.com#test>\n" +
+                "\n" +
+                "construct { ?s  test:test \"0\"} WHERE  {?s nn:childOf nn:Eve . }";
+        conn.setOptimizeLevel(0);
+        GraphQuery graphQuery = conn.prepareGraphQuery(QueryLanguage.SPARQL, queryString);
+        GraphQueryResult results = graphQuery.evaluate();
+        Assert.assertNotNull(results);
+        results.close();
+        conn.setOptimizeLevel(null);
     }
 
     @Test
@@ -225,13 +240,17 @@ public class MarkLogicGraphQueryTest extends Rdf4jTestBase {
 
     // result.close() throws an NPE
     // https://github.com/marklogic/marklogic-sesame/issues/257
+    // https://github.com/eclipse/rdf4j/issues/896
     @Test
     public void testPrepareGraphQueryClose() throws Exception
     {
         String query = "DESCRIBE <http://example.org/ontology/name>";
         GraphQuery queryObj = conn.prepareGraphQuery(query);
-        GraphQueryResult result = queryObj.evaluate();
-        result.close();
+        try (GraphQueryResult result = queryObj.evaluate()) {
+            while (result.hasNext()) {
+                result.next();
+            }
+        }
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,6 +166,17 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
             conn.close();
             Thread.sleep(1000);
         }
+    }
+
+    @Test
+    public void testPrepareTupleQueryWithOptimizeLevel() throws Exception{
+        String queryString = "select ?s ?p ?o { ?s ?p ?o } limit 10 ";
+        TupleQuery tupleQuery = conn.prepareTupleQuery(queryString,"http://marklogic.com/test/baseuri");
+        conn.setOptimizeLevel(0);
+        TupleQueryResult results = tupleQuery.evaluate();
+        Assert.assertNotNull(results);
+        conn.setOptimizeLevel(null);
+        results.close();
     }
 
     @Test
@@ -456,7 +467,27 @@ public class MarkLogicTupleQueryTest extends Rdf4jTestBase {
 
         SPARQLResultsXMLWriter sparqlWriter = new SPARQLResultsXMLWriter(out);
 
-        String expected = "<?xml version='1.0' encoding='UTF-8'?><sparql xmlns='http://www.w3.org/2005/sparql-results#'><head><variable name='s'/><variable name='p'/><variable name='o'/></head><results><result><binding name='s'><uri>http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata</uri></binding><binding name='p'><uri>http://semanticbible.org/ns/2006/NTNames#altitude</uri></binding><binding name='o'><literal datatype='http://www.w3.org/2001/XMLSchema#int'>0</literal></binding></result></results></sparql>";
+        String expected = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                "<sparql xmlns='http://www.w3.org/2005/sparql-results#'>\n" +
+                "\t<head>\n" +
+                "\t\t<variable name='s'/>\n" +
+                "\t\t<variable name='p'/>\n" +
+                "\t\t<variable name='o'/>\n" +
+                "\t</head>\n" +
+                "\t<results>\n" +
+                "\t\t<result>\n" +
+                "\t\t\t<binding name='s'>\n" +
+                "\t\t\t\t<uri>http://semanticbible.org/ns/2006/NTNames#AttaliaGeodata</uri>\n" +
+                "\t\t\t</binding>\n" +
+                "\t\t\t<binding name='p'>\n" +
+                "\t\t\t\t<uri>http://semanticbible.org/ns/2006/NTNames#altitude</uri>\n" +
+                "\t\t\t</binding>\n" +
+                "\t\t\t<binding name='o'>\n" +
+                "\t\t\t\t<literal datatype='http://www.w3.org/2001/XMLSchema#int'>0</literal>\n" +
+                "\t\t\t</binding>\n" +
+                "\t\t</result>\n" +
+                "\t</results>\n" +
+                "</sparql>\n";
 
         String queryString = "select * { ?s ?p ?o . } limit 1";
         TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);

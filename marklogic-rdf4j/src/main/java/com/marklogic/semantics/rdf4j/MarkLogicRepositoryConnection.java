@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 
+import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.Transaction;
 import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.IsolationLevel;
@@ -1073,7 +1074,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     	Iterator <? extends Statement> iter = statements.iterator();
 	    while(iter.hasNext()){
 	    	Statement st = iter.next();
-	        add(st, mergeResource(st.getContext(), contexts));
+	        add(st, contexts);
 	    }
 	}
 
@@ -1287,6 +1288,23 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     *
+     * @param optimizeLevel
+     */
+    public void setOptimizeLevel(Integer optimizeLevel)
+    {
+        this.client.setOptimizeLevel(optimizeLevel);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Integer getOptimizeLevel()
+    {
+        return this.client.getOptimizeLevel();
+    }
 
     /**
      * sets default graph permissions to be used by all queries
@@ -1434,6 +1452,11 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
             dataset.addDefaultGraph(getValueFactory().createIRI(DEFAULT_GRAPH_URI));
         }
         query.setDataset(dataset);
+    }
+
+    public DatabaseClient getDatabaseClient()
+    {
+        return this.client.getClient().getDatabaseClient();
     }
 
     public Transaction getTransaction()

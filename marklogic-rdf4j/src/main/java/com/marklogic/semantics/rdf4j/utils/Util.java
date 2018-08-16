@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class Util {
      */
     public Value skolemize(Value s) {
         if (s instanceof org.eclipse.rdf4j.model.BNode) {
-            return SimpleValueFactory.getInstance().createIRI("http://marklogic.com/semantics/blank/" + s.toString());
+            return SimpleValueFactory.getInstance().createIRI("http://marklogic.com/semantics/blank/" + s.stringValue());
         } else {
             return s;
         }

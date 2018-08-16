@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,8 @@ public class MarkLogicGraphQuery extends MarkLogicQuery implements GraphQuery,Ma
     }
 
     /**
-     * Evaluate graph query
+     * Evaluate graph query. Note: take care to always close the GraphQueryResult after use to free any resources it keeps hold of.
+     * It is recommended to use the try-with-resources pattern as GraphQueryResult implements AutoCloseable.
      *
      * @return GraphQueryResult
      * @throws QueryEvaluationException

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 MarkLogic Corporation
+ * Copyright 2015-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,17 @@ public class MarkLogicBooleanQueryTest extends Rdf4jTestBase {
         booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
         results = booleanQuery.evaluate();
         Assert.assertEquals(true, results);
+    }
+
+    @Test
+    public void testBooleanQueryWithOptimizeLevel()
+            throws Exception {
+        String queryString = "ASK {GRAPH <http://example.org/test/g27> {<http://semanticbible.org/ns/2006/NTNames#Shelah1> ?p ?o}}";
+        conn.setOptimizeLevel(0);
+        BooleanQuery booleanQuery = conn.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
+        boolean results = booleanQuery.evaluate();
+        Assert.assertEquals(false, results);
+        conn.setOptimizeLevel(null);
     }
 
     @Test

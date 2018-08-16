@@ -1,4 +1,4 @@
-# marklogic-rdf4j v1.2.0
+# marklogic-rdf4j v1.2.1
 
 ## Introduction
 
@@ -28,13 +28,13 @@ server.
 ### Quick Start
 
 The markLogic-rdf4j API is available via [Maven
-Central](http://central.maven.org/maven2/artifact/com.marklogic/marklogic-rdf4j/1.2.0).
+Central](http://central.maven.org/maven2/artifact/com.marklogic/marklogic-rdf4j/1.2.1).
 
 For gradle projects, include the following dependency in your `build.gradle`:
 
 ```
 dependencies {
-    compile group: 'com.marklogic', name: 'marklogic-rdf4j', version: '1.2.0'
+    compile group: 'com.marklogic', name: 'marklogic-rdf4j', version: '1.2.1'
 }
 ```
 
@@ -44,7 +44,7 @@ For maven projects, include in your pom.xml:
 <dependency>
     <groupId>com.marklogic</groupId>
     <artifactId>marklogic-rdf4j</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
@@ -60,7 +60,7 @@ and should pull down this version from maven central.
 
 To optionally build marklogic-rdf4j with _develop_ branch version of MarkLogic Java API Client:
 
-1. Clone or download [MarkLogic Java API client](https://github.com/marklogic/java-client-api/tree/develop) _develop_ branch.
+1. Clone or download [MarkLogic Java API client](https://github.com/marklogic/java-client-api/tree/master) _master_ branch.
 2. Build and deploy Java API client to local maven repo.
 
 ```
@@ -108,7 +108,7 @@ optionally you can build the jar without running tests.
 gradle build -x test
 ```
 
-and copy resultant build/lib/marklogic-rdf4j-1.2.0.jar.
+and copy resultant marklogic-rdf4j/build/libs/marklogic-rdf4j-1.2.1.jar.
 
 ### Examples
 
@@ -127,25 +127,15 @@ gradle marklogic-rdf4j:javadoc
 
 ```
 
-### Contributing
-
-Everyone is encouraged to 
-[file bug reports](https://github.com/marklogic/marklogic-rdf4j/labels/Bug), 
-[feature requests](https://github.com/marklogic/marklogic-rdf4j/labels/enhancement), and
-[pull requests](https://github.com/marklogic/marklogic-rdf4j/pulls) through
-GitHub. This input is critical and will be carefully considered, though we
-cannot promise a specific resolution or timeframe for any request.
-
-Learn how to [contribute](CONTRIBUTING.md).
 
 ### Support
 
-The marklogic-rdf4j is maintained by MarkLogic Engineering and distributed
-under the Apache 2.0 license. In addition, MarkLogic provides technical support
-for release tags of the MarkLogic RDF4J API to licensed customers under the
-terms outlined in the Support Handbook. For more information or to sign up for
-support, visit [help.marklogic.com](http://help.marklogic.com).
-
+The marklogic-rdf4j project is maintained by [MarkLogic](https://www.marklogic.com/) Engineering and is made available under the [Apache 2.0 license](LICENSE). It is designed for use in production applications
+with MarkLogic Server. Everyone is encouraged to file bug reports, feature requests, and pull requests through
+[GitHub](https://github.com/marklogic/marklogic-rdf4j/issues). This input is critical and will be carefully considered. However, we can't promise a specific 
+resolution or timeframe for any request. In addition, MarkLogic provides technical support for [release
+tags](https://github.com/marklogic/marklogic-rdf4j/releases) of marklogic-rdf4j to
+licensed customers under the terms outlined in the [MarkLogic Technical Support Handbook](http://www.marklogic.com/files/Mark_Logic_Support_Handbook.pdf). Customers with an active maintenance contract can sign up for MarkLogic Technical Support on our [support portal](https://help.marklogic.com/).
 ### License
 
 [Apache License v2.0](LICENSE)
