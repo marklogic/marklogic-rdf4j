@@ -685,8 +685,7 @@ public class MarkLogicRepositoryConnectionTest extends Rdf4jTestBase {
     }
 
     // https://github.com/marklogic/marklogic-rdf4j/issues/39
-    // TODO Enable test once we are on rdf4j library 2.4.0
-    @Ignore
+    @Test
     public void testBNodeSkolmizationWithRioParser() throws Exception
     {
         ValueFactory vf = conn.getValueFactory();
