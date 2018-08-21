@@ -1,4 +1,4 @@
-# marklogic-rdf4j v1.2.1
+# marklogic-rdf4j v1.2-SNAPSHOT
 
 ## Introduction
 
