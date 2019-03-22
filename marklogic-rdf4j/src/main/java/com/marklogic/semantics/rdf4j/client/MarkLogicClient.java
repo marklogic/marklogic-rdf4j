@@ -29,7 +29,6 @@ import com.marklogic.client.semantics.SPARQLRuleset;
 import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
 import com.marklogic.semantics.rdf4j.MarkLogicTransactionException;
 import com.marklogic.semantics.rdf4j.utils.Util;
-import org.apache.commons.io.input.ReaderInputStream;
 import org.eclipse.rdf4j.http.protocol.UnauthorizedException;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.*;
@@ -92,7 +91,10 @@ public class MarkLogicClient {
 	/**
 	 * Constructor initialized with connection parameters.
 	 *
+	 * This constructor will be removed in a future release.  Applications should either manage the
+	 * DatabaseClient themselves or create a MarkLogicRepositoryConnection (which creates a MarkLogicClient).
 	 */
+	@Deprecated
 	public MarkLogicClient(String host, int port, String user, String password, String database, String auth) {
 		this._client = new MarkLogicClientImpl(host, port, user, password, database, auth);
 		this.initTimer();
@@ -335,8 +337,7 @@ public class MarkLogicClient {
 	 */
 	public void sendAdd(Reader in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
         if(util.isFormatSupported(dataFormat)) {
-            //TBD- must deal with char encoding
-            getClient().performAdd(new ReaderInputStream(in, Charset.defaultCharset()), baseURI, dataFormat, this.tx, contexts);
+            getClient().performAdd(in, baseURI, dataFormat, this.tx, contexts);
         }
         else
         {
@@ -405,7 +406,7 @@ public class MarkLogicClient {
 	public void openTransaction() throws MarkLogicTransactionException {
 		if (!isActiveTransaction()) {
 			try {
-                this.tx = getClient().getDatabaseClient().openTransaction();
+                this.tx = getRequiredDatabaseClient().openTransaction();
             }
             catch (ForbiddenUserException e)
             {
@@ -578,7 +579,7 @@ public class MarkLogicClient {
 		if (graphPerms != null) {
 			getClient().setGraphPerms(graphPerms);
 		}else {
-			getClient().setGraphPerms(getClient().getDatabaseClient().newGraphManager().newGraphPermissions());
+			getClient().setGraphPerms(getRequiredDatabaseClient().newGraphManager().newGraphPermissions());
 		}
 	}
 
@@ -592,7 +593,7 @@ public class MarkLogicClient {
 	}
 
 	public GraphPermissions emptyGraphPerms(){
-		return _client.getDatabaseClient().newGraphManager().newGraphPermissions();
+		return getRequiredDatabaseClient().newGraphManager().newGraphPermissions();
 	}
 
 	/**
@@ -604,8 +605,22 @@ public class MarkLogicClient {
 	}
 
 	/**
-	 *
+	 * getter for the underlying Java API database client used by the MarkLogic RDF4J client
+	 * @return the database client
 	 */
+    public DatabaseClient getDatabaseClient() {
+		return _client.getDatabaseClient();
+	}
+	private DatabaseClient getRequiredDatabaseClient() {
+		DatabaseClient client = getDatabaseClient();
+		if (client == null) {
+			throw new IllegalStateException("null database client");
+		}
+		return client;
+	}
+
+	// make package local or private in a future release
+	@Deprecated
 	public MarkLogicClientImpl getClient(){
 		return this._client;
 	}

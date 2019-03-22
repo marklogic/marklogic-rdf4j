@@ -19,15 +19,16 @@
  */
 package com.marklogic.semantics.rdf4j.client;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.marklogic.client.io.ReaderHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.marker.QuadsWriteHandle;
+import com.marklogic.client.io.marker.TriplesWriteHandle;
 import com.marklogic.semantics.rdf4j.utils.Util;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -64,7 +65,7 @@ import com.marklogic.semantics.rdf4j.MarkLogicRdf4jException;
  *
  *
  */
-public class MarkLogicClientImpl {
+class MarkLogicClientImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(MarkLogicClientImpl.class);
 
@@ -79,11 +80,14 @@ public class MarkLogicClientImpl {
     private GraphManager graphManager;
 
     private DatabaseClient databaseClient;
+    private boolean externalClient = true;
 
     private Util util = Util.getInstance();
 
     /**
      * Constructor initialized with connection parameters.
+     *
+     * This constructor will be removed in a future release.
      *
      * @param host
      * @param port
@@ -91,25 +95,39 @@ public class MarkLogicClientImpl {
      * @param password
      * @param auth
      */
-    public MarkLogicClientImpl(String host, int port, String user, String password, String database, String auth) {
-        setDatabaseClient(util.getClientBasedOnAuth(host, port, user, password, database, auth));
+    @Deprecated
+    MarkLogicClientImpl(String host, int port, String user, String password, String database, String auth) {
+        setDatabaseClient(false, util.getClientBasedOnAuth(host, port, user, password, database, auth));
     }
 
     /**
-     *  set databaseclient
+     * Constructor initialized with databaseclient
      *
      * @param databaseClient
      */
-    public MarkLogicClientImpl(DatabaseClient databaseClient) {
-        setDatabaseClient(databaseClient);
+    MarkLogicClientImpl(DatabaseClient databaseClient) {
+        setDatabaseClient(true, databaseClient);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (this.databaseClient != null) {
+            if (!this.externalClient) {
+                this.databaseClient.release();
+            }
+            this.databaseClient = null;
+        }
     }
 
     /**
      * set databaseclient and instantiate related managers.
      *
+     * @param externalClient
      * @param databaseClient
      */
-    private void setDatabaseClient(DatabaseClient databaseClient) {
+    private void setDatabaseClient(boolean externalClient, DatabaseClient databaseClient) {
+        this.externalClient = externalClient;
         this.databaseClient = databaseClient;
         this.sparqlManager = getDatabaseClient().newSPARQLQueryManager();
         this.graphManager = getDatabaseClient().newGraphManager();
@@ -120,7 +138,7 @@ public class MarkLogicClientImpl {
      *
      * @return DatabaseClient
      */
-    public DatabaseClient getDatabaseClient() {
+    DatabaseClient getDatabaseClient() {
         return this.databaseClient;
     }
 
@@ -137,7 +155,7 @@ public class MarkLogicClientImpl {
      * @return
      * @throws JsonProcessingException
      */
-    public InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
+    InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         return performSPARQLQuery(queryString, bindings, new InputStreamHandle(), start, pageLength, tx, includeInferred, baseURI);
     }
 
@@ -155,7 +173,7 @@ public class MarkLogicClientImpl {
      * @return
      * @throws JsonProcessingException
      */
-    public InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
+    InputStream performSPARQLQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, long start, long pageLength, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if (Util.notNull(ruleset) && includeInferred){qdef.setRulesets(ruleset);}
@@ -188,7 +206,7 @@ public class MarkLogicClientImpl {
      * @return
      * @throws JsonProcessingException
      */
-    public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
+    InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException {
         return performGraphQuery(queryString, bindings, new InputStreamHandle(), tx, includeInferred, baseURI);
     }
 
@@ -204,7 +222,7 @@ public class MarkLogicClientImpl {
      * @return
      * @throws JsonProcessingException
      */
-    public InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
+    InputStream performGraphQuery(String queryString, SPARQLQueryBindingSet bindings, InputStreamHandle handle, Transaction tx, boolean includeInferred, String baseURI) throws JsonProcessingException  {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
@@ -232,7 +250,7 @@ public class MarkLogicClientImpl {
      * @param baseURI
      * @return
      */
-    public boolean performBooleanQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
+    boolean performBooleanQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if(Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         qdef.setIncludeDefaultRulesets(includeInferred);
@@ -258,7 +276,7 @@ public class MarkLogicClientImpl {
      * @param includeInferred
      * @param baseURI
      */
-    public void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
+    void performUpdateQuery(String queryString, SPARQLQueryBindingSet bindings, Transaction tx, boolean includeInferred, String baseURI) {
         SPARQLQueryDefinition qdef = sparqlManager.newQueryDefinition(queryString);
         if (Util.notNull(baseURI) && !baseURI.isEmpty()){ qdef.setBaseUri(baseURI);}
         if (Util.notNull(ruleset) && includeInferred) {qdef.setRulesets(ruleset);}
@@ -287,30 +305,9 @@ public class MarkLogicClientImpl {
      */
     // performAdd
     // as we use mergeGraphs, baseURI is always file.toURI
-    public void performAdd(File file, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException {
-        try {
-            graphManager.setDefaultMimetype(dataFormat.getDefaultMIMEType());
-            if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
-                graphManager.mergeGraphs(new FileHandle(file),tx);
-            } else {
-                if (contexts.length>0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if(Util.notNull(contexts[i])){
-                            graphManager.mergeAs(contexts[i].toString(), new FileHandle(file), getGraphPerms(),tx);
-                        }else{
-                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file), getGraphPerms(), tx);
-                        }
-                    }
-                } else {
-                    graphManager.mergeAs(DEFAULT_GRAPH_URI, new FileHandle(file), getGraphPerms(),tx);
-                }
-            }
-        } catch (FailedRequestException e) {
-            logger.error(e.getLocalizedMessage());
-            throw new RDFParseException("Request to MarkLogic server failed, check file and format.");
-        }
+    void performAdd(File file, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException {
+        performAdd(new FileHandle(file), baseURI, dataFormat, tx, contexts);
     }
-
     /**
      * Executes merge of triples from InputStream.
      *
@@ -321,31 +318,61 @@ public class MarkLogicClientImpl {
      * @param contexts
      * @throws RDFParseException
      */
-    public void performAdd(InputStream in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
+    void performAdd(InputStream in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
+        try {
+            performAdd(new InputStreamHandle(in), baseURI, dataFormat, tx, contexts);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                logger.error(e.getLocalizedMessage());
+                throw new MarkLogicRdf4jException("IO error");
+            }
+        }
+    }
+    /**
+     * Executes merge of triples from Reader.
+     *
+     * @param in
+     * @param baseURI
+     * @param dataFormat
+     * @param tx
+     * @param contexts
+     * @throws RDFParseException
+     * @throws MarkLogicRdf4jException
+     */
+    void performAdd(Reader in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource... contexts) throws RDFParseException, MarkLogicRdf4jException {
+        try {
+            performAdd(new ReaderHandle(in), baseURI, dataFormat, tx, contexts);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                logger.error(e.getLocalizedMessage());
+                throw new MarkLogicRdf4jException("IO error");
+            }
+        }
+    }
+    private void performAdd(AbstractWriteHandle in, String baseURI, RDFFormat dataFormat, Transaction tx, Resource[] contexts) throws RDFParseException {
+        // TODO: use baseURI?
         try {
             graphManager.setDefaultMimetype(dataFormat.getDefaultMIMEType());
             if (dataFormat.equals(RDFFormat.NQUADS) || dataFormat.equals(RDFFormat.TRIG)) {
-                graphManager.mergeGraphs(new InputStreamHandle(in),tx);
-            } else {
-                if (contexts.length > 0) {
-                    for (int i = 0; i < contexts.length; i++) {
-                        if (Util.notNull(contexts[i])) {
-                            graphManager.mergeAs(contexts[i].toString(), new InputStreamHandle(in), getGraphPerms(), tx);
-                        } else {
-                            graphManager.mergeAs(DEFAULT_GRAPH_URI, new InputStreamHandle(in),getGraphPerms(), tx);
-                        }
+                graphManager.mergeGraphs((QuadsWriteHandle) in,tx);
+            } else if (contexts.length > 0) {
+                for (int i = 0; i < contexts.length; i++) {
+                    if (Util.notNull(contexts[i])) {
+                        graphManager.merge(contexts[i].toString(), (TriplesWriteHandle) in, getGraphPerms(), tx);
+                    } else {
+                        graphManager.merge(DEFAULT_GRAPH_URI, (TriplesWriteHandle) in, getGraphPerms(), tx);
                     }
-                } else {
-                    graphManager.mergeAs(DEFAULT_GRAPH_URI, new InputStreamHandle(in),getGraphPerms(), tx);
                 }
+            } else {
+                graphManager.merge(DEFAULT_GRAPH_URI, (TriplesWriteHandle) in, getGraphPerms(), tx);
             }
-            in.close();
         } catch (FailedRequestException e) {
             logger.error(e.getLocalizedMessage());
             throw new RDFParseException("Request to MarkLogic server failed, check input is valid.");
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            throw new MarkLogicRdf4jException("IO error");
         }
     }
 
@@ -360,7 +387,7 @@ public class MarkLogicClientImpl {
      * @param contexts
      * @throws MarkLogicRdf4jException
      */
-    public void performAdd(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
+    void performAdd(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
         if(contexts.length>0) {
             if (Util.notNull(baseURI)) sb.append("BASE <" + baseURI + ">\n");
@@ -398,7 +425,7 @@ public class MarkLogicClientImpl {
      * @param contexts
      * @throws MarkLogicRdf4jException
      */
-    public void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
+    void performRemove(String baseURI, Resource subject, IRI predicate, Value object, Transaction tx, Resource... contexts) throws MarkLogicRdf4jException {
         StringBuilder sb = new StringBuilder();
         String[] contextArgs = null;
         if(contexts.length>0)
@@ -429,8 +456,8 @@ public class MarkLogicClientImpl {
      * @param tx
      * @param contexts
      */
-    public void performClear(Transaction tx, Resource... contexts) {
-        if(contexts.length>0) {
+    void performClear(Transaction tx, Resource... contexts) {
+        if (contexts.length > 0) {
             for (int i = 0; i < contexts.length; i++) {
                 if (Util.notNull(contexts[i])) {
                     graphManager.delete(contexts[i].stringValue(), tx);
@@ -438,7 +465,7 @@ public class MarkLogicClientImpl {
                     graphManager.delete(DEFAULT_GRAPH_URI, tx);
                 }
             }
-        }else{
+        } else {
             graphManager.delete(DEFAULT_GRAPH_URI, tx);
         }
     }
@@ -448,15 +475,15 @@ public class MarkLogicClientImpl {
      *
      * @param tx
      */
-    public void performClearAll(Transaction tx) {
+    void performClearAll(Transaction tx) {
         graphManager.deleteGraphs(tx);
     }
 
-    public Integer getOptimizeLevel() {
+    Integer getOptimizeLevel() {
         return optimizeLevel;
     }
 
-    public void setOptimizeLevel(Integer optimizeLevel) {
+    void setOptimizeLevel(Integer optimizeLevel) {
         this.optimizeLevel = optimizeLevel;
     }
 
@@ -465,7 +492,7 @@ public class MarkLogicClientImpl {
      *
      * @return
      */
-    public SPARQLRuleset[] getRulesets() {
+    SPARQLRuleset[] getRulesets() {
         return this.ruleset;
     }
 
@@ -474,7 +501,7 @@ public class MarkLogicClientImpl {
      *
      * @param rulesets
      */
-    public void setRulesets(SPARQLRuleset ... rulesets) {
+    void setRulesets(SPARQLRuleset ... rulesets) {
         if(Util.notNull(rulesets)) {
             List<SPARQLRuleset> list = new ArrayList<>();
             for(Object r : rulesets) {
@@ -493,7 +520,7 @@ public class MarkLogicClientImpl {
      *
      * @param graphPerms
      */
-    public void setGraphPerms(GraphPermissions graphPerms) {
+    void setGraphPerms(GraphPermissions graphPerms) {
         this.graphPerms = graphPerms;
     }
 
@@ -502,7 +529,7 @@ public class MarkLogicClientImpl {
      *
      * @return
      */
-    public GraphPermissions getGraphPerms() {
+    GraphPermissions getGraphPerms() {
         return this.graphPerms;
     }
 
@@ -511,7 +538,7 @@ public class MarkLogicClientImpl {
      *
      * @param constrainingQueryDefinition
      */
-    public void setConstrainingQueryDefinition(QueryDefinition constrainingQueryDefinition) {
+    void setConstrainingQueryDefinition(QueryDefinition constrainingQueryDefinition) {
         this.constrainingQueryDef = constrainingQueryDefinition;
     }
 
@@ -520,7 +547,7 @@ public class MarkLogicClientImpl {
      *
      * @return
      */
-    public QueryDefinition getConstrainingQueryDefinition() {
+    QueryDefinition getConstrainingQueryDefinition() {
         return this.constrainingQueryDef;
     }
 
@@ -528,17 +555,20 @@ public class MarkLogicClientImpl {
      * Close client.
      *
      */
-    public void close() {
+    void close() {
         // close MarkLogicClientImpl
     }
 
-    public void release() {
+    void release() {
         if (this.databaseClient != null) {
-            try {
-                this.databaseClient.release();
-            } catch (Exception e) {
-                logger.info("Failed releasing DB client", e);
+            if (!this.externalClient) {
+                try {
+                    this.databaseClient.release();
+                } catch (Exception e) {
+                    logger.info("Failed releasing DB client", e);
+                }
             }
+            this.databaseClient = null;
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -298,6 +298,8 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		testWriterCon = null;
 		testWriterRepository = null;
 
+		databaseClient = null;
+
 		logger.info("tearDown complete.");
 	}
 
@@ -316,18 +318,18 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		adminconfig.setUser("admin");
 		adminconfig.setPassword("admin");
 		adminconfig.setPort(restPort);
-		RepositoryFactory factory = new MarkLogicRepositoryFactory();
+		MarkLogicRepositoryFactory factory = new MarkLogicRepositoryFactory();
 		Assert.assertEquals("marklogic:MarkLogicRepository", factory.getRepositoryType());
 		try {
-			testAdminRepository = (MarkLogicRepository) factory.getRepository(adminconfig);
-			testAdminCon = (MarkLogicRepositoryConnection) testAdminRepository.getConnection();
+			testAdminRepository = factory.getRepository(adminconfig);
+			testAdminCon = testAdminRepository.getConnection();
 			Assert.assertTrue(false);
 		} catch (Exception e) {
 			Assert.assertTrue(e instanceof RepositoryException);
 		}
 		try {
 			testAdminRepository.initialize();
-			testAdminCon = (MarkLogicRepositoryConnection) testAdminRepository.getConnection();
+			testAdminCon = testAdminRepository.getConnection();
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 		}
@@ -340,12 +342,11 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 		adminconfig = new MarkLogicRepositoryConfig(host, restPort, "admin", "admin", "DIGEST");
 		Assert.assertEquals("marklogic:MarkLogicRepository", factory.getRepositoryType());
-		testAdminRepository = (MarkLogicRepository) factory.getRepository(adminconfig);
+		testAdminRepository = factory.getRepository(adminconfig);
 		testAdminRepository.initialize();
 
 		testAdminCon = testAdminRepository.getConnection();
-		Assert.assertTrue(testAdminCon instanceof MarkLogicRepositoryConnection);
-		
+
 		Repository otherrepo = factory.getRepository(adminconfig);
 		RepositoryConnection conn = null;
 		try {
@@ -358,7 +359,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			otherrepo.shutDown();
 		}
 
-		Assert.assertTrue(testAdminCon instanceof MarkLogicRepositoryConnection);
 		graph1 = testAdminCon.getValueFactory().createIRI("http://marklogic.com/Graph1");
 		graph2 = testAdminCon.getValueFactory().createIRI("http://marklogic.com/Graph2");
 		dirgraph = testAdminCon.getValueFactory().createIRI("http://marklogic.com/dirgraph");
@@ -371,12 +371,10 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			try {
 				testReaderRepository.initialize();
 				Assert.assertNotNull(testReaderRepository);
-				testReaderCon = (MarkLogicRepositoryConnection) testReaderRepository.getConnection();
+				testReaderCon = testReaderRepository.getConnection();
 			} catch (RepositoryException e) {
 				e.printStackTrace();
 			}
-			Assert.assertTrue(testReaderCon instanceof MarkLogicRepositoryConnection);
-
 		}
 		
 		// Creating MLRDF4J Connection object Using
@@ -392,8 +390,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 			try {
 				testWriterRepository.initialize();
-				Assert.assertNotNull(testWriterRepository);
-				testWriterCon = (MarkLogicRepositoryConnection) testWriterRepository.getConnection();
+				testWriterCon = testWriterRepository.getConnection();
 			} catch (RepositoryException e) {
 				e.printStackTrace();
 			}
@@ -410,18 +407,18 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		adminconfig.setUser("admin");
 		adminconfig.setPassword("admin");
 		adminconfig.setPort(restPort);
-		RepositoryFactory factory = new MarkLogicRepositoryFactory();
+		MarkLogicRepositoryFactory factory = new MarkLogicRepositoryFactory();
 		Assert.assertEquals("marklogic:MarkLogicRepository", factory.getRepositoryType());
 		try {
-			testAdminRepository = (MarkLogicRepository) factory.getRepository(adminconfig);
-			testAdminCon = (MarkLogicRepositoryConnection) testAdminRepository.getConnection();
+			testAdminRepository = factory.getRepository(adminconfig);
+			testAdminCon = testAdminRepository.getConnection();
 			Assert.assertTrue(false);
 		} catch (Exception e) {
 			Assert.assertTrue(e instanceof RepositoryException);
 		}
 		try {
 			testAdminRepository.initialize();
-			testAdminCon = (MarkLogicRepositoryConnection) testAdminRepository.getConnection();
+			testAdminCon = testAdminRepository.getConnection();
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 		}
@@ -436,11 +433,10 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 
 		adminconfig = new MarkLogicRepositoryConfig(host, restPort, "admin", "admin", "DIGEST");
 		Assert.assertEquals("marklogic:MarkLogicRepository", factory.getRepositoryType());
-		testAdminRepository = (MarkLogicRepository) factory.getRepository(adminconfig);
+		testAdminRepository = factory.getRepository(adminconfig);
 		testAdminRepository.initialize();
 
 		testAdminCon = testAdminRepository.getConnection();
-		Assert.assertTrue(testAdminCon instanceof MarkLogicRepositoryConnection);
 		client = testAdminCon.getDatabaseClient();
 		client.newDocumentManager().writeAs("/test2",new StringHandle().with("<test>test2</test>").withFormat(Format.XML));
 		Assert.assertTrue(client.newServerEval().xquery("fn:doc(\"/test2\")").eval().hasNext());
@@ -457,7 +453,6 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			otherrepo.shutDown();
 		}
 
-		Assert.assertTrue(testAdminCon instanceof MarkLogicRepositoryConnection);
 		graph1 = testAdminCon.getValueFactory().createIRI("http://marklogic.com/Graph1");
 		graph2 = testAdminCon.getValueFactory().createIRI("http://marklogic.com/Graph2");
 		dirgraph = testAdminCon.getValueFactory().createIRI("http://marklogic.com/dirgraph");
@@ -470,12 +465,10 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			try {
 				testReaderRepository.initialize();
 				Assert.assertNotNull(testReaderRepository);
-				testReaderCon = (MarkLogicRepositoryConnection) testReaderRepository.getConnection();
+				testReaderCon = testReaderRepository.getConnection();
 			} catch (RepositoryException e) {
 				e.printStackTrace();
 			}
-			Assert.assertTrue(testReaderCon instanceof MarkLogicRepositoryConnection);
-
 		}
 		
 		client = testReaderCon.getDatabaseClient();
@@ -501,7 +494,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 			try {
 				testWriterRepository.initialize();
 				Assert.assertNotNull(testWriterRepository);
-				testWriterCon = (MarkLogicRepositoryConnection) testWriterRepository.getConnection();
+				testWriterCon = testWriterRepository.getConnection();
 			} catch (RepositoryException e) {
 				e.printStackTrace();
 			}
@@ -2940,7 +2933,7 @@ public class MarkLogicRepositoryConnectionTest extends ConnectedRESTQA {
 		queryBuilder.append(" } ");
 		queryBuilder.append(" ORDER BY ?lastname");
 
-		Query query = testAdminCon.prepareQuery(queryBuilder.toString());
+		MarkLogicQuery query = testAdminCon.prepareQuery(queryBuilder.toString());
 
 		TupleQueryResult result1 = ((MarkLogicTupleQuery) query).evaluate(1, 2);
 		String[] expLname = { "Ausmus", "Avila", "Bernard", "Cabrera", "Carrera", "Castellanos", "Holaday", "Joyner",

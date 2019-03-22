@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.marklogic.client.DatabaseClient;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -199,7 +200,8 @@ public class MultiThreadedPersistenceTest extends Rdf4jTestBase {
         }
     }
 
-    @Test
+    // a multistatement transaction with a deadlock is not retryable
+    @Ignore
     public void multipleConnectionMultiThreadedPersist() throws RepositoryException, InterruptedException {
         final MultipleConnectionPersistenceService persistenceService = new MultipleConnectionPersistenceService(host, port, adminUser, adminPassword);
 

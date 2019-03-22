@@ -44,12 +44,11 @@ import java.net.URL;
  * size queries, combination queries,  base uri, and permissions.
  *
  */
-public class MarkLogicRepository extends AbstractRepository implements Repository,MarkLogicClientDependent {
+public class MarkLogicRepository extends AbstractRepository implements Repository, MarkLogicClientDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(MarkLogicRepository.class);
 
-    // MarkLogicClient vars
-    private MarkLogicClient client;
+    // DatabaseClient vars
     private String host;
     private int port;
     private String user;
@@ -63,6 +62,7 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     private ValueFactory f;
 
     private DatabaseClient databaseClient;
+    private boolean externalClient = true;
 
     private Util util = Util.getInstance();
 
@@ -83,9 +83,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.user = cred[0];
         this.password = cred[1];
         this.auth = "DIGEST";
-        this.client = getMarkLogicClient();
+        this.database = null;
+        makeDatabaseClient();
     }
-
     /**
      *
      * Constructor initialized with connection vars to MarkLogic server.
@@ -101,7 +101,6 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     public MarkLogicRepository(String host, int port, String user, String password, String auth) {
         this(host, port, user, password, null, auth);
     }
-
     /**
      *
      * Constructor initialized with connection vars to MarkLogic server.
@@ -125,10 +124,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.password = password;
         this.auth = auth;
         this.database = database;
-        this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
-        this.client = new MarkLogicClient(databaseClient);
+        makeDatabaseClient();
     }
-
     /**
      *
      * Constructor initialized with connection vars to MarkLogic server.
@@ -140,7 +137,6 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     public MarkLogicRepository(String host, int port, DatabaseClientFactory.SecurityContext securityContext) {
         this(host, port, null, securityContext);
     }
-
     /**
      *
      * Constructor initialized with connection vars to MarkLogic server.
@@ -158,10 +154,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         this.port = port;
         this.database = database;
         this.securityContext = securityContext;
-        this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
-        this.client = new MarkLogicClient(databaseClient);
+        makeDatabaseClient();
     }
-
     /**
      * Constructor initialized with MarkLogic Java Client Api DatabaseClient.
      *
@@ -170,15 +164,31 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     public MarkLogicRepository(DatabaseClient databaseClient) {
         super();
         this.f = SimpleValueFactory.getInstance();
-        this.databaseClient = databaseClient;
         this.quadMode = true;
         this.host = databaseClient.getHost();
         this.port = databaseClient.getPort();
         this.database = databaseClient.getDatabase();
         this.securityContext = databaseClient.getSecurityContext();
-        this.client = new MarkLogicClient(databaseClient);
+        this.databaseClient = databaseClient;
     }
-    
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (this.databaseClient != null) {
+            if (!this.externalClient) {
+                this.databaseClient.release();
+            }
+            this.databaseClient = null;
+        }
+        this.f = null;
+        this.quadMode = false;
+        this.host = null;
+        this.port = 0;
+        this.database = null;
+        this.securityContext = null;
+    }
+
     /**
      * gets the Valuefactory used for creating URIs, blank nodes, literals and statements.
      *
@@ -207,18 +217,8 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     @Deprecated
     protected void initializeInternal() throws RepositoryException
     {
-        if(this.databaseClient == null || this.client == null || this.databaseClient.getClientImplementation() == null)
-        {
-            if(this.securityContext == null)
-            {
-                this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
-                this.client = new MarkLogicClient(databaseClient);
-            }
-            else
-            {
-                this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
-                this.client = new MarkLogicClient(databaseClient);
-            }
+        if (this.databaseClient == null) {
+            makeDatabaseClient();
         }
     }
 
@@ -231,7 +231,12 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
     @Override
     @Deprecated
     protected void shutDownInternal() throws RepositoryException {
-        client.release();
+        if (databaseClient != null) {
+            if (!this.externalClient) {
+                databaseClient.release();
+            }
+            databaseClient = null;
+        }
     }
 
     /**
@@ -286,10 +291,9 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
         if (!isInitialized()) {
             throw new RepositoryException("MarkLogicRepository not initialized.");
         }
-        return new MarkLogicRepositoryConnection(this, getMarkLogicClient(), quadMode);
+        return new MarkLogicRepositoryConnection(this, makeMarkLogicClient(), quadMode);
     }
 
-    //TODO: Check and refactor.
     /**
      * Returns MarkLogicClient object which manages communication to ML server via Java api client
      *
@@ -297,27 +301,33 @@ public class MarkLogicRepository extends AbstractRepository implements Repositor
      */
     @Override
     public synchronized MarkLogicClient getMarkLogicClient() {
-        if(this.securityContext == null)
-        {
+        return makeMarkLogicClient();
+    }
+    private synchronized MarkLogicClient makeMarkLogicClient() {
+        if (this.databaseClient == null) {
+            makeDatabaseClient();
+        }
+        return new MarkLogicClient(this.databaseClient);
+    }
+    private void makeDatabaseClient() {
+        if (this.securityContext == null) {
             this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.user, this.password, this.database, this.auth);
-            this.client = new MarkLogicClient(databaseClient);
-        }
-        else
-        {
+            this.securityContext = databaseClient.getSecurityContext();
+        } else {
             this.databaseClient = util.getClientBasedOnAuth(this.host, this.port, this.database, this.securityContext);
-            this.client = new MarkLogicClient(databaseClient);
         }
-        return this.client;
+        this.externalClient = false;
     }
 
     /**
-     * Sets MarkLogicClient used by this repository.
+     * This setter is now a noop because each repository connection has a separate MarkLogicClient.
+     *
+     * This method and will be removed at a future date.
      *
      * @param client the MarkLogicClient to be used, which mediates all the interactions with the MarkLogic database.
      */
-    @Override
-    public synchronized void setMarkLogicClient(MarkLogicClient client) {
-        this.client = client;
+    @Deprecated
+    public void setMarkLogicClient(MarkLogicClient client) {
     }
 
     /**

@@ -89,7 +89,7 @@ import com.marklogic.semantics.rdf4j.query.MarkLogicUpdateQuery;
  *
  *
  */
-public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection implements RepositoryConnection,MarkLogicRepositoryConnectionDependent {
+public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection implements RepositoryConnection, MarkLogicRepositoryConnectionDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(MarkLogicRepositoryConnection.class);
 
@@ -179,7 +179,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      * @throws MalformedQueryException
      */
     @Override
-    public Query prepareQuery(String queryString) throws RepositoryException, MalformedQueryException {
+    public MarkLogicQuery prepareQuery(String queryString) throws RepositoryException, MalformedQueryException {
         return prepareQuery(QueryLanguage.SPARQL, queryString, null);
     }
 
@@ -193,7 +193,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      * @throws MalformedQueryException
      */
     @Override
-    public Query prepareQuery(String queryString, String baseURI) throws RepositoryException, MalformedQueryException {
+    public MarkLogicQuery prepareQuery(String queryString, String baseURI) throws RepositoryException, MalformedQueryException {
         return prepareQuery(QueryLanguage.SPARQL, queryString, baseURI);
     }
 
@@ -207,7 +207,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
      * @throws MalformedQueryException
      */
     @Override
-    public Query prepareQuery(QueryLanguage queryLanguage, String queryString) throws RepositoryException, MalformedQueryException {
+    public MarkLogicQuery prepareQuery(QueryLanguage queryLanguage, String queryString) throws RepositoryException, MalformedQueryException {
         return prepareQuery(queryLanguage, queryString, null);
     }
 
@@ -1456,7 +1456,7 @@ public class MarkLogicRepositoryConnection extends AbstractRepositoryConnection 
 
     public DatabaseClient getDatabaseClient()
     {
-        return this.client.getClient().getDatabaseClient();
+        return this.client.getDatabaseClient();
     }
 
     public Transaction getTransaction()

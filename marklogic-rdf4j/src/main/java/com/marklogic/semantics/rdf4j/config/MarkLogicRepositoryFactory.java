@@ -55,7 +55,7 @@ public class MarkLogicRepositoryFactory implements RepositoryFactory {
      * returns config
      *
      */
-    public RepositoryImplConfig getConfig() {
+    public MarkLogicRepositoryConfig getConfig() {
         return new MarkLogicRepositoryConfig();
 	}
 
@@ -64,7 +64,7 @@ public class MarkLogicRepositoryFactory implements RepositoryFactory {
      * Instantiate and return repository object.
      *
      */
-    public Repository getRepository(RepositoryImplConfig config) throws RepositoryConfigException {
+    public MarkLogicRepository getRepository(RepositoryImplConfig config) throws RepositoryConfigException {
         MarkLogicRepository repo = null;
         MarkLogicRepositoryConfig cfg = (MarkLogicRepositoryConfig) config;
         if (cfg.getHost() != null && cfg.getPort() != 0) {
