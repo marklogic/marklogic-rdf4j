@@ -127,15 +127,6 @@ gradle marklogic-rdf4j:javadoc
 
 ```
 
-
-### Support
-
-The marklogic-rdf4j project is maintained by [MarkLogic](https://www.marklogic.com/) Engineering and is made available under the [Apache 2.0 license](LICENSE). It is designed for use in production applications
-with MarkLogic Server. Everyone is encouraged to file bug reports, feature requests, and pull requests through
-[GitHub](https://github.com/marklogic/marklogic-rdf4j/issues). This input is critical and will be carefully considered. However, we can't promise a specific 
-resolution or timeframe for any request. In addition, MarkLogic provides technical support for [release
-tags](https://github.com/marklogic/marklogic-rdf4j/releases) of marklogic-rdf4j to
-licensed customers under the terms outlined in the [MarkLogic Technical Support Handbook](http://www.marklogic.com/files/Mark_Logic_Support_Handbook.pdf). Customers with an active maintenance contract can sign up for MarkLogic Technical Support on our [support portal](https://help.marklogic.com/).
 ### License
 
 [Apache License v2.0](LICENSE)
